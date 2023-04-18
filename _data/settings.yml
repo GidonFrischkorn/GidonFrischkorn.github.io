@@ -1,5 +1,6 @@
 basic_settings:
-  site_title: Gidon Frischkorn
+  site_title: Gidon Frischkorn, Ph.D.
+  site_subtitle: Psychometrics - Cogntive Psychology - Computational Modeling
   favicon_image: /images/favicon.png
 
 header_settings:
@@ -42,7 +43,7 @@ social_settings:
   instagram_url: ''
   snapchat_url: ''
   youtube_url: ''
-  google-plus_url: ''
+  google-plus_url: 'https://scholar.google.com/citations?user=gpol3F4AAAAJ&hl=de'
   vimeo_url: ''
   pinterest_url: ''
   medium_url: ''
