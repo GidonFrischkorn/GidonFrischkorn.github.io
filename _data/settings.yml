@@ -1,29 +1,14 @@
 basic_settings:
-  site_title: Gidon Frischkorn, Ph.D.
-  site_subtitle: Psychometrics - Cogntive Psychology - Computational Modeling
+  site_title: Gidon Frischkorn
+  site_subtitle: Psychometrics - Computational Modeling - Cognitive Psychology
   favicon_image: /images/favicon.png
 
 header_settings:
-  logo_image: 
+  logo_image:
   logo_width: 200
 
-menu_settings:
-  menu_items:
-    - title: 'Home'
-      url: '/'
-    - title: 'Research'
-      url: '/research'
-    - title: 'Publications'
-      url: '/publications'
-    - title: 'Teaching'    
-      url: '/teaching'
-    - title: 'Blog'
-      url: '/blog/'
-    - title: 'About'
-      url: '/about'
-
 footer_settings:
-  footer_tagline: Psychometrics - Cognitive Psychology - Computational Modeling
+  footer_tagline: Psychometrics - Compuational Modeling - Cognitive Psychology
 
 hero_settings:
   overlay_opacity: 0.8
@@ -43,7 +28,7 @@ social_settings:
   instagram_url: ''
   snapchat_url: ''
   youtube_url: ''
-  google-plus_url: 'https://scholar.google.com/citations?user=gpol3F4AAAAJ&hl=de'
+  google-plus_url: ''
   vimeo_url: ''
   pinterest_url: ''
   medium_url: ''
@@ -63,19 +48,19 @@ social_settings:
   soundcloud_url: ''
   spotify_url: ''
   bandcamp_url: ''
-  linkedin_url: ''
+  linkedin_url: 'https://www.linkedin.com/in/gidon-frischkorn-4913431b1/'
 
 color_settings:
-  background_color: '#ffffff'
-  background_alt_color: '#f4f5f6'
-  text_dark_color: '#2A2F36'
-  text_medium_color: '#6C7A89'
-  text_light_color: '#ABB7B7'
-  accent_color: '#3498db'
+  background_color: '#000000'
+  background_alt_color: '#1e1e1e'
+  text_dark_color: '#ffffff'
+  text_medium_color: '#ffffff'
+  text_light_color: '#ffffff'
+  accent_color: '#4fa7e2'
   border_color: '#dddddd'
   hero_background_color: '#132930'
-  hero_text_color: '#ffffff'
-  error_color: '#D64541'
+  hero_text_color: '#fbfbfb'
+  error_color: '#d86d6a'
 
 font_settings:
   font_embed: '<link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700" rel="stylesheet">'
@@ -138,9 +123,9 @@ font_settings:
     letter_spacing: 0
     line_height: 1.6
   p:
-    small_size: 18
-    medium_size: 20
-    large_size: 22
+    small_size: 14
+    medium_size: 16
+    large_size: 18
     weight: 400
     letter_spacing: 0
     line_height: 1.6

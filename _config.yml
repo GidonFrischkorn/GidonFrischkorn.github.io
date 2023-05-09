@@ -1,7 +1,7 @@
-site: Gidon Frischkorn
+site: Gidon Frischkorn, Ph.D.
 
-url: www.gfrischkorn.org
-baseurl: 
+url: www.gfrischkorn.com
+baseurl:
 
 collections:
   pages:
@@ -44,14 +44,25 @@ markdown: kramdown
 kramdown:
   input: GFM
   syntax_highlighter: rouge
-  
+
 sass:
   style: compressed
 
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
+  - jekyll-toc
 
 paginate: 6
 paginate_path: "/blog/page:num/"
-  
+
+toc:
+  min_level: 1
+  max_level: 6
+  ordered_list: false
+  no_toc_section_class: no_toc_section
+  list_id: toc
+  list_class: section-nav
+  sublist_class: ''
+  item_class: toc-entry
+  item_prefix: toc-
