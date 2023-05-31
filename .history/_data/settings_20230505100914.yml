@@ -8,7 +8,7 @@ header_settings:
   logo_width: 200
 
 footer_settings:
-  footer_tagline: Psychometrics - Computational Modeling - Cognitive Psychology
+  footer_tagline: Psychometrics - Compuational Modeling - Cognitive Psychology
 
 hero_settings:
   overlay_opacity: 0.8
@@ -130,9 +130,9 @@ font_settings:
     letter_spacing: 0
     line_height: 1.6
   blockquote:
-    small_size: 18
-    medium_size: 20
-    large_size: 24
+    small_size: 25
+    medium_size: 35
+    large_size: 45
     weight: 300
     letter_spacing: -0.02
     line_height: 1.6
