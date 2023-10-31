@@ -1,0 +1,13 @@
+menu_items:
+  - title: 'Projects'
+    url: '/'
+  - title: 'Publications'
+    url: '/publications'
+  - title: 'Teaching'
+    url: '/teaching'
+  - title: 'Blog'
+    url: '/blog/'
+  - title: 'About'
+    url: '/about'
+  - title: 'Contact'
+    url: '/contact'
