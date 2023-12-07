@@ -1,6 +1,6 @@
 ---
 title: CV
-subtitle: updated on 2023-10-31 
+subtitle: updated on 2023-12-07 
 featured_image: 
 pdf_file: 
 ---
