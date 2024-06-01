@@ -59,7 +59,7 @@ color_settings:
   accent_color: '#50E3C2'
   border_color: '#007AFF'
   hero_background_color: '#4A4A4A'
-  hero_text_color: '#4A4A4A'
+  hero_text_color: '#E1E8ED'
   error_color: '#50E3C2'
 
 font_settings:
