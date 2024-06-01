@@ -4,6 +4,7 @@ subtitle:
 featured_image:
 sidebar: toc
 toc: true
+featured_image: '/images/Publications.png'
 ---
 
 [Google Scholar](https://scholar.google.com/citations?user=gpol3F4AAAAJ&hl=de)
