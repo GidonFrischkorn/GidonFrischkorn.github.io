@@ -5,7 +5,7 @@ date: 2022-12-02 00:00:00
 description: 'In this project, I try to implement commonly used cognitive Measurement
 models in easily accessible software packages to enable as many researchers as possible
 to use these models in their work.'
-featured_image: '/images/demo/demo-square.jpg'
+featured_image: '/images/Banner.png'
 ---
 
 > Cognitive measurement models provide a mathematical formalization of the cognitive processes underlying observed behavior.

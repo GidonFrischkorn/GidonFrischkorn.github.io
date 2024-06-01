@@ -5,7 +5,7 @@ date: 2023-01-01 00:00:00
 description: 'This project explores the binding hypothesis, that proposes that
 working memory capacity is limited by the number and strength of bindings a person
 can form and maintain in working memory.'
-featured_image: '/images/demo/demo-square.jpg'
+featured_image: '/images/Banner.png'
 ---
 
 Almost all cognitive processing requires the temporary storage of information. For example, when solving math problems, such as (3 + 6) * 2, the terms and intermediate results must be held active in memory to solve the equation. The cognitive system used for this is working memory (WM). Individual differences in the capacity of WM - the amount of information people can hold active for current processing - is strongly related to various cognitive abilities, such as intelligence, processing speed, and learning. Yet, it is still unclear which processes limit the capacity of WM. Thus, identifying the specific cognitive processes limiting WM capacity is essential for a better understanding of cognitive individual differences in general.
