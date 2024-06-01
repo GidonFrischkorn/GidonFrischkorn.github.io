@@ -18,4 +18,9 @@ Rearchers developing cognitive measurement models oftentimes provide code to use
 
 ## Goals  
 
-For example, together with my colleague [Ven Popov](https://venpopov.com) I have recently implemented commonly used measurement models, such as the [two-parameter mixture model](http://dx.doi.org/10.1038/nature06860), the [three-parameter mixture model](https://doi.org/10.1167/9.10.7), and the [interference measurement model](https://doi.org/10.1167/17.5.11), for visual working memory tasks in a hierachical Bayesian framework building on the R package [brms](https://paul-buerkner.github.io/brms/)
+In the R package [bmm](https://venpopov.github.io/bmm/), [Ven Popov](https://venpopov.com) and I have recently implemented commonly used measurement models, such as the:
+- the [2-parameter mixture model](http://dx.doi.org/10.1038/nature06860)
+- the [3-parameter mixture model](https://doi.org/10.1167/9.10.7)
+- the [Interference Measurement Model](https://doi.org/10.1167/17.5.11)
+- the [Signal Discrimination Model](http://doi.org/10.1037/rev0000328) 
+for visual working memory tasks in a hierachical Bayesian framework building on the R package [brms](https://paul-buerkner.github.io/brms/)
