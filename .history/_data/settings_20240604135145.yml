@@ -51,16 +51,16 @@ social_settings:
   linkedin_url: 'https://www.linkedin.com/in/gidon-frischkorn-4913431b1/'
 
 color_settings:
-  background_color: '#000000'
-  background_alt_color: '#1e1e1e'
-  text_dark_color: '#ffffff'
-  text_medium_color: '#ffffff'
-  text_light_color: '#ffffff'
-  accent_color: '#4fa7e2'
-  border_color: '#dddddd'
-  hero_background_color: '#132930'
-  hero_text_color: '#fbfbfb'
-  error_color: '#d86d6a'
+  background_color: '#FFFFFF'
+  background_alt_color: '#E1E8ED'
+  text_dark_color: '#4A4A4A'
+  text_medium_color: '#7a7a7a'
+  text_light_color: '#7a7a7a'
+  accent_color: '#50E3C2'
+  border_color: '#007AFF'
+  hero_background_color: '#4e4e4e'
+  hero_text_color: '#E1E8ED'
+  error_color: '#50E3C2'
 
 font_settings:
   font_embed: '<link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700" rel="stylesheet">'

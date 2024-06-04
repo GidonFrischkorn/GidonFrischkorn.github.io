@@ -11,7 +11,7 @@ footer_settings:
   footer_tagline: Psychometrics - Computational Modeling - Cognitive Psychology
 
 hero_settings:
-  overlay_opacity: 0.5
+  overlay_opacity: 0.8
 
 post_settings:
   grid_spacing: 10
@@ -53,14 +53,14 @@ social_settings:
 color_settings:
   background_color: '#FFFFFF'
   background_alt_color: '#E1E8ED'
-  text_dark_color: '#303030'
-  text_medium_color: '#353535'
+  text_dark_color: '#7a7a7a'
+  text_medium_color: '#7a7a7a'
   text_light_color: '#7a7a7a'
-  accent_color: '#0049B6'
-  border_color: '#0049B6'
-  hero_background_color: '#E1E8ED'
-  hero_text_color: '#303030'
-  error_color: '#0049B6'
+  accent_color: '#50E3C2'
+  border_color: '#007AFF'
+  hero_background_color: '#FFFFFF'
+  hero_text_color: '#E1E8ED'
+  error_color: '#50E3C2'
 
 font_settings:
   font_embed: '<link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700" rel="stylesheet">'
