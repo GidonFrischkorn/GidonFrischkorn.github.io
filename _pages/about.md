@@ -1,9 +1,9 @@
 ---
 title: CV
-subtitle: updated on 2023-12-07 
+subtitle: updated on 2025-01-15 
 featured_image: 
 pdf_file: 
-featured_image: '/images/CV.png'
+featured_image: '/images/Banner.png'
 ---
 
 <iframe src="/images/PDF/CV_GidonFrischkorn.pdf" style="width:950px; height:1200px;" frameborder="0"></iframe>

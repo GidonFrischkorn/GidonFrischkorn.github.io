@@ -9,22 +9,43 @@ featured_image: '/images/Publications.png'
 
 [Google Scholar](https://scholar.google.com/citations?user=gpol3F4AAAAJ&hl=de)
 
-## Preprints
+## Preprints & Papers in preparation
 
-- Nunez, M. D., Schubert, A.-L., **Frischkorn, G. T.**, & Oberauer, K. (2023). Cognitive models of decision-making with identifiable parameters: Diffusion Decision Models with within-trial noise. *PsyArXiv*. <https://doi.org/10.31234/osf.io/h4fde>
-- Bartsch, L. M., **Frischkorn, G. T.**, & Shepherdson, P. (2023). When Load is Low, Working Memory is Shielded from Long-Term Memory's Influence (SSRN Scholarly Paper 4600918). <https://doi.org/10.2139/ssrn.4600918>
-- Schubert, A.-L., **Frischkorn, G. T.**, Sadus, K., Welhaf, M., Kane, M. J., & Rummel, J. (2023). The brief mind wandering three-factor scale (BMW-3). *PsyArXiv*. <https://doi.org/10.31234/osf.io/cy9rx>
-- **Frischkorn, G. T.**, & Popov, V. (2023). *A tutorial for estimating mixture models for visual working memory tasks in brms: Introducing the Bayesian Measurement Modeling (bmm) package for R*. PsyArXiv. <https://doi.org/10.31234/osf.io/umt57>
-- Souza, A. S., **Frischkorn, G. T**., & Oberauer, K. (2023). *Older yet Sharp: No General Age-Related Decline in Focusing Attention*. PsyArXiv. <https://doi.org/10.31234/osf.io/g3ydr>
-- Löffler, C., **Frischkorn, G. T.**, Hagemann, D., Sadus, K., & Schubert, A.-L. (2022). *The common factor of executive functions measures nothing but speed of information uptake*. PsyArXiv. <https://doi.org/10.31234/osf.io/xvdyz>
-- Bastian, C. C. von, Blais, C., Brewer, G., Gyurkovics, M., Hedge, C., Kałamała, P., Meier, M., Oberauer, K., Rey-Mermet, A., Rouder, J. N., Souza, A. S., Bartsch, L. M., Conway, A. R. A., Draheim, C., Engle, R. W., Friedman, N. P., **Frischkorn, G. T.**, Gustavson, D. E., Koch, I., ... Wiemers, E. (2020). *Advancing the understanding of individual differences in attentional control: Theoretical, methodological, and analytical considerations*. PsyArXiv. <https://doi.org/10.31234/osf.io/x3b9k>
+- Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M. D., & Fieach, C. J. (under review at *Behavioral and Brain Sciences*). The Signal-To-Noise Ratio Hypothesis of Intelligence.
+
+- **Frischkorn, G. T.**, & Oberauer, K. (invited for revision at *JEP: General*). Is the Anti-Saccade Task a Valid Measure of Inhibition? Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/sbyqt>
+
+- Li, C., **Frischkorn, G. T.**, Dames, H., & Oberauer, K. (invited for revision at *Cognition*). The Benefit of Removing Information from Working Memory: Increasing Available Cognitive Resources or Reducing Interference? Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/s8kcz>
+
+- Löffler, C., Sadus, K., **Frischkorn, G. T.**, Hagemann, D., & Schubert, A.-L. (under review at *Journal of Experimental Psychology: Learning, Memory & Cognition*). The factor structure of executive functions measured with electrophysiological correlates: An event-related potential analysis. Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/kfqt4>
+
+- **Frischkorn, G. T.**\*, & Popov, V.\* (invited for revision at *Behavior Research Methods*). A tutorial for estimating mixture models for visual working memory tasks in brms: Introducing the Bayesian Measurement Modeling (bmm) package for R.  Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/umt57>
+
+- Nunez, M. D., Schubert, A.-L., **Frischkorn, G. T.**, & Oberauer, K. (invited for revision at *Journal of Mathematical Psychology*). Cognitive models of decision-making with identifiable parameters: Diffusion Decision Models with within-trial noise. Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/h4fde>
+
+- Von Bastian, C. C., Blais, C., Brewer, G., Gyurkovics, M., Hedge, C., Kałamała, P., Meier, M., Oberauer, K., Rey-Mermet, A., Rouder, J. N., Souza, A. S., Bartsch, L. M., Conway, A. R. A., Draheim, C., Engle, R. W., Friedman, N. P., **Frischkorn, G. T.**, Gustavson, D. E., Koch, I., … Wiemers, E. (in preparation). Advancing the understanding of individual differences in attentional control: Theoretical, methodological, and analytical considerations.  Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/x3b9k>
 
 ## Journal Articles
 
-### in press
+### 2025
 
-- **Frischkorn, G. T.** (accepted). Responsible Research Assessment requires structural more than procedural reforms. *Meta-Psychology*. Preprint available at: <https://psyarxiv.com/a4ky6/>
-- Dames, H., Musfeld, P., Popov, V., Oberauer, K., & **Frischkorn, G. T.** (accepted). Responsible Research Assessment Should Prioritize Theory Development and Testing Over Ticking Open Science Boxes. *Meta-Psychology*. Preprint available at: <https://psyarxiv.com/ad74m/>
+- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2025). Updating of information in working memory: Time course and consequences. Cognitive Psychology, 156, 101702. <https://doi.org/10.1016/j.cogpsych.2024.101702>
+
+### 2024
+
+- Schubert, A.-L., **Frischkorn, G. T.**, Sadus, K., Welhaf, M. S., Kane, M. J., & Rummel, J. (2024). The brief mind wandering three-factor scale (BMW-3). *Behavior Research Methods*. <https://doi.org/10.3758/s13428-024-02500-6>
+
+- Dames, H., Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2024). Removing information from working memory with a delay: Effective but not beneficial. *Psychonomic Bulletin & Review*. <https://doi.org/10.3758/s13423-024-02550-z>
+
+- Souza, A. S., **Frischkorn, G. T.**, & Oberauer, K. (2024). Older yet sharp: No general age-related decline in focusing attention. *Journal of Experimental Psychology: General*. <https://doi.org/10.1037/xge0001649>
+
+- Bartsch, L. M., **Frischkorn, G. T.**, & Shepherdson, P. (2024). When Load is Low, Working Memory is Shielded From Long-Term Memory's Influence. *Journal of Cognition* 7(1), Article 1. <https://doi.org/10.5334/joc.368>
+
+- Löffler, C., **Frischkorn, G. T.**, Hagemann, D., Sadus, K., & Schubert, A.-L. (2024). The common factor of executive functions measures nothing but speed of information uptake. *Psychological Research*. <https://doi.org/10.1007/s00426-023-01924-7>
+
+- **Frischkorn, G. T.** (2024). Responsible Research Assessment requires structural more than procedural reforms. *Meta-Psychology*, 8. <https://doi.org/10.15626/MP.2023.3734>
+
+- Dames, H., Musfeld, P., Popov, V., Oberauer, K., & **Frischkorn, G. T.** (2024). Responsible Research Assessment Should Prioritize Theory Development and Testing Over Ticking Open Science Boxes. *Meta-Psychology*, 8. <https://doi.org/10.15626/MP.2023.3735>
 
 ### 2023
 
@@ -71,8 +92,15 @@ featured_image: '/images/Publications.png'
 
 ## Invited Talks
 
-- **Frischkorn, G. T.** (2022, May). Measuring & dissociating cognitive processes: Problems and pitfalls exemplified with the Anti-Saccade Task. Working Memory, Cognition, and Development Laboratory, University of Geneva.
-- **Frischkorn, G. T.** (2021, May). Implications from cognitive psychology for measuring cognitive processes: The example of the anti-saccade task. Lehrstuhl für Allgemeine Psychologie: Cognition, Action, and Sustainability. Universität Freiburg
+- **Frischkorn, G. T.** (2024, July). *Analyzing data on the level of psychological processes*. Colloquium of the Psychological Institute, Johannes-Gutenberg University Mainz.
+
+- **Frischkorn, G. T.** (2024, May). *The bmm R package: Easy and Accessible Bayesian Measurement Models using 'brms'.* Department of Statistics, Computational Statistics Lab, TU Dortmund.
+
+- **Frischkorn, G. T.** (2024, May). *Measuring psychological theories requires formal theories.* Faculty for Psychology, Sigmund Freud University Vienna.
+
+- **Frischkorn, G. T.** (2022, May). *Measuring & dissociating cognitive processes: Problems and pitfalls exemplified with the Anti-Saccade Task.* Working Memory, Cognition, and Development Laboratory, University of Geneva.
+
+- **Frischkorn, G. T.** (2021, May). *Implications from cognitive psychology for measuring cognitive processes: The example of the anti-saccade task.* Chair of General Psychology: Cognition, Action, and Sustainability. University of Freiburg
 
 ## Conference Presentations
 
