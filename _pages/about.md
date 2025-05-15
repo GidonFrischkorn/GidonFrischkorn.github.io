@@ -1,6 +1,6 @@
 ---
 title: CV
-subtitle: updated on 2025-01-15 
+subtitle: updated on 2025-05-15 
 featured_image: 
 pdf_file: 
 featured_image: '/images/Banner.png'

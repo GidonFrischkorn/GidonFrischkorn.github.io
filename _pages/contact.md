@@ -1,8 +1,12 @@
 ---
 title: Get in Touch!
 subtitle: Feel free to contact me via the form below.
-description: Or via mail: gidon.frischkorn@psychologie.uzh.ch
-featured_image: /images/demo/contact.jpg
+description:
+featured_image: '/images/Banner.png'
 ---
+
+Contact me via mail: gidon.frischkorn@psychologie.uzh.ch, or via the contact form below.
+
+## Contact Form
 
 {% include contact-form.html %}
