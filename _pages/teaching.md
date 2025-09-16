@@ -10,10 +10,10 @@ toc: true
 
 I have held workshops in a broad range of topics in the area of statistics and computational modelling in Psychology. Specifically, I have held worksops on:
 
-1) Structural Equation Modelling in Psychology & Social Sciences (2-3 days)
-2) Introdcution to Bayesian Statistics in R with brms (1 - 3 days, depending on depth)
-3) Simulation Studies to challenge intuitions about statistics and psychological theories (2 - 3 days)
-4) Analyzing Data on the level of cognitive processes / Introduction to the R package: bmm (2 - 3 days)
+1. Structural Equation Modelling in Psychology & Social Sciences (2-3 days)
+2. Introdcution to Bayesian Statistics in R with brms (1 - 3 days, depending on depth)
+3. Simulation Studies to challenge intuitions about statistics and psychological theories (2 - 3 days)
+4. Analyzing Data on the level of cognitive processes / Introduction to the R package: bmm (2 - 3 days)
 
 If you are interested in including a workshop or course along the lines of these topics in your PhD or Graduate program, please contact me.
 
