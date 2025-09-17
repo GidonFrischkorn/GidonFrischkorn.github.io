@@ -1,19 +1,17 @@
 ---
 title: Teaching & Workshops
 subtitle: 
-featured_image: /images/demo/about.jpg
-sidebar: toc
-toc: true
+featured_image: '/images/Banner.png'
 ---
 
 ## Workshops
 
 I have held workshops in a broad range of topics in the area of *statistics* and *computational modelling* in Psychology. Specifically, I have held worksops on:
 
-1. Structural Equation Modelling in Psychology & Social Sciences (2-3 days)
-2. Introdcution to Bayesian Statistics in R with brms (1 - 3 days, depending on depth)
-3. Simulation Studies to challenge intuitions about statistics and psychological theories (2 - 3 days)
-4. Analyzing Data on the level of cognitive processes / Introduction to the R package: bmm (2 - 3 days)
+1. [Structural Equation Modelling in Psychology & Social Sciences](https://github.com/GidonFrischkorn/Workshop_SEM) (2-3 days)
+2. [Introdcution to Bayesian Statistics in R with brms](https://github.com/GidonFrischkorn/Workshop_BayesianStatistics) (1 - 3 days, depending on depth)
+3. [Analyzing Data on the level of cognitive processes / Introduction to the R package bmm](https://github.com/GidonFrischkorn/ws-process-level-data-analysis) (2 - 3 days)
+4. Simulation Studies to challenge intuitions about statistics and psychological theories (2 - 3 days)
 
 If you are interested in including one of my workshops in your PhD or Graduate program, please contact me.
 
