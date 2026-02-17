@@ -3,8 +3,12 @@
 .RData
 .Ruserdata
 
+**/.DS_Store
+
 /local
 /_site
 /.quarto
 /.quarto/
 **/*.quarto_ipynb
+
+
