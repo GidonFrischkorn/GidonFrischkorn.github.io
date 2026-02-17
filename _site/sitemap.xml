@@ -1,41 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url>
-<loc>http://localhost:4000/about</loc>
-<lastmod>2025-01-15T14:06:59+01:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/contact</loc>
-<lastmod>2025-01-15T14:06:59+01:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/publications</loc>
-<lastmod>2025-01-15T14:06:59+01:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/teaching</loc>
-<lastmod>2025-01-15T14:06:59+01:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/thanks</loc>
-<lastmod>2025-01-15T14:06:59+01:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/project/2023-01-01-measurementmodels</loc>
-<lastmod>2022-12-02T01:00:00+01:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/project/2023-02-01-bindinghypothesis</loc>
-<lastmod>2023-01-01T01:00:00+01:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/blog/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/images/PDF/CV_GidonFrischkorn.pdf</loc>
-<lastmod>2025-01-15T13:48:56+01:00</lastmod>
-</url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.gfrischkorn.org/index.html</loc>
+    <lastmod>2026-02-17T10:13:39.040Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/about.html</loc>
+    <lastmod>2026-02-17T09:41:12.945Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/projects/measurement-models.html</loc>
+    <lastmod>2026-02-17T09:26:08.405Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/contact.html</loc>
+    <lastmod>2026-02-17T09:25:38.902Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/teaching.html</loc>
+    <lastmod>2026-02-17T09:25:36.696Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/projects/binding-hypothesis.html</loc>
+    <lastmod>2026-02-17T09:26:09.513Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/publications.html</loc>
+    <lastmod>2026-02-17T09:44:57.093Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/software.html</loc>
+    <lastmod>2026-02-17T09:25:35.594Z</lastmod>
+  </url>
 </urlset>

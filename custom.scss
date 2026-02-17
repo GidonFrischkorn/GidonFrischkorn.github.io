@@ -1,0 +1,46 @@
+/*-- scss:rules --*/
+
+// Circular portrait on the trestles about page
+.about-image img {
+  border-radius: 50% !important;
+}
+
+// Give the project listing cards a consistent minimum height
+.quarto-grid-item {
+  min-height: 180px;
+}
+
+// ORCID and Google Scholar icons using the locally hosted Academicons font.
+// Quarto generates <i class="bi bi-orcid"> from icon: orcid in YAML.
+// Using i.bi.bi-orcid (two classes) gives specificity 0,2,2 which beats
+// Bootstrap Icons' [class*=" bi-"]::before at 0,1,1, even with !important.
+i.bi.bi-orcid::before {
+  font-family: 'Academicons' !important;
+  content: "\e9d9" !important;
+}
+
+i.bi.bi-google-scholar::before {
+  font-family: 'Academicons' !important;
+  content: "\e9d4" !important;
+}
+
+// Widen the page beyond Quarto's default ~800px content column.
+// Redefine the grid template, changing only the body-content column
+// from calc(850px - 3em) to calc(1050px - 3em).
+@media (min-width: 992px) {
+  #quarto-content.page-columns {
+    grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start page-start-inset] 35px [body-start-outset] 35px [body-start] 1.5em [body-content-start] minmax(500px, calc(1050px - 3em)) [body-content-end] 1.5em [body-end] 35px [body-end-outset] minmax(75px, 145px) [page-end-inset] 35px [page-end] 5fr [screen-end-inset] 1.5em [screen-end] !important;
+  }
+
+  // Publications page uses toc-left grid — widen its body-content column too.
+  #quarto-content.page-columns.toc-left {
+    grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start] 35px [page-start-inset] minmax(0px, 175px) [body-start-outset] 35px [body-start] 1.5em [body-content-start] minmax(450px, calc(1000px - 3em)) [body-content-end] 1.5em [body-end] 50px [body-end-outset] minmax(0px, 200px) [page-end-inset] 50px [page-end] 5fr [screen-end-inset] 1.5em [screen-end] !important;
+  }
+}
+
+// Trestles about page: slim the sidebar so the bio text gets more room.
+// Default is 42%; 30% keeps the photo large enough while widening the text column.
+.quarto-about-trestles .about-entity {
+  flex: 0 0 30% !important;
+  max-width: 30% !important;
+}

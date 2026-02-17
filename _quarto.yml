@@ -1,0 +1,52 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - CNAME
+    - images/academicons-1.9.4/
+
+website:
+  title: "Gidon Frischkorn"
+  description: "Psychological Methods - Psychometrics - Cognitive Psychology"
+  favicon: images/favicon.png
+  site-url: https://www.gfrischkorn.org
+  navbar:
+    left:
+      - href: index.qmd
+        text: About
+      - href: publications.qmd
+        text: Publications
+      - href: software.qmd
+        text: Software
+      - href: teaching.qmd
+        text: Teaching
+      - href: about.qmd
+        text: CV
+      - href: contact.qmd
+        text: Contact
+    right:
+      - icon: github
+        href: https://github.com/GidonFrischkorn
+        aria-label: GitHub
+      - icon: linkedin
+        href: https://www.linkedin.com/in/gidon-frischkorn-4913431b1/
+        aria-label: LinkedIn
+  page-footer:
+    center: "Psychological Methods - Psychometrics - Cognitive Psychology"
+  back-to-top-navigation: false
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    css: custom.scss
+    include-in-header:
+      - text: |
+          <link rel="stylesheet" href="/images/academicons-1.9.4/css/academicons.min.css">
+    toc: false
+    link-external-icon: false
+    link-external-newwindow: true
+
+execute:
+  freeze: auto

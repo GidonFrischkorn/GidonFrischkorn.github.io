@@ -21,7 +21,7 @@ suppressPackageStartupMessages({
 
 ORCID_ID      <- Sys.getenv("ORCID_ID")
 SELF_FAMILY   <- "Frischkorn"
-PUBS_FILE     <- "_pages/publications.md"
+PUBS_FILE     <- "publications.qmd"
 CONTACT_EMAIL <- "gidon.frischkorn@psychologie.uzh.ch"  # for CrossRef polite pool
 
 if (nchar(ORCID_ID) == 0) stop("ORCID_ID environment variable is not set.")
