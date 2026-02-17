@@ -8,15 +8,9 @@ toc-location: right
 
 [Google Scholar](https://scholar.google.com/citations?user=gpol3F4AAAAJ&hl=de)
 
-## In press
-
-- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (in press). Forgetting from working memory through temporal decay: Evidence from an interference-free forgetting paradigm. *Journal of Experimental Psychology: Learning, Memory, and Cognition*. \[[preprint](https://doi.org/10.31234/osf.io/mcpf7_v1)\]
-
 ## Preprints & Papers in preparation
 
 - Göttmann, J., **Frischkorn, G. T.**, Oberauer, K., Schaefer, S. B., & Schubert, A.-L. (under review at *Journal of Mathematical Psychology*). Modeling Individual Differences in Working Memory: Subject-Level Parameter Recovery within the Memory Measurement Model Framework (M³). \[[preprint](https://doi.org/10.31234/osf.io/945d2_v1)\]
-
-- **Frischkorn, G. T.**, Courage, I., Dames, H., Dignath, D., Pfeuffer, C., Schiltenwolf, M., Kiesel, A., & Oberauer, K. (invited for revision at *Journal of Cognition*). Bindings for Action: Bridging the Gap Between Theories of Procedural Working Memory and Action Control Research. \[[preprint](https://doi.org/10.31234/osf.io/ut4e9_v1)\]
 
 - Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M. D., & Fieach, C. J. (preprint). The Signal-To-Noise Ratio Hypothesis of Intelligence. \[[preprint](https://doi.org/10.31219/osf.io/nkms3_v1)\]
 
@@ -25,6 +19,12 @@ toc-location: right
 - Von Bastian, C. C., Blais, C., Brewer, G., Gyurkovics, M., Hedge, C., Kałamała, P., Meier, M., Oberauer, K., Rey-Mermet, A., Rouder, J. N., Souza, A. S., Bartsch, L. M., Conway, A. R. A., Draheim, C., Engle, R. W., Friedman, N. P., **Frischkorn, G. T.**, Gustavson, D. E., Koch, I., … Wiemers, E. (in preparation). Advancing the understanding of individual differences in attentional control: Theoretical, methodological, and analytical considerations. \[[preprint](https://doi.org/10.31234/osf.io/x3b9k)\]
 
 ## Journal Articles
+
+### 2026
+
+- **Frischkorn, G. T.**, Courage, I., Dames, H., Dignath, D., Pfeuffer, C. U., Schiltenwolf, M., Kiesel, A., & Oberauer, K. (2026). Bindings for Action: Bridging the Gap Between Theories of Procedural Working Memory and Action Control Research. Journal of Cognition, 9(1), 16. https://doi.org/10.5334/joc.488
+
+- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2026). Can we process information without encoding it into working memory? Journal of Experimental Psychology: Learning, Memory, and Cognition.  https://doi.org/10.1037/xlm0001585
 
 ### 2025
 
