@@ -1,6 +1,6 @@
 basic_settings:
   site_title: Gidon Frischkorn
-  site_subtitle: Psychometrics - Computational Modeling - Cognitive Psychology
+  site_subtitle: Psychological Methods - Psychometrics - Cognitive Psychology
   favicon_image: /images/favicon.png
 
 header_settings:
@@ -8,7 +8,7 @@ header_settings:
   logo_width: 200
 
 footer_settings:
-  footer_tagline: Psychometrics - Computational Modeling - Cognitive Psychology
+  footer_tagline: Psychological Methods - Psychometrics - Cognitive Psychology
 
 hero_settings:
   overlay_opacity: 0.5

@@ -30,7 +30,7 @@ jobs:
           restore-keys: ${{ runner.os }}-r-4.4-publications-
 
       - name: Install R packages
-        run: install.packages(c("httr2", "stringr", "purrr"))
+        run: install.packages(c("httr2", "jsonlite", "stringr", "purrr"))
         shell: Rscript {0}
 
       - name: Run publications update script

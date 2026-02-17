@@ -11,25 +11,35 @@ featured_image: '/images/Publications.png'
 
 ## Preprints & Papers in preparation
 
-- Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M. D., & Fieach, C. J. (under review at *Behavioral and Brain Sciences*). The Signal-To-Noise Ratio Hypothesis of Intelligence.
+- Göttmann, J., **Frischkorn, G. T.**, Oberauer, K., Schaefer, S. B., & Schubert, A.-L. (under review at *Journal of Mathematical Psychology*). Modeling Individual Differences in Working Memory: Subject-Level Parameter Recovery within the Memory Measurement Model Framework (M³). Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/945d2_v1>
 
-- **Frischkorn, G. T.**, & Oberauer, K. (invited for revision at *JEP: General*). Is the Anti-Saccade Task a Valid Measure of Inhibition? Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/sbyqt>
+- **Frischkorn, G. T.**, Courage, I., Dames, H., Dignath, D., Pfeuffer, C., Schiltenwolf, M., Kiesel, A., & Oberauer, K. (invited for revision at *Journal of Cognition*). Bindings for Action: Bridging the Gap Between Theories of Procedural Working Memory and Action Control Research. Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/ut4e9_v1>
 
-- Li, C., **Frischkorn, G. T.**, Dames, H., & Oberauer, K. (invited for revision at *Cognition*). The Benefit of Removing Information from Working Memory: Increasing Available Cognitive Resources or Reducing Interference? Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/s8kcz>
+- Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M. D., & Fieach, C. J. (Preprint). The Signal-To-Noise Ratio Hypothesis of Intelligence. Preprint available at *PsyArXiv*: <https://doi.org/10.31219/osf.io/nkms3_v1>
 
-- Löffler, C., Sadus, K., **Frischkorn, G. T.**, Hagemann, D., & Schubert, A.-L. (under review at *Journal of Experimental Psychology: Learning, Memory & Cognition*). The factor structure of executive functions measured with electrophysiological correlates: An event-related potential analysis. Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/kfqt4>
-
-- **Frischkorn, G. T.**\*, & Popov, V.\* (invited for revision at *Behavior Research Methods*). A tutorial for estimating mixture models for visual working memory tasks in brms: Introducing the Bayesian Measurement Modeling (bmm) package for R.  Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/umt57>
-
-- Nunez, M. D., Schubert, A.-L., **Frischkorn, G. T.**, & Oberauer, K. (invited for revision at *Journal of Mathematical Psychology*). Cognitive models of decision-making with identifiable parameters: Diffusion Decision Models with within-trial noise. Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/h4fde>
+- Rey-Mermet, A., Haaf, J., Donzallaz, M., **Frischkorn, G. T.**, Hedge, C., Kempkens, N., Oberauer, K., & Schubert, A.-L. (under review at *Perspectives on Psychological Science*). How can we achieve a good measurement of attentional control? Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/ugk4h_v1>
 
 - Von Bastian, C. C., Blais, C., Brewer, G., Gyurkovics, M., Hedge, C., Kałamała, P., Meier, M., Oberauer, K., Rey-Mermet, A., Rouder, J. N., Souza, A. S., Bartsch, L. M., Conway, A. R. A., Draheim, C., Engle, R. W., Friedman, N. P., **Frischkorn, G. T.**, Gustavson, D. E., Koch, I., … Wiemers, E. (in preparation). Advancing the understanding of individual differences in attentional control: Theoretical, methodological, and analytical considerations.  Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/x3b9k>
 
 ## Journal Articles
 
+### In press
+
+- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (in press). Can We Process Information Without Encoding It into Working Memory? *Journal of Experimental Psychology: Learning, Memory, and Cognition*. Preprint available at *PsyArXiv*: <https://doi.org/10.31234/osf.io/mcpf7_v1>
+
 ### 2025
 
-- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2025). Updating of information in working memory: Time course and consequences. Cognitive Psychology, 156, 101702. <https://doi.org/10.1016/j.cogpsych.2024.101702>
+- **Frischkorn, G. T.**, & Oberauer, K. (2025). Is the antisaccade task a valid measure of inhibition? *Journal of Experimental Psychology: General*. <https://doi.org/10.1037/xge0001808>
+
+- **Frischkorn, G. T.**, & Popov, V. (2025). A tutorial for estimating Bayesian hierarchical mixture models for visual working memory tasks: Introducing the Bayesian Measurement Modeling (bmm) package for R. *Behavior Research Methods*, *57*(5), 144. <https://doi.org/10.3758/s13428-025-02643-0>
+
+- Nunez, M. D., Schubert, A.-L., **Frischkorn, G. T.**, & Oberauer, K. (2025). Cognitive models of decision-making with identifiable parameters: Diffusion decision models with within-trial noise. *Journal of Mathematical Psychology*, *125*, 102917. <https://doi.org/10.1016/j.jmp.2025.102917>
+
+- Li, C., **Frischkorn, G. T.**, Dames, H., & Oberauer, K. (2025). The Benefit of Removing Information from Working Memory: Increasing Available Cognitive Resources or Reducing Interference? *Cognition*, *260*. <https://doi.org/10.1016/j.cognition.2025.106134>
+
+- Löffler, C., Sadus, K., **Frischkorn, G. T.**, Hagemann, D., & Schubert, A.-L. (2025). The factor structure of executive functions measured with electrophysiological correlates: An event-related potential analysis. *Journal of Experimental Psychology: Learning, Memory, and Cognition*. <https://doi.org/10.1037/xlm0001549>
+
+- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2025). Updating of information in working memory: Time course and consequences. *Cognitive Psychology*, *156*, 101702. <https://doi.org/10.1016/j.cogpsych.2024.101702>
 
 ### 2024
 
