@@ -1,6 +1,7 @@
 ---
 title: Get in Touch
 subtitle: Feel free to reach out by email.
+title-block-banner: true
 ---
 
 The best way to contact me is by email: [gidon.frischkorn@psychologie.uzh.ch](mailto:gidon.frischkorn@psychologie.uzh.ch)

@@ -2,7 +2,7 @@
 # scripts/update_publications.R
 #
 # Fetches journal articles from ORCID, enriches metadata via CrossRef,
-# and replaces the "## Journal Articles" section of _pages/publications.md.
+# and replaces the "## Journal Articles" section of publications.qmd.
 #
 # Required environment variable:
 #   ORCID_ID  - your ORCID iD, e.g. "0000-0000-0000-0000"

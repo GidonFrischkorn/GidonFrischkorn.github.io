@@ -1,9 +1,9 @@
 ---
 title: Publications
+title-block-banner: true
 toc: true
-toc-depth: 3
-toc-location: left
-toc-title: "Contents"
+toc-depth: 2
+toc-location: right
 ---
 
 [Google Scholar](https://scholar.google.com/citations?user=gpol3F4AAAAJ&hl=de)

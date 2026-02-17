@@ -1,6 +1,7 @@
 ---
-title: CV
-subtitle: updated on 2026-02-17
+title: Curriculum Vitae
+date: 2026-02-17
+title-block-banner: true
 ---
 
 <iframe src="/images/PDF/CV_GidonFrischkorn_NEW_2026.pdf" style="width:100%; height:1200px;" frameborder="0"></iframe>

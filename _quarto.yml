@@ -20,7 +20,7 @@ website:
         text: Software
       - href: teaching.qmd
         text: Teaching
-      - href: about.qmd
+      - href: cv.qmd
         text: CV
       - href: contact.qmd
         text: Contact
@@ -32,15 +32,14 @@ website:
         href: https://www.linkedin.com/in/gidon-frischkorn-4913431b1/
         aria-label: LinkedIn
   page-footer:
-    center: "Psychological Methods - Psychometrics - Cognitive Psychology"
+    center: "© 2026 Gidon Frischkorn"
   back-to-top-navigation: false
 
 format:
   html:
     theme:
-      light: flatly
-      dark: darkly
-    css: custom.scss
+      light: [cosmo, theme-light.scss, custom.scss]
+      dark:  [cosmo, theme-dark.scss, custom.scss]
     include-in-header:
       - text: |
           <link rel="stylesheet" href="/images/academicons-1.9.4/css/academicons.min.css">

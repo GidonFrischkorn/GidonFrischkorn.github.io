@@ -1,6 +1,7 @@
 ---
 title: Software
 subtitle: R packages for cognitive measurement and Bayesian modeling
+title-block-banner: true
 ---
 
 Most R packages for cognitive measurement models require researchers to write their own Stan or JAGS code. The packages I work on wrap those models in a brms-compatible interface, so fitting them feels more like running a regression than writing a custom sampler.

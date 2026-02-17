@@ -1,10 +1,11 @@
 ---
 title: "Gidon Frischkorn, Ph.D."
-subtitle: "Psychological Methods · Psychometrics · Cognitive Psychology"
+subtitle: "Psychological Methods · Cognitive Psychology · Psychometrics"
 about:
   template: trestles
   image: images/Frischkorn_Gidon_small.jpg
   image-shape: round
+  image-width: 12em
   links:
     - icon: github
       text: GitHub
