@@ -1,0 +1,51 @@
+name: Update Publications
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'   # 1st of each month at 06:00 UTC
+  workflow_dispatch:       # also triggerable manually from the Actions tab
+
+permissions:
+  contents: write          # needed to commit and push the updated file
+
+jobs:
+  update-publications:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.4'
+          use-public-rspm: true   # use pre-compiled binaries for fast installs
+
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-r-4.4-publications-${{ hashFiles('scripts/update_publications.R') }}
+          restore-keys: ${{ runner.os }}-r-4.4-publications-
+
+      - name: Install R packages
+        run: install.packages(c("httr2", "stringr", "purrr"))
+        shell: Rscript {0}
+
+      - name: Run publications update script
+        env:
+          ORCID_ID: ${{ vars.ORCID_ID }}
+        run: Rscript scripts/update_publications.R
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _pages/publications.md
+          if git diff --staged --quiet; then
+            echo "No changes to publications — skipping commit."
+          else
+            git commit -m "chore: auto-update journal articles from ORCID"
+            git push
+          fi
