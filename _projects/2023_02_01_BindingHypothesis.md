@@ -8,25 +8,18 @@ can form and maintain in working memory.'
 featured_image: '/images/Banner.png'
 ---
 
-Almost all cognitive processing requires the temporary storage of information. For example, when solving math problems, such as (3 + 6) * 2, the terms and intermediate results must be held active in memory to solve the equation. The cognitive system used for this is working memory (WM). Individual differences in the capacity of WM - the amount of information people can hold active for current processing - is strongly related to various cognitive abilities, such as intelligence, processing speed, and learning. Yet, it is still unclear which processes limit the capacity of WM. Thus, identifying the specific cognitive processes limiting WM capacity is essential for a better understanding of cognitive individual differences in general.
+Almost all cognitive processing requires the temporary storage of information. When solving (3 + 6) * 2, you have to hold the intermediate result in mind while completing the calculation. The system responsible for this is working memory (WM). Working memory capacity — how much information a person can hold active at once — predicts a surprisingly broad range of other abilities, including fluid intelligence, processing speed, and learning. What limits that capacity, though, is still not well understood.
 
 ## The Binding Hypothesis
 
->The binding hypothesis is a theoretical idea proposing that working memory capacity (WMC) is limited by the number and strength of bindings a person can form and maintain in WM. 
+>The binding hypothesis proposes that working memory capacity (WMC) is limited by the number and strength of bindings a person can form and maintain in WM.
 
-Such bindings either associate declarative information with each other, for example a digit with its position in an authentication code - so-called declarative bindings -, or associate declarative information with behavioral responses, for example a key press on my keyboard to a certain letter - so-called procedural bindings. In this project, I...
-1. ...develop tasks and formal models that provide theoretically grounded measures of the ability to form and maintain both binding types in WM. 
-2. ... then examine if individual differences in binding ability can explain why WMC is limited, and why individual differences in WMC are related to fluid intelligence, processing speed, and learning.
+Two types of binding matter here. Declarative bindings link pieces of information to each other — a digit to its position in a PIN, for example. Procedural bindings link information to actions — a letter to a specific key on a keyboard. In this project, I develop tasks and formal models that measure binding ability in both domains, then test whether individual differences in that ability can explain why working memory capacity is limited and why those limits track so closely with intelligence and other cognitive abilities.
 
-## Project Goals
+## Project goals
 
-With these steps, this project overcomes two limitations of previous research that, so far, precluded a strong test of the binding hypothesis:
+Two problems have blocked a clean test of the binding hypothesis so far. First, standard tests for procedural bindings — speeded choice tasks, mainly — do not adequately control for contributions from long-term memory, which contaminates the measure. Second, behavioral performance indicators alone cannot isolate binding ability; measurement models are needed to separate it from other sources of variance.
 
-* First, existing tests for procedural bindings in WM - in particular, speeded choice tasks - often fail to control for contributions of long-term memory (LTM) to performance. 
-* Second, behavioral indicators do not provide process pure measures for binding ability. For this, measurement models isolating the contribution of bindings to performance in a cognitive task are required. 
+I address both problems directly, using newly developed tasks and measurement models to ask: does a general binding ability explain why WMC is limited, and does it account for why individual differences in WMC predict intelligence, processing speed, and learning?
 
-In the project I aim to address these two main problems of previous research testing the binding hypothesis. For this, I use newly developed tasks and measurement models to investigate:  
-1. if a general ability for forming and maintaining bindings in both declarative and procedural WM can explain why WMC is limited.
-2. if binding ability provides a unifying account of the relationship of individual differences in WMC with intelligence, processing speed, and learning. 
-
-Ultimately, this project thus aims to contributes to a theory-grounded measurement of WMC and thereby enables to adequately test if binding ability provides a unifying account of cognitive individual differences.
+That is the test the binding hypothesis has been waiting for.

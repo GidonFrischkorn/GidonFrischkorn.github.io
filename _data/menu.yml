@@ -3,6 +3,8 @@ menu_items:
     url: '/'
 #  - title: 'Publications'
 #    url: '/publications'
+  - title: 'Software'
+    url: '/software'
   - title: 'Teaching'
     url: '/teaching'
 #  - title: 'Blog'
