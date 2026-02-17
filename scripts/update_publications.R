@@ -49,7 +49,7 @@ extract_journal_dois <- function(groups) {
   dois <- character()
   for (grp in groups) {
     s <- grp$`work-summary`[[1]]
-    if (is.null(s$`work-type`) || s$`work-type` != "journal-article") next
+    if (is.null(s$type) || s$type != "journal-article") next
     for (ext in s$`external-ids`$`external-id` %||% list()) {
       if (isTRUE(ext$`external-id-type` == "doi")) {
         dois <- c(dois, tolower(str_trim(ext$`external-id-value`)))
