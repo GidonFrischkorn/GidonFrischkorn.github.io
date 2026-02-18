@@ -4,22 +4,38 @@ subtitle: R packages for cognitive measurement and Bayesian modeling
 title-block-banner: true
 ---
 
-Most R packages for cognitive measurement models require researchers to write their own Stan or JAGS code. The packages I work on wrap those models in a brms-compatible interface, so fitting them feels more like running a regression than writing a custom sampler.
+In addition to my research, I develop open source software. The package I work on wraps cognitive measurement models in a `brms`-compatible interface, so fitting them feels more like running a regression than writing a custom sampler. Below you can find an overview of my open source software contributions.
 
 ---
 
 ## bmm
 
-[bmm](https://venpopov.github.io/bmm/) is an R package I co-develop with [Ven Popov](https://venpopov.com) for fitting cognitive measurement models in a hierarchical Bayesian framework. It builds on [brms](https://paul-buerkner.github.io/brms/) and Stan, and uses the same formula syntax. If you know brms, you already know most of how bmm works.
+:::: {.columns}
 
-The current focus is visual working memory, where several competing measurement models exist but have historically been painful to fit. bmm implements them all in one place.
+::: {.column width="20%"}
+![](images/bmm-logo.png)
+:::
 
-### Models
+::: {.column width="5%"}
+:::
 
-- [2-parameter mixture model](http://dx.doi.org/10.1038/nature06860) (Zhang & Luck, 2008)
-- [3-parameter mixture model](https://doi.org/10.1167/9.10.7) (Bays et al., 2009)
-- [Interference Measurement Model](https://doi.org/10.1167/17.5.11) (Oberauer & Lin, 2017)
-- [Signal Discrimination Model](http://doi.org/10.1037/rev0000328) (Oberauer, 2023)
+::: {.column width="75%"}
+
+**bmm: Bayesian Measurement Models for Cognitive Processes**
+
+Role: Co-author and maintainer
+
+[Website](https://venpopov.com/bmm/index.html){.btn .btn-outline-primary .btn-sm role="button"} 
+[GitHub](https://github.com/venpopov/bmm){.btn .btn-outline-primary .btn-sm role="button"} 
+[Issues](https://github.com/venpopov/bmm/issues){.btn .btn-outline-primary .btn-sm role="button"}
+
+:::
+
+::::
+
+`bmm` is an R package I co-develop with [Ven Popov](https://venpopov.com) for fitting cognitive measurement models in a hierarchical Bayesian framework. It builds on [`brms`](https://paul-buerkner.github.io/brms/) and Stan, and uses the same formula syntax. If you know brms, you already know most of how bmm works.
+
+The current focus is measurement models for  working memory. `bmm` implements different measurement models all in one place, providing a flexible and user-friendly interface for Bayesian hierarchical mixture models and related cognitive measurement models.
 
 ### Install
 
@@ -31,8 +47,6 @@ install.packages("bmm")
 remotes::install_github("venpopov/bmm")
 ```
 
-### Links
+### Selected References
 
-- Documentation: [venpopov.github.io/bmm](https://venpopov.github.io/bmm/)
-- Source: [github.com/venpopov/bmm](https://github.com/venpopov/bmm)
-- Bug reports and feature requests: [github.com/venpopov/bmm/issues](https://github.com/venpopov/bmm/issues)
+- Frischkorn, G. T., & Popov, V. (2025). A tutorial for estimating Bayesian hierarchical mixture models for visual working memory tasks: Introducing the Bayesian Measurement Modeling (bmm) package for R. *Behavior Research Methods, 57*(5), 144. [https://doi.org/10.3758/s13428-025-02643-0](https://doi.org/10.3758/s13428-025-02643-0){target="_blank"}
