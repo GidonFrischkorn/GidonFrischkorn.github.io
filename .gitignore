@@ -11,4 +11,6 @@
 /.quarto/
 **/*.quarto_ipynb
 
+*.docx
+
 
