@@ -20,6 +20,10 @@ toc-location: right
 
 ## Journal Articles
 
+### 2026
+
+- **Frischkorn, G. T.**, Courage, I., Dames, H., Dignath, D., Pfeuffer, C. U., Schiltenwolf, M., Kiesel, A., & Oberauer, K. (2026). Bindings for Action: Bridging the Gap Between Theories of Procedural Working Memory and Action Control Research. *Journal of Cognition*, *9*(1). <https://doi.org/10.5334/joc.488>
+
 ### 2025
 
 - **Frischkorn, G. T.** & Oberauer, K. (2025). Is the antisaccade task a valid measure of inhibition?. *Journal of Experimental Psychology: General*, *154*(9), 2456-2481. <https://doi.org/10.1037/xge0001808>
