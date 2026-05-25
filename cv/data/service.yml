@@ -1,0 +1,69 @@
+editorial:
+  - role:
+      en: "Associate Editor"
+      de: "Associate Editor"
+    journal: "Journal of Cognition"
+  - role:
+      en: "Recommender"
+      de: "Recommender"
+    journal: "PCI: Registered Reports"
+  - role:
+      en: "Recommender"
+      de: "Recommender"
+    journal: "PCI: Psychology"
+  - role:
+      en: "Editorial Board Member"
+      de: "Mitglied des Editorial Board"
+    journal: "Psychological Science"
+  - role:
+      en: "Consulting Editor"
+      de: "Consulting Editor"
+    journal: "Behavior Research Methods"
+
+reviewing_funding:
+  - "Swiss National Science Foundation"
+  - "National Science Center Poland"
+
+reviewing_journals:
+  - "Advances in Methods and Practices in Psychological Science"
+  - "Behavior Research Methods"
+  - "Current Directions in Psychological Science"
+  - "Experimental Psychology"
+  - "Journal of Experimental Psychology: General"
+  - "Journal of Experimental Psychology: Learning, Memory, and Cognition"
+  - "Memory & Cognition"
+  - "Psychological Review"
+  - "Psychological Science"
+  - "Quarterly Journal of Experimental Psychology"
+
+reviewing_note:
+  en: "Additional international journals (> 20 total)"
+  de: "Weitere internationale Zeitschriften (> 20 insgesamt)"
+
+memberships:
+  - "Psychonomic Society"
+  - "European Society of Cognitive Psychology (ESCoP)"
+  - "Society for the Improvement of Psychological Science"
+
+self_governance:
+  - title:
+      en: "ECR Representative, Strategy Committee"
+      de: "Mittelbauvertretung, Strategieausschuss"
+    description:
+      en: "Department of Psychology, University of Zurich"
+      de: "Psychologisches Institut, Universität Zürich"
+    date: "10/2019 -- 06/2024"
+  - title:
+      en: "Deputy ECR Representative, Departmental Assembly"
+      de: "Stv. Mittelbauvertretung, Institutsversammlung"
+    description:
+      en: "Department of Psychology, University of Zurich"
+      de: "Psychologisches Institut, Universität Zürich"
+    date: "10/2019 -- 06/2024"
+  - title:
+      en: "Deputy ECR Representative, Appointment Committee"
+      de: "Stv. Mittelbauvertretung, Berufungskommission"
+    description:
+      en: "Professorship \"Work and Organizational Psychology,\" Dept. of Psychology, UZH"
+      de: "Professur \"Arbeits- und Organisationspsychologie\", Psychologisches Institut, UZH"
+    date: "2024"

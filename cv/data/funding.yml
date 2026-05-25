@@ -1,0 +1,95 @@
+total:
+  en: "Total third-party funding acquired (PI share): > CHF 1,000,000"
+  de: "Total eingeworbene Drittmittel (PI-Anteil): > CHF 1'000'000"
+
+grants:
+  - number: 1
+    title:
+      en: "The Binding Hypothesis -- A Unified Account of Cognitive Individual Differences"
+      de: "Die Bindungshypothese -- Ein einheitlicher Ansatz für kognitive individuelle Unterschiede"
+    agency: "SNF"
+    type:
+      en: "competitive"
+      de: "kompetitiv"
+    role: "PI"
+    duration: "2023--2026"
+    amount: "CHF 916'510"
+    summary:
+      en: "This project investigates individual differences in cognitive processes by combining experimental paradigms with formal measurement and process models. The aim is to develop theoretically grounded indicators of cognitive processes and examine their relationship with higher-order performance measures. The project is run as an independent research group with full budget and personnel responsibility."
+      de: "Dieses Projekt untersucht individuelle Unterschiede in kognitiven Prozessen durch die Kombination experimenteller Paradigmen mit formalen Mess- und Prozessmodellen. Ziel ist die Entwicklung theoretisch fundierter Indikatoren kognitiver Prozesse und die Untersuchung ihres Zusammenhangs mit höheren Leistungsmassen. Das Projekt wird als unabhängige Forschungsgruppe mit voller Budget- und Personalverantwortung geleitet."
+
+  - number: 2
+    title:
+      en: "Flexibility Grant"
+      de: "Flexibility Grant"
+    agency: "SNF"
+    type:
+      en: "non-competitive"
+      de: "nicht-kompetitiv"
+    role: "PI"
+    duration: "2023--2026"
+    amount: "CHF 120'000"
+    summary:
+      en: "Supplementary funding within the Ambizione project to support the compatibility of family life and academic work."
+      de: "Ergänzende Förderung im Rahmen des Ambizione-Projekts zur Unterstützung der Vereinbarkeit von Familien- und Wissenschaftsleben."
+
+  - number: 3
+    title:
+      en: "Neurocognitive Psychometrics (research network)"
+      de: "Neurokognitive Psychometrie (Forschungsnetzwerk)"
+    agency: "DFG"
+    type:
+      en: "competitive"
+      de: "kompetitiv"
+    role: "Co-PI"
+    duration: "2022--2026"
+    amount: "€ 44,645"
+    summary:
+      en: "An international scientific network to foster exchange between psychometrics, cognitive psychology, and neurocognition. My role involved co-coordinating the network and shaping its conceptual direction and grant applications."
+      de: "Ein internationales wissenschaftliches Netzwerk zur Förderung des Austauschs zwischen Psychometrie, kognitiver Psychologie und Neurokognition. Meine Rolle umfasste die Co-Koordination des Netzwerks sowie die Mitgestaltung seiner konzeptuellen Ausrichtung und Antragsstellung."
+
+  - number: 4
+    title:
+      en: "Bayes Factor Estimation for Complex Hierarchical Models"
+      de: "Bayes-Faktor-Schätzung für komplexe hierarchische Modelle"
+    agency: "Graduate Campus UZH"
+    type:
+      en: "competitive"
+      de: "kompetitiv"
+    role: "Co-PI"
+    duration: "2024"
+    amount: "CHF 4'000"
+    summary:
+      en: "Funding for an international workshop on Bayes factor estimation in complex hierarchical models."
+      de: "Förderung eines internationalen Workshops zur Bayes-Faktor-Schätzung in komplexen hierarchischen Modellen."
+
+travel_awards:
+  - year: 2019
+    agency: "SAGW"
+    title:
+      en: "Travel Award, Psychonomic Society Annual Meeting"
+      de: "Reisestipendium, Jahrestagung der Psychonomic Society"
+    description:
+      en: "60th Annual Meeting, Montreal, Canada"
+      de: "60. Jahrestagung, Montreal, Kanada"
+    amount: "CHF 1,000"
+
+  - year: 2018
+    agency: "ISIR"
+    title:
+      en: "Student Travel Award, ISIR Annual Meeting"
+      de: "Studierenden-Reisestipendium, ISIR-Jahrestagung"
+    description:
+      en: "International Society for Intelligence Research, Edinburgh, Scotland"
+      de: "International Society for Intelligence Research, Edinburgh, Schottland"
+    amount: "€ 1,000"
+
+  - year: 2017
+    agency: "DAAD"
+    title:
+      en: "Travel Award, Psychonomic Society Annual Meeting"
+      de: "Reisestipendium, Jahrestagung der Psychonomic Society"
+    description:
+      en: "58th Annual Meeting, Vancouver, Canada"
+      de: "58. Jahrestagung, Vancouver, Kanada"
+    amount: "€ 1,000"

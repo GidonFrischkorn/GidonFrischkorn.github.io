@@ -1,0 +1,178 @@
+overview:
+  en: "4 lecture courses; more than 10 seminars; 6 workshops"
+  de: "4 Vorlesungen; mehr als 10 Seminare; 6 Workshops"
+
+lectures:
+  - title:
+      en: "Statistics I"
+      de: "Statistik I"
+    program:
+      en: "B.Sc. Psychology, approx. 150 students"
+      de: "B.Sc. Psychologie, ca. 150 Studierende"
+    institution:
+      en: "University of Lucerne"
+      de: "Universität Luzern"
+    date: "HS 2025"
+    details:
+      en: "3 contact hours/week; 5 ECTS"
+      de: "3 SWS; 5 ECTS"
+    evaluation:
+      en: "Overall course rating: 3.0; Instructor: 3.4"
+      de: "Gesamtbewertung: 3.0; Dozent: 3.4"
+
+  - title:
+      en: "Cognitive Psychology I"
+      de: "Kognitionspsychologie I"
+    program:
+      en: "B.Sc. Psychology, approx. 800 students"
+      de: "B.Sc. Psychologie, ca. 800 Studierende"
+    institution:
+      en: "University of Zurich"
+      de: "Universität Zürich"
+    date: "FS 2021"
+    details:
+      en: "2 contact hours/week; 3 ECTS; co-taught with Dr. Lea Bartsch; fully responsible for 6 of 12 lectures and 50% of the exam"
+      de: "2 SWS; 3 ECTS; Ko-Lehre mit Dr. Lea Bartsch; vollständig verantwortlich für 6 von 12 Vorlesungen und 50% der Prüfung"
+
+seminars:
+  - title:
+      en: "Introduction to Bayesian Statistics"
+      de: "Einführung in Bayesianische Statistik"
+    program:
+      en: "M.Sc. Psychology, 15 students"
+      de: "M.Sc. Psychologie, 15 Studierende"
+    institution:
+      en: "University of Zurich"
+      de: "Universität Zürich"
+    date: "FS 2024"
+    details:
+      en: "2 SWS; 4 ECTS; co-taught with Philipp Musfeld; fully responsible for 6 of 12 sessions and 50% of the exam"
+      de: "2 SWS; 4 ECTS; Ko-Lehre mit Philipp Musfeld; vollständig verantwortlich für 6 von 12 Sitzungen und 50% der Prüfung"
+
+  - title:
+      en: "Using simulations to challenge your intuitions about cognitive theories"
+      de: "Simulationen zur Überprüfung von Intuitionen über kognitive Theorien"
+    program:
+      en: "M.Sc. Psychology, 20 students"
+      de: "M.Sc. Psychologie, 20 Studierende"
+    institution:
+      en: "University of Zurich"
+      de: "Universität Zürich"
+    date: "FS 2023"
+    details:
+      en: "2 SWS; 4 ECTS"
+      de: "2 SWS; 4 ECTS"
+    evaluation:
+      en: "Overall course rating: 4.9; Instructor: 5.7"
+      de: "Gesamtbewertung: 4.9; Dozent: 5.7"
+
+  - title:
+      en: "Using simulations to challenge your intuitions about statistics and cognitive theories"
+      de: "Simulationen zur Überprüfung von Intuitionen über Statistik und kognitive Theorien"
+    program:
+      en: "M.Sc. Psychology, 5 students"
+      de: "M.Sc. Psychologie, 5 Studierende"
+    institution:
+      en: "University of Zurich"
+      de: "Universität Zürich"
+    date: "FS 2022"
+    details:
+      en: "2 SWS; 4 ECTS"
+      de: "2 SWS; 4 ECTS"
+
+  - title:
+      en: "Cutting Edge Research in Human Cognition"
+      de: "Aktuelle Forschung zur menschlichen Kognition"
+    program:
+      en: "M.Sc. Psychology, 25 students"
+      de: "M.Sc. Psychologie, 25 Studierende"
+    institution:
+      en: "University of Zurich"
+      de: "Universität Zürich"
+    date: "HS 2021"
+    details:
+      en: "2 SWS; 4 ECTS; co-taught with Dr. Lea Bartsch; fully responsible for 6 of 12 sessions and 50% of the exam"
+      de: "2 SWS; 4 ECTS; Ko-Lehre mit Dr. Lea Bartsch; vollständig verantwortlich für 6 von 12 Sitzungen und 50% der Prüfung"
+    evaluation:
+      en: "Overall course rating: 5.6; Instructor: 5.7"
+      de: "Gesamtbewertung: 5.6; Dozent: 5.7"
+
+workshops:
+  - title:
+      en: "Analyzing data on the level of cognitive processes"
+      de: "Datenanalyse auf der Ebene kognitiver Prozesse"
+    venue:
+      en: "24th Conference of the European Society of Cognitive Psychology, Sheffield, United Kingdom"
+      de: "24. Konferenz der European Society of Cognitive Psychology, Sheffield, Vereinigtes Königreich"
+    date: "September 2025"
+    format:
+      en: "Two-day workshop"
+      de: "Zweitägiger Workshop"
+
+  - title:
+      en: "Introduction to Structural Equation Modeling in R"
+      de: "Einführung in Strukturgleichungsmodelle in R"
+    venue:
+      en: "Graduate School of the Faculty of Arts and Social Sciences at University of Zurich, Switzerland"
+      de: "Graduate School der Philosophischen Fakultät der Universität Zürich, Schweiz"
+    date: "June 2025"
+    format:
+      en: "Two-day course for PhD students"
+      de: "Zweitägiger Kurs für Doktorierende"
+
+  - title:
+      en: "Bayesian Modelling for Observational Data"
+      de: "Bayesianische Modellierung für Beobachtungsdaten"
+    venue:
+      en: "R group at the Institute of Psychology at University of Zurich, Switzerland"
+      de: "R-Gruppe am Psychologischen Institut der Universität Zürich, Schweiz"
+    date: "April 2024"
+
+  - title:
+      en: "Improving Inference About Cognitive Processes Using Mixture Models"
+      de: "Verbesserung der Inferenz über kognitive Prozesse mittels Mischverteilungsmodellen"
+    venue:
+      en: "23rd Conference of the European Society of Cognitive Psychology, Porto, Portugal"
+      de: "23. Konferenz der European Society of Cognitive Psychology, Porto, Portugal"
+    date: "September 2023"
+
+  - title:
+      en: "Structural equation modeling in R & lavaan"
+      de: "Strukturgleichungsmodelle in R & lavaan"
+    venue:
+      en: "Workshop for PhD & MSc students, University of Porto"
+      de: "Workshop für Doktorierende und Masterstudierende, Universität Porto"
+    date: "October 2022"
+
+professional_development:
+  - title:
+      en: "Foundation course: University teaching"
+      de: "Grundkurs: Hochschullehre"
+    details:
+      en: "2-day workshop on evidence-based structuring of lectures and seminars & designing rubrics for exams and written assignments"
+      de: "2-tägiger Workshop zur evidenzbasierten Gestaltung von Vorlesungen und Seminaren & Erstellung von Beurteilungsrastern für Prüfungen und schriftliche Arbeiten"
+    date: "HS 2025"
+
+  - title:
+      en: "Supervision Training"
+      de: "Betreuungs-Training"
+    details:
+      en: "2-day workshop as part of the postdoctoral professional development program of the Graduate School at the Faculty of Arts, University of Zurich"
+      de: "2-tägiger Workshop im Rahmen des Postdoc-Weiterbildungsprogramms der Graduate School an der Philosophischen Fakultät der Universität Zürich"
+    date: "June 2025"
+
+breadth:
+  en:
+    - "Introductory and intermediate courses in statistics and research methods"
+    - "Advanced courses on Bayesian statistics, hierarchical models, and structural equation models"
+    - "Seminars on psychometric modeling and test theory"
+    - "Project and methods seminars on planning, conducting, and analyzing experimental studies"
+    - "Programming courses for experimental implementation and data analysis (including R, jsPsych)"
+    - "Research seminars and colloquia in cognitive psychology and individual differences"
+  de:
+    - "Grundlagen- und Aufbaukurse in Statistik und Forschungsmethoden"
+    - "Fortgeschrittenenkurse in Bayesianischer Statistik, hierarchischen Modellen und Strukturgleichungsmodellen"
+    - "Seminare zu psychometrischer Modellierung und Testtheorie"
+    - "Projekt- und Methodenseminare zur Planung, Durchführung und Auswertung experimenteller Studien"
+    - "Programmierkurse für experimentelle Umsetzung und Datenanalyse (u.a. R, jsPsych)"
+    - "Forschungsseminare und Kolloquien in kognitiver Psychologie und individuellen Unterschieden"

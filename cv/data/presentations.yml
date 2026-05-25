@@ -1,0 +1,45 @@
+talk_series:
+  - year: 2021
+    title:
+      en: "Distributed Working Memory Series (DWMS)"
+      de: "Distributed Working Memory Series (DWMS)"
+    description:
+      en: "Organizer of a virtual talk series bringing together working memory researchers worldwide"
+      de: "Organisator einer virtuellen Vortragsreihe, die Arbeitsgedächtnisforschende weltweit zusammenbringt"
+    url: "https://www.world-wide.org/Psychology/Distributed-WM-Series/"
+
+invited_talks:
+  - number: 5
+    title: "Analyzing data on the level of psychological processes"
+    venue: "Colloquium of the Psychological Institute, Johannes-Gutenberg University Mainz"
+    date: "July 2024"
+  - number: 4
+    title: "The *bmm* R package: Easy and Accessible Bayesian Measurement Models using 'brms'"
+    venue: "Department of Statistics, Computational Statistics Lab, TU Dortmund"
+    date: "May 2024"
+  - number: 3
+    title: "Measuring psychological theories requires formal theories"
+    venue: "Faculty for Psychology, Sigmund Freud University Vienna"
+    date: "May 2024"
+  - number: 2
+    title: "Measuring & dissociating cognitive processes: Problems and pitfalls exemplified with the Anti-Saccade Task"
+    venue: "Working Memory, Cognition, and Development Laboratory, University of Geneva"
+    date: "May 2022"
+  - number: 1
+    title: "Implications from cognitive psychology for measuring cognitive processes: The example of the anti-saccade task"
+    venue: "Chair of General Psychology: Cognition, Action, and Sustainability, University of Freiburg"
+    date: "May 2021"
+
+conference_contributions:
+  summary:
+    en: "More than 30 contributions (18 as talks) at international conferences, including:"
+    de: "Mehr als 30 Beiträge (18 als Vorträge) auf internationalen Konferenzen, darunter:"
+  conferences:
+    - "Annual Meeting of the Psychonomic Society"
+    - "Conference of the European Society of Cognitive Psychology"
+    - "Congress of the German Psychological Society"
+    - "European Working Memory Symposium"
+    - "Annual Meeting Psychology & Brain"
+    - "Conference of Experimental Psychologists (TeaP)"
+    - "Conference of the European Mathematical Psychology Group"
+    - "International Workshop on Psychometric Computing"

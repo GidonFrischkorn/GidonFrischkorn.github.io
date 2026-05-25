@@ -1,0 +1,9 @@
+- name: "bmm"
+  type: "R package"
+  role:
+    en: "Lead author"
+    de: "Erstautor"
+  description:
+    en: "R package for Easy and Accessible Bayesian Measurement Models Using 'brms'"
+    de: "R-Paket für einfache und zugängliche Bayesianische Messmodelle mit 'brms'"
+  url: "https://cran.r-project.org/web/packages/bmm/index.html"

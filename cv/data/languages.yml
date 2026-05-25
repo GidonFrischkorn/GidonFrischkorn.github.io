@@ -1,0 +1,20 @@
+- language:
+    en: "German"
+    de: "Deutsch"
+  level:
+    en: "Native speaker (Swiss German: excellent comprehension)"
+    de: "Muttersprache (Schweizerdeutsch: hervorragendes Verständnis)"
+
+- language:
+    en: "English"
+    de: "Englisch"
+  level:
+    en: "Full professional proficiency, spoken and written (9 years of schooling + 10 years as working language)"
+    de: "Verhandlungssicher in Wort und Schrift (9 Jahre Schulunterricht + 10 Jahre als Arbeitssprache)"
+
+- language:
+    en: "French"
+    de: "Französisch"
+  level:
+    en: "Basic proficiency (DELF A2 diploma)"
+    de: "Grundkenntnisse (DELF A2 Diplom)"

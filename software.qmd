@@ -4,7 +4,7 @@ subtitle: R packages for cognitive measurement and Bayesian modeling
 title-block-banner: true
 ---
 
-In addition to my research, I develop open source software. The package I work on wraps cognitive measurement models in a `brms`-compatible interface, so fitting them feels more like running a regression than writing a custom sampler. Below you can find an overview of my open source software contributions.
+In addition to my research, I develop open source software. The package I work on wraps cognitive measurement models in a `brms`-compatible interface, so fitting them feels more like running a regression than writing a custom sampler. Below is an overview of my open source software contributions.
 
 ---
 
@@ -35,7 +35,7 @@ Role: Co-author and maintainer
 
 `bmm` is an R package I co-develop with [Ven Popov](https://venpopov.com) for fitting cognitive measurement models in a hierarchical Bayesian framework. It builds on [`brms`](https://paul-buerkner.github.io/brms/) and Stan, and uses the same formula syntax. If you know brms, you already know most of how bmm works.
 
-The current focus is measurement models for  working memory. `bmm` implements different measurement models all in one place, providing a flexible and user-friendly interface for Bayesian hierarchical mixture models and related cognitive measurement models.
+The current focus is measurement models for  working memory. `bmm` implements multiple measurement models in one place, with a consistent interface across model families.
 
 ### Install
 

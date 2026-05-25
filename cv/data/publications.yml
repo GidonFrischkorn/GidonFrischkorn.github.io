@@ -1,0 +1,241 @@
+preprints:
+- number: 9
+  text: 'Courage, I., & **Frischkorn, G. T.** (under review at Psychonomic Bulletin
+    & Review). The relation between processing speed and working memory capacity:
+    No difference across varying procedural working memory demands. Preprint: https://osf.io/bh4ps_v1'
+- number: 8
+  text: 'Li, C., **Frischkorn, G. T.**, & Oberauer, K. (under review at Behavior Research
+    Methods). Measuring Individual Differences with Bayesian Hierarchical Cognitive
+    Models. Preprint: https://osf.io/24w3z_v1'
+- number: 7
+  text: '**Frischkorn, G. T.**, Dutli, J., Musfeld, P., & Oberauer, K. (under review
+    at Advances in Methods & Practices for Psychological Science). How to Set Priors
+    for Hypothesis Testing in Generalized Linear Models: A Three-Step Workflow with
+    an Application to Binomial Models. Preprint: https://osf.io/q7byw_v1'
+- number: 6
+  text: '**Frischkorn, G. T.**, & Li, C. (under review at Advances in Methods & Practices
+    for Psychological Science). Applying the Memory Measurement Model (M3): A Tutorial
+    Using the bmm R Package. Preprint: https://osf.io/tcuzx_v1'
+- number: 5
+  text: '**Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (under review at Psychological
+    Review). Validity is a Theoretical Problem: A Computational Psychometrics Perspective
+    on How to Measure Cognition. Preprint: https://osf.io/pczua_v1'
+- number: 4
+  text: 'Göttmann, J., **Frischkorn, G. T.**, Oberauer, K., Schaefer, S. B., & Schubert,
+    A.-L. (invited for revision at Journal of Mathematical Psychology). *Modeling
+    Individual Differences in Working Memory: Subject-Level Parameter Recovery within
+    the Memory Measurement Model Framework (M^3^)*. Preprint: https://doi.org/10.31234/osf.io/945d2_v1'
+- number: 3
+  text: 'Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M. D., & Fiebach,
+    C. J. (under review at Perspectives on Psychological Science). The Signal-To-Noise
+    Ratio Hypothesis of Intelligence. Preprint: https://doi.org/10.31219/osf.io/nkms3_v2'
+- number: 2
+  text: 'Rey-Mermet, A., Haaf, J., Donzallaz, M., **Frischkorn, G.**, Hedge, C., Kempkens,
+    N., Oberauer, K., & Schubert, A.-L. (invited for revision at Perspectives on Psychological
+    Science). *How can we achieve a good measurement of attentional control?* Preprint:
+    https://doi.org/10.31234/osf.io/ugk4h_v1'
+- number: 1
+  text: 'Von Bastian, C. C., Blais, C., Brewer, G., Gyurkovics, M., Hedge, C., Kałamała,
+    P., Meier, M., Oberauer, K., Rey-Mermet, A., Rouder, J. N., Souza, A. S., Bartsch,
+    L. M., Conway, A. R. A., Draheim, C., Engle, R. W., Friedman, N. P., **Frischkorn,
+    G. T.**, Gustavson, D. E., Koch, I., ... Wiemers, E. (Preprint). Advancing the
+    understanding of individual differences in attentional control. Preprint: https://doi.org/10.31234/osf.io/x3b9k'
+articles:
+- number: 34
+  year: '2026'
+  text: '**Frischkorn, G. T.**, Courage, I., Dames, H., Dignath, D., Pfeuffer, C.
+    U., Schiltenwolf, M., Kiesel, A., & Oberauer, K. (2026). Bindings for Action:
+    Bridging the Gap Between Theories of Procedural Working Memory and Action Control
+    Research. *Journal of Cognition*, *9*(1), 16. https://doi.org/10.5334/joc.488'
+- number: 33
+  year: '2026'
+  text: 'Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2026). Can we process information
+    without encoding it into working memory? *Journal of Experimental Psychology:
+    Learning, Memory, and Cognition*. https://doi.org/10.1037/xlm0001585'
+- number: 32
+  year: '2025'
+  text: 'Löffler, C., Sadus, K., **Frischkorn, G. T.**, Hagemann, D., & Schubert,
+    A.-L. (2025). The factor structure of executive functions measured with electrophysiological
+    correlates: An event-related potential analysis. *Journal of Experimental Psychology:
+    Learning, Memory, and Cognition*. https://doi.org/10.1037/xlm0001549'
+- number: 31
+  year: '2025'
+  text: '**Frischkorn, G. T.**, & Oberauer, K. (2025). Is the antisaccade task a valid
+    measure of inhibition? *Journal of Experimental Psychology: General*. https://doi.org/10.1037/xge0001808'
+  industry_annotation: Rigorous quantitative validation of a widely-used psychological
+    measure — directly applicable to psychometric tool evaluation and test validity
+    assessment.
+- number: 30
+  year: '2025'
+  text: 'Li, C., **Frischkorn, G. T.**, Dames, H., & Oberauer, K. (2025). The Benefit
+    of Removing Information from Working Memory: Increasing Available Cognitive Resources
+    or Reducing Interference? *Cognition*, *260*. https://doi.org/10.1016/j.cognition.2025.106134'
+- number: 29
+  year: '2025'
+  text: 'Nunez, M. D., Schubert, A.-L., **Frischkorn, G. T.**, & Oberauer, K. (2025).
+    Cognitive models of decision-making with identifiable parameters: Diffusion decision
+    models with within-trial noise. *Journal of Mathematical Psychology*, *125*, 102917.
+    https://doi.org/10.1016/j.jmp.2025.102917'
+- number: 28
+  year: '2025'
+  text: '**Frischkorn, G. T.**, & Popov, V. (2025). A tutorial for estimating Bayesian
+    hierarchical mixture models for visual working memory tasks: Introducing the Bayesian
+    Measurement Modeling (bmm) package for R. *Behavior Research Methods*, *57*(5),
+    144. https://doi.org/10.3758/s13428-025-02643-0'
+  industry_annotation: 'Full software documentation cycle: from Bayesian model specification
+    to a published tutorial adopted by applied researchers internationally.'
+- number: 27
+  year: '2025'
+  text: 'Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2025). Updating of information
+    in working memory: Time course and consequences. *Cognitive Psychology*, 156,
+    101702. https://doi.org/10.1016/j.cogpsych.2024.101702'
+- number: 26
+  year: '2024'
+  text: Schubert, A.-L., **Frischkorn, G. T.**, Sadus, K., Welhaf, M. S., Kane, M.
+    J., & Rummel, J. (2024). The brief mind wandering three-factor scale (BMW-3).
+    *Behavior Research Methods*. https://doi.org/10.3758/s13428-024-02500-6
+- number: 25
+  year: '2024'
+  text: 'Dames, H., Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2024). Removing
+    information from working memory with a delay: Effective but not beneficial. *Psychonomic
+    Bulletin & Review*. https://doi.org/10.3758/s13423-024-02550-z'
+- number: 24
+  year: '2024'
+  text: 'Souza, A. S., **Frischkorn, G. T.**, & Oberauer, K. (2024). Older yet sharp:
+    No general age-related decline in focusing attention. *Journal of Experimental
+    Psychology: General*. https://doi.org/10.1037/xge0001649'
+- number: 23
+  year: '2024'
+  text: Bartsch, L. M., **Frischkorn, G. T.**, & Shepherdson, P. (2024). When Load
+    is Low, Working Memory is Shielded From Long-Term Memory's Influence. *Journal
+    of Cognition* 7(1). https://doi.org/10.5334/joc.368
+- number: 22
+  year: '2024'
+  text: Löffler, C., **Frischkorn, G. T.**, Hagemann, D., Sadus, K., & Schubert, A.-L.
+    (2024). The common factor of executive functions measures nothing but speed of
+    information uptake. *Psychological Research*. https://doi.org/10.1007/s00426-023-01924-7
+- number: 21
+  year: '2024'
+  text: '**Frischkorn, G. T.** (2024). Responsible Research Assessment requires structural
+    more than procedural reforms. *Meta-Psychology*, 8. https://doi.org/10.15626/MP.2023.3734'
+- number: 20
+  year: '2024'
+  text: Dames, H., Musfeld, P., Popov, V., Oberauer, K., & **Frischkorn, G. T.** (2024).
+    Responsible Research Assessment Should Prioritize Theory Development and Testing
+    Over Ticking Open Science Boxes. *Meta-Psychology*, 8. https://doi.org/10.15626/MP.2023.3735
+- number: 19
+  year: '2023'
+  text: Souza, A. S., & **Frischkorn, G. T.** (2023). A diffusion model analysis of
+    age and individual differences in the retro-cue benefit. *Scientific Reports*,
+    13(1). https://doi.org/10.1038/s41598-023-44080-z
+- number: 18
+  year: '2022'
+  text: '**Frischkorn, G. T.**, Wilhelm, O., & Oberauer, K. (2022). Process-oriented
+    intelligence research: A review from the cognitive perspective. *Intelligence*,
+    94, 101--681. https://doi.org/10.1016/j.intell.2022.101681'
+- number: 17
+  year: '2022'
+  text: '**Frischkorn, G. T.**, Hilger, K., Kretzschmar, A., & Schubert, A.-L. (2022).
+    Intelligenzdiagnostik der Zukunft. [The future of intelligence assessment] *Psychologische
+    Rundschau*, 73(3), 173--189. https://doi.org/10.1026/0033-3042/a000598'
+- number: 16
+  year: '2022'
+  text: '**Frischkorn, G. T.**, von Bastian, C. C., Souza, A. S., & Oberauer, K. (2022).
+    Individual differences in updating are not related to reasoning ability and working
+    memory capacity. *Journal of Experimental Psychology: General*. https://doi.org/10.1037/xge0001141'
+  industry_annotation: Latent-variable modelling to separate true cognitive signal
+    from measurement artefacts — foundational to building reliable, construct-valid
+    psychometric indicators.
+- number: 15
+  year: '2022'
+  text: Löffler, C., **Frischkorn, G. T.**, Rummel, J., Hagemann, D., & Schubert,
+    A.-L. (2022). Do Attentional Lapses Account for the Worst Performance Rule? *Journal
+    of Intelligence*, 10(1), 2. https://doi.org/10.3390/jintelligence10010002
+- number: 14
+  year: '2021'
+  text: '**Frischkorn, G. T.**, & Oberauer, K. (2021). Intelligence test items varying
+    in capacity demands cannot be used to test the causality of working memory capacity
+    for fluid intelligence. *Psychonomic Bulletin & Review*. https://doi.org/10/gjp3br'
+- number: 13
+  year: '2021'
+  text: '**Frischkorn, G. T.**, & von Bastian, C. C. (2021). In Search of the Executive
+    Cognitive Processes Proposed by Process-Overlap Theory. *Journal of Intelligence*,
+    9(3), 43. https://doi.org/10/gmm7dz'
+- number: 12
+  year: '2020'
+  text: 'Lerche, V., von Krause, M., Voss, A., Frischkorn, G. T., Schubert, A.-L.,
+    & Hagemann, D. (2020). Diffusion modeling and intelligence: Drift rates show both
+    domain-general and domain-specific relations with intelligence. *Journal of Experimental
+    Psychology: General*, 149, 2207--2249. https://doi.org/10/ggt8r7'
+- number: 11
+  year: '2020'
+  text: 'Schubert, A.-L.*, & **Frischkorn, G. T.*** (2020). Neurocognitive Psychometrics
+    of Intelligence: How Measurement Advancements Unveiled the Role of Mental Speed
+    in Intelligence Differences. *Current Directions in Psychological Science*. https://doi.org/10/ggkz9b'
+  shared_first: yes
+- number: 10
+  year: '2020'
+  text: Schubert, A.-L., Hagemann, D., Löffler, C., & **Frischkorn, G. T.** (2020).
+    Disentangling the Effects of Processing Speed on the Association between Age Differences
+    and Fluid Intelligence. *Journal of Intelligence*, 8(1), 1. https://doi.org/10/ggj5hm
+- number: 9
+  year: '2019'
+  text: Schubert, A.-L., **Frischkorn, G. T.**, & Rummel, J. (2019). The validity
+    of the online thought-probing procedure of mind wandering is not threatened by
+    variations of probe rate and probe framing. *Psychological Research*. https://doi.org/10/gfz6s4
+- number: 8
+  year: '2019'
+  text: '**Frischkorn, G. T.**, Schubert, A.-L., & Hagemann, D. (2019). Processing
+    speed, working memory, and executive functions: Independent or inter-related predictors
+    of general intelligence. *Intelligence*, 75, 95--110. https://doi.org/10/gf3sxs'
+- number: 7
+  year: '2018'
+  text: 'Schubert, A.-L., Hagemann, D., **Frischkorn, G. T.**, & Herpertz, S. C. (2018).
+    Faster, but not smarter: An experimental analysis of the relationship between
+    mental speed and mental abilities. *Intelligence*, 71, 66--75. https://doi.org/10/gffjb9'
+- number: 6
+  year: '2018'
+  text: '**Frischkorn, G. T.*** , & Schubert, A.-L.* (2018). Cognitive Models in Intelligence
+    Research: Advantages and Recommendations for Their Application. *Journal of Intelligence*,
+    6(3), 34. https://doi.org/10/gd3vqn'
+  shared_first: yes
+- number: 5
+  year: '2017'
+  text: 'Schubert, A.-L., Hagemann, D., & **Frischkorn, G. T.** (2017). Is general
+    intelligence little more than the speed of higher-order processing? *Journal of
+    Experimental Psychology: General*, 146(10), 1498-1512. https://doi.org/10/gch83n'
+- number: 4
+  year: '2016'
+  text: '**Frischkorn, G. T.**, Schubert, A.-L., Neubauer, A., & Hagemann, D. (2016).
+    The Worst Performance Rule as Moderation: New Methods for Worst Performance Analysis.
+    *Journal of Intelligence*, 4(3), 9. https://doi.org/10/gd3vsz'
+- number: 3
+  year: '2016'
+  text: Schubert, A.-L., **Frischkorn, G. T.**, Hagemann, D., & Voss, A. (2016). Trait
+    Characteristics of Diffusion Model Parameters. *Journal of Intelligence*, 4(3),
+    7. https://doi.org/10/gd3vs3
+- number: 2
+  year: '2016'
+  text: Meißner, A., Greiff, S., **Frischkorn, G. T.**, & Steinmayr, R. (2016). Predicting
+    Complex Problem Solving and school grades with working memory and ability self-concept.
+    *Learning and Individual Differences*, 49, 323--331. https://doi.org/10/f82798
+- number: 1
+  year: '2014'
+  text: '**Frischkorn, G. T.**, Greiff, S., & Wüstenberg, S. (2014). The development
+    of complex problem solving in adolescence: A latent growth curve analysis. *Journal
+    of Educational Psychology*, 106(4), 1007--1020. https://doi.org/10/gd3vsg'
+software:
+- text: 'bmm (R package). Lead author. R package for Easy and Accessible Bayesian
+    Measurement Models Using ''brms''. Available at: https://cran.r-project.org/web/packages/bmm/index.html'
+citation_stats:
+  total_citations: '> 1000 (OpenAlex)'
+  h_index: 16
+  i10_index: 20
+  total_articles: 36
+  total_preprints: 9
+selected_for_industry:
+- 31
+- 28
+- 16
+- 18
+- 14

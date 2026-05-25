@@ -1,7 +1,21 @@
 ---
 title: Curriculum Vitae
-date: 2026-02-17
+date: 2026-02-21
 title-block-banner: true
 ---
 
-<iframe src="/images/PDF/CV_GidonFrischkorn_NEW_2026.pdf" style="width:100%; height:1200px;" frameborder="0"></iframe>
+Download my CV in the format that best suits your needs:
+
+### Academic CV (full)
+
+- [English (PDF)](/cv/cv-en-academic.pdf){target="_blank"}
+- [Deutsch (PDF)](/cv/cv-de-academic.pdf){target="_blank"}
+
+### Industry CV (2-page summary)
+
+- [English (PDF)](/cv/cv-en-industry.pdf){target="_blank"}
+- [Deutsch (PDF)](/cv/cv-de-industry.pdf){target="_blank"}
+
+---
+
+<iframe src="/cv/cv-en-academic.pdf" style="width:100%; height:1200px;" frameborder="0"></iframe>

@@ -1,131 +1,136 @@
 #!/usr/bin/env Rscript
 # scripts/update_publications.R
 #
-# Fetches journal articles from ORCID, enriches metadata via CrossRef,
-# and replaces the "## Journal Articles" section of publications.qmd.
+# Fetches publications from Zotero "My Publications":
+#   - journalArticle items → replaces "## Journal Articles" in publications.qmd
+#   - preprint items       → replaces "## Preprints" section in publications.qmd
 #
-# Required environment variable:
-#   ORCID_ID  - your ORCID iD, e.g. "0000-0000-0000-0000"
+# Fetches citation metrics from OpenAlex and updates:
+#   - the two metrics lines in publications.qmd
+#   - the citation_stats block in cv/data/publications.yml
 #
-# Required R packages: httr2, stringr, purrr
+# Required environment variables:
+#   ZOTERO_API_KEY  - Zotero personal API key (zotero.org/settings/keys)
+#   ZOTERO_USER_ID  - Zotero numeric user ID  (same page, default: 5084025)
+#
+# Preprint status convention — add to the "Extra" field in Zotero:
+#   Status: under review at Psychological Review
+#   Status: invited for revision at Journal of Mathematical Psychology
+#   Status: in preparation
+#
+# Required R packages: httr2, stringr, purrr, yaml
 
 suppressPackageStartupMessages({
   library(httr2)
   library(stringr)
   library(purrr)
+  library(yaml)
 })
 
 # --------------------------------------------------------------------------- #
 # Configuration
 # --------------------------------------------------------------------------- #
 
-ORCID_ID      <- Sys.getenv("ORCID_ID")
-SELF_FAMILY   <- "Frischkorn"
-PUBS_FILE     <- "publications.qmd"
-CONTACT_EMAIL <- "gidon.frischkorn@psychologie.uzh.ch"  # for CrossRef polite pool
+ZOTERO_API_KEY  <- Sys.getenv("ZOTERO_API_KEY")
+ZOTERO_USER_ID  <- Sys.getenv("ZOTERO_USER_ID", unset = "5084025")
+SELF_FAMILY     <- "Frischkorn"
+PUBS_FILE         <- "publications.qmd"
+CV_YAML_FILE      <- "cv/data/publications.yml"
+CONTACT_EMAIL     <- "frischkorn@tutanota.com"
+OPENALEX_AUTHOR   <- "A5032866465"
 
-if (nchar(ORCID_ID) == 0) stop("ORCID_ID environment variable is not set.")
+if (nchar(ZOTERO_API_KEY) == 0) stop("ZOTERO_API_KEY environment variable is not set.")
 
-`%||%` <- function(x, y) if (!is.null(x) && length(x) > 0) x else y
+`%||%` <- function(x, y) if (!is.null(x) && length(x) > 0 && !identical(x, "")) x else y
 
 # --------------------------------------------------------------------------- #
-# ORCID API
+# Zotero API helpers
 # --------------------------------------------------------------------------- #
 
-fetch_orcid_works <- function(orcid_id) {
-  message("Fetching ORCID works for ", orcid_id, " ...")
-  resp <- request(paste0("https://pub.orcid.org/v3.0/", orcid_id, "/works")) |>
-    req_headers(Accept = "application/json") |>
-    req_error(is_error = \(r) FALSE) |>
-    req_perform()
+add_query_params <- function(req, params) {
+  if (length(params) == 0) return(req)
+  do.call(req_url_query, c(list(req), params))
+}
+
+zotero_fetch <- function(path, query = list()) {
+  req <- request(paste0("https://api.zotero.org", path)) |>
+    req_headers(`Zotero-API-Key` = ZOTERO_API_KEY) |>
+    req_error(is_error = \(r) FALSE)
+  req <- add_query_params(req, query)
+  resp <- req_perform(req)
 
   if (resp_status(resp) != 200) {
-    stop("ORCID API returned HTTP ", resp_status(resp))
+    stop("Zotero API error: HTTP ", resp_status(resp), " at ", path)
   }
-  resp_body_json(resp)$group
-}
 
-extract_journal_dois <- function(groups) {
-  dois <- character()
-  for (grp in groups) {
-    s <- grp$`work-summary`[[1]]
-    if (is.null(s$type) || s$type != "journal-article") next
-    for (ext in s$`external-ids`$`external-id` %||% list()) {
-      if (isTRUE(ext$`external-id-type` == "doi")) {
-        dois <- c(dois, tolower(str_trim(ext$`external-id-value`)))
-      }
-    }
-  }
-  unique(dois)
-}
-
-# --------------------------------------------------------------------------- #
-# CrossRef API
-# --------------------------------------------------------------------------- #
-
-fetch_crossref <- function(doi) {
-  Sys.sleep(0.1)  # stay in CrossRef polite pool
-  url <- paste0("https://api.crossref.org/works/", URLencode(doi, reserved = TRUE))
-  resp <- tryCatch(
-    request(url) |>
-      req_headers(
-        `User-Agent` = paste0("PublicationsUpdater/1.0 (mailto:", CONTACT_EMAIL, ")")
-      ) |>
-      req_error(is_error = \(r) FALSE) |>
-      req_perform(),
-    error = \(e) {
-      message("  CrossRef request error for <", doi, ">: ", conditionMessage(e))
-      NULL
-    }
+  total_header <- tryCatch(resp_header(resp, "Total-Results"), error = \(e) NA)
+  list(
+    body  = resp_body_json(resp),
+    total = if (!is.na(total_header) && !is.null(total_header))
+              as.integer(total_header)
+            else
+              NA_integer_
   )
-  if (is.null(resp) || resp_status(resp) != 200) {
-    message("  No CrossRef record for: ", doi)
-    return(NULL)
-  }
-  resp_body_json(resp)$message
 }
 
-get_year <- function(meta) {
-  dp <- (meta$published %||% meta$`published-print` %||% meta$`published-online`)$`date-parts`
-  if (is.null(dp)) return(NA_integer_)
-  as.integer(dp[[1]][[1]])
+fetch_all_items <- function(path, extra_query = list()) {
+  all_items <- list()
+  start     <- 0L
+  total     <- Inf
+
+  while (start < total) {
+    query  <- c(extra_query, list(format = "json", limit = 100L, start = start))
+    result <- zotero_fetch(path, query)
+    items  <- result$body
+
+    if (!is.na(result$total)) total <- result$total
+    all_items <- c(all_items, items)
+    start <- start + length(items)
+    if (length(items) == 0) break
+  }
+
+  all_items
+}
+
+# --------------------------------------------------------------------------- #
+# Fetch items from Zotero "My Publications"
+# --------------------------------------------------------------------------- #
+
+fetch_my_publications <- function(user_id, item_type) {
+  message("Fetching ", item_type, " from My Publications ...")
+  path  <- paste0("/users/", user_id, "/publications/items")
+  items <- fetch_all_items(path, list(itemType = item_type))
+  message("  Found ", length(items), " ", item_type, " items")
+  items
 }
 
 # --------------------------------------------------------------------------- #
 # Author formatting
 # --------------------------------------------------------------------------- #
 
-# Convert a given-name string to initials.
-# Handles: "Gidon T." → "G. T."  |  "Anna-Lena" → "A.-L."  |  "A.-L." → "A.-L."
 format_initials <- function(given) {
   parts <- str_split(str_trim(given), "\\s+")[[1]]
   map_chr(parts, function(p) {
-    # Already an initial if it starts with a letter followed by a period
     if (str_detect(p, "^[[:alpha:]]\\.")) return(p)
-    # Hyphenated names: "Anna-Lena" -> "A.-L."
     subparts <- str_split(p, "-")[[1]]
     paste(paste0(str_sub(subparts, 1, 1), "."), collapse = "-")
   }) |>
     paste(collapse = " ")
 }
 
-format_one_author <- function(author) {
-  family   <- str_trim(author$family %||% "")
-  given    <- str_trim(author$given  %||% "")
-  particle <- str_trim(author$`non-dropping-particle` %||% "")
-
-  if (nchar(family) == 0) return(given)  # corporate / unusual author
-
-  full_family <- if (nchar(particle) > 0) paste(particle, family) else family
-  initials    <- if (nchar(given) > 0) format_initials(given) else ""
-  name        <- if (nchar(initials) > 0) paste0(full_family, ", ", initials) else full_family
-
+format_one_creator <- function(creator) {
+  family   <- str_trim(creator$lastName  %||% "")
+  given    <- str_trim(creator$firstName %||% "")
+  if (nchar(family) == 0) return(given)
+  initials <- if (nchar(given) > 0) format_initials(given) else ""
+  name     <- if (nchar(initials) > 0) paste0(family, ", ", initials) else family
   if (str_detect(family, fixed(SELF_FAMILY))) paste0("**", name, "**") else name
 }
 
-format_authors <- function(authors) {
-  if (is.null(authors) || length(authors) == 0) return("")
-  formatted <- map_chr(authors, format_one_author)
+format_authors <- function(creators) {
+  authors   <- keep(creators, \(c) (c$creatorType %||% "") == "author")
+  if (length(authors) == 0) return("")
+  formatted <- map_chr(authors, format_one_creator)
   n <- length(formatted)
   if      (n == 1) formatted
   else if (n == 2) paste(formatted[1], "&", formatted[2])
@@ -133,100 +138,307 @@ format_authors <- function(authors) {
 }
 
 # --------------------------------------------------------------------------- #
-# APA citation assembly
+# Year extraction
 # --------------------------------------------------------------------------- #
 
-format_citation <- function(meta) {
-  if (is.null(meta)) return(NULL)
+get_year <- function(item_data) {
+  date_str <- str_trim(item_data$date %||% "")
+  m <- str_match(date_str, "(\\d{4})")
+  if (is.na(m[1, 2])) return(NA_integer_)
+  as.integer(m[1, 2])
+}
 
-  year    <- get_year(meta)
-  if (is.na(year)) return(NULL)
+# --------------------------------------------------------------------------- #
+# Citation formatting — journal articles (APA)
+# --------------------------------------------------------------------------- #
 
-  authors <- format_authors(meta$author)
-  title   <- str_trim((meta$title %||% list(""))[[1]])
-  journal <- str_trim((meta$`container-title` %||% list(""))[[1]])
-  volume  <- str_trim(meta$volume %||% "")
-  issue   <- str_trim(meta$issue  %||% "")
-  page    <- str_trim(meta$page   %||% "")
-  doi     <- str_trim(meta$DOI    %||% "")
+format_article_citation <- function(item) {
+  d    <- item$data
+  year <- get_year(d)
 
-  # Volume(issue), page
+  if (is.na(year)) {
+    message("  Skipping article with no year: ", d$title %||% "(no title)")
+    return(NULL)
+  }
+
+  authors <- format_authors(d$creators %||% list())
+  title   <- str_trim(d$title             %||% "")
+  journal <- str_trim(d$publicationTitle  %||% "")
+  volume  <- str_trim(d$volume            %||% "")
+  issue   <- str_trim(d$issue             %||% "")
+  pages   <- str_trim(d$pages             %||% "")
+  doi     <- str_trim(d$DOI               %||% "")
+  doi     <- str_replace(doi, "^https?://doi\\.org/", "")
+
   vol_str <- if (nchar(volume) > 0) {
     if (nchar(issue) > 0) paste0("*", volume, "*", "(", issue, ")")
     else                  paste0("*", volume, "*")
   } else ""
-  loc_str <- paste(Filter(nchar, c(vol_str, page)), collapse = ", ")
 
+  loc_str      <- paste(Filter(nchar, c(vol_str, pages)), collapse = ", ")
   journal_part <- if (nchar(journal) > 0) {
     base <- paste0("*", journal, "*")
     if (nchar(loc_str) > 0) paste0(base, ", ", loc_str, ".") else paste0(base, ".")
   } else ""
 
   doi_part <- if (nchar(doi) > 0) paste0(" <https://doi.org/", doi, ">") else ""
+  text     <- paste0(authors, " (", year, "). ", title, ". ", journal_part, doi_part)
 
-  citation <- paste0(authors, " (", year, "). ", title, ". ", journal_part, doi_part)
-
-  list(year = year, text = citation)
+  list(year = year, text = text)
 }
 
 # --------------------------------------------------------------------------- #
-# Markdown generation
+# Citation formatting — preprints
 # --------------------------------------------------------------------------- #
 
-build_section <- function(citations) {
-  # Sort: descending year, then alphabetically by first author family name
+parse_status <- function(extra) {
+  if (is.null(extra) || nchar(str_trim(extra %||% "")) == 0) return(NULL)
+  m <- str_match(extra, "(?i)Status:\\s*(.+?)(?:\\n|$)")
+  if (is.na(m[1, 2])) return(NULL)
+  str_trim(m[1, 2])
+}
+
+format_preprint_citation <- function(item) {
+  d       <- item$data
+  year    <- get_year(d)
+  authors <- format_authors(d$creators %||% list())
+  title   <- str_trim(d$title %||% "")
+  status  <- parse_status(d$extra %||% "")
+
+  url <- str_trim(d$url %||% "")
+  doi <- str_trim(d$DOI %||% "")
+  doi <- str_replace(doi, "^https?://doi\\.org/", "")
+
+  preprint_url <- if (nchar(url) > 0) {
+    url
+  } else if (nchar(doi) > 0) {
+    paste0("https://doi.org/", doi)
+  } else {
+    NULL
+  }
+
+  year_part <- if (!is.null(status) && nchar(status) > 0) {
+    status
+  } else {
+    as.character(year %||% "no date")
+  }
+
+  url_part <- if (!is.null(preprint_url))
+    paste0(" \\[[preprint](", preprint_url, ")\\]")
+  else
+    ""
+
+  text <- paste0(authors, " (", year_part, "). ", title, ".", url_part)
+  list(year = year %||% 0L, text = text)
+}
+
+# --------------------------------------------------------------------------- #
+# Section builders
+# --------------------------------------------------------------------------- #
+
+build_articles_section <- function(citations) {
   first_word <- map_chr(citations, \(c) str_extract(c$text, "[[:alpha:]]+"))
   citations  <- citations[order(-map_int(citations, "year"), first_word)]
 
-  years <- unique(map_int(citations, "year"))
+  years   <- unique(map_int(citations, "year"))
+  total   <- length(citations)
+  counter <- total
 
   lines <- c("## Journal Articles", "")
+
   for (yr in years) {
-    yr_cits <- keep(citations, \(c) c$year == yr)
-    lines   <- c(lines, paste0("### ", yr), "")
-    lines   <- c(lines, map_chr(yr_cits, \(c) paste0("- ", c$text)), "")
+    yr_cits   <- keep(citations, \(c) c$year == yr)
+    start_num <- counter
+
+    lines <- c(lines, paste0("### ", yr), "")
+    lines <- c(lines, paste0('<ol reversed start="', start_num, '">'), "")
+
+    for (cit in yr_cits) {
+      lines   <- c(lines, "<li>", "", cit$text, "", "</li>")
+      counter <- counter - 1L
+    }
+
+    lines <- c(lines, "</ol>", "")
   }
-  lines
+
+  list(lines = lines, total = total)
+}
+
+build_preprints_section <- function(citations) {
+  first_word <- map_chr(citations, \(c) str_extract(c$text, "[[:alpha:]]+"))
+  citations  <- citations[order(-map_int(citations, "year"), first_word)]
+
+  total <- length(citations)
+  lines <- c("## Preprints & Papers in preparation", "")
+  lines <- c(lines, paste0('<ol reversed start="', total, '">'), "")
+
+  for (cit in citations) {
+    lines <- c(lines, "<li>", "", cit$text, "", "</li>")
+  }
+
+  lines <- c(lines, "</ol>", "")
+  list(lines = lines, total = total)
 }
 
 # --------------------------------------------------------------------------- #
-# Replace the Journal Articles section in publications.md
+# Section replacement in publications.qmd
 # --------------------------------------------------------------------------- #
 
-replace_journal_articles_section <- function(new_lines, filepath = PUBS_FILE) {
+replace_section <- function(new_lines, section_header, filepath = PUBS_FILE) {
   if (!file.exists(filepath)) stop("Cannot find file: ", filepath)
 
   content   <- readLines(filepath, warn = FALSE)
-  start_idx <- which(str_detect(content, "^## Journal Articles$"))
   h2_idxs   <- which(str_detect(content, "^## "))
+  start_idx <- which(content == section_header)
 
-  if (length(start_idx) == 0) stop("Could not find '## Journal Articles' in ", filepath)
-  end_idx <- min(h2_idxs[h2_idxs > start_idx]) - 1
+  if (length(start_idx) == 0)
+    stop("Could not find '", section_header, "' in ", filepath)
+  start_idx <- start_idx[1]
+
+  later_h2 <- h2_idxs[h2_idxs > start_idx]
+  end_idx  <- if (length(later_h2) > 0) min(later_h2) - 1 else length(content)
 
   writeLines(
-    c(content[seq_len(start_idx - 1)], new_lines, content[seq(end_idx + 1, length(content))]),
+    c(content[seq_len(start_idx - 1)],
+      new_lines,
+      content[seq(end_idx + 1, length(content))]),
     filepath
   )
-  message("Written to ", filepath)
+  message("  Written '", section_header, "' to ", filepath)
+}
+
+# --------------------------------------------------------------------------- #
+# OpenAlex citation metrics
+# --------------------------------------------------------------------------- #
+
+fetch_openalex_metrics <- function(author_id = OPENALEX_AUTHOR) {
+  message("Fetching citation metrics from OpenAlex ...")
+  resp <- tryCatch(
+    request(paste0("https://api.openalex.org/authors/", author_id)) |>
+      req_headers(
+        `User-Agent` = paste0("PublicationsUpdater/1.0 (mailto:", CONTACT_EMAIL, ")")
+      ) |>
+      req_error(is_error = \(r) FALSE) |>
+      req_perform(),
+    error = \(e) { message("  OpenAlex error: ", conditionMessage(e)); NULL }
+  )
+
+  if (is.null(resp) || resp_status(resp) != 200) {
+    message("  OpenAlex returned HTTP ", if (!is.null(resp)) resp_status(resp) else "error")
+    return(NULL)
+  }
+
+  data <- resp_body_json(resp)
+  list(
+    total_citations = data$cited_by_count,
+    h_index         = data$summary_stats$h_index,
+    i10_index       = data$summary_stats$i10_index
+  )
+}
+
+# --------------------------------------------------------------------------- #
+# Update metrics lines in publications.qmd
+# --------------------------------------------------------------------------- #
+
+update_metrics_line <- function(metrics, total_articles, total_preprints,
+                                filepath = PUBS_FILE) {
+  content  <- readLines(filepath, warn = FALSE)
+  cit_line <- which(str_detect(content, "^Total citations"))
+  art_line <- which(str_detect(content, "^Peer-reviewed articles"))
+
+  if (length(cit_line) == 0 || length(art_line) == 0) {
+    message("  Metrics lines not found in ", filepath, " — skipping.")
+    return(invisible(FALSE))
+  }
+
+  citations_str <- if (metrics$total_citations >= 1000)
+    paste0("> ", floor(metrics$total_citations / 100) * 100)
+  else
+    as.character(metrics$total_citations)
+
+  content[cit_line] <- paste0(
+    "Total citations (OpenAlex): ", citations_str,
+    " | h-index: ", metrics$h_index,
+    " | i10-index: ", metrics$i10_index
+  )
+  content[art_line] <- paste0(
+    "Peer-reviewed articles: ", total_articles,
+    " | Preprints: ", total_preprints
+  )
+
+  writeLines(content, filepath)
+  message("  Updated metrics lines in ", filepath)
+  invisible(TRUE)
+}
+
+# --------------------------------------------------------------------------- #
+# Update citation_stats in cv/data/publications.yml
+# --------------------------------------------------------------------------- #
+
+update_cv_citation_stats <- function(metrics, total_articles, filepath = CV_YAML_FILE) {
+  if (!file.exists(filepath)) {
+    message("  CV YAML not found: ", filepath, " — skipping.")
+    return(invisible(FALSE))
+  }
+
+  cv_data <- read_yaml(filepath)
+
+  citations_str <- if (metrics$total_citations >= 1000)
+    paste0("> ", floor(metrics$total_citations / 100) * 100, " (OpenAlex)")
+  else
+    paste0(metrics$total_citations, " (OpenAlex)")
+
+  cv_data$citation_stats$total_citations <- citations_str
+  cv_data$citation_stats$h_index         <- metrics$h_index
+  cv_data$citation_stats$i10_index       <- metrics$i10_index
+  cv_data$citation_stats$total_articles  <- total_articles
+
+  write_yaml(cv_data, filepath)
+  message("  Updated citation_stats in ", filepath)
+  invisible(TRUE)
 }
 
 # --------------------------------------------------------------------------- #
 # Main
 # --------------------------------------------------------------------------- #
 
-groups <- fetch_orcid_works(ORCID_ID)
-dois   <- extract_journal_dois(groups)
-message("Found ", length(dois), " journal-article DOIs on ORCID")
+# --- 1. Journal articles ---
+article_items <- fetch_my_publications(ZOTERO_USER_ID, "journalArticle")
+article_cits  <- compact(map(article_items, format_article_citation))
+message("Formatted ", length(article_cits), " article citations")
 
-message("Fetching CrossRef metadata ...")
-metadata  <- map(dois, \(d) { message("  ", d); fetch_crossref(d) })
-citations <- compact(map(metadata, format_citation))
-message("Formatted ", length(citations), " citations")
+if (length(article_cits) == 0) stop("No article citations produced — aborting.")
 
-if (length(citations) == 0) {
-  stop("No citations were produced — aborting to avoid overwriting the file.")
+article_result <- build_articles_section(article_cits)
+total_articles <- article_result$total
+replace_section(article_result$lines, "## Journal Articles")
+
+# --- 2. Preprints ---
+preprint_items <- fetch_my_publications(ZOTERO_USER_ID, "preprint")
+preprint_cits  <- compact(map(preprint_items, format_preprint_citation))
+message("Formatted ", length(preprint_cits), " preprint citations")
+
+if (length(preprint_cits) > 0) {
+  preprint_result <- build_preprints_section(preprint_cits)
+  total_preprints <- preprint_result$total
+  replace_section(preprint_result$lines, "## Preprints & Papers in preparation")
+} else {
+  message("No preprints found — skipping preprints section update.")
+  total_preprints <- 0L
 }
 
-new_section <- build_section(citations)
-replace_journal_articles_section(new_section)
+# --- 3. Citation metrics ---
+metrics <- fetch_openalex_metrics()
+
+if (!is.null(metrics)) {
+  message(sprintf(
+    "OpenAlex: citations %d | h-index %d | i10 %d",
+    metrics$total_citations, metrics$h_index, metrics$i10_index
+  ))
+  update_metrics_line(metrics, total_articles, total_preprints)
+  update_cv_citation_stats(metrics, total_articles)
+} else {
+  message("OpenAlex fetch failed — metrics not updated.")
+}
+
 message("Done.")

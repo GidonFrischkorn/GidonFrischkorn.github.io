@@ -1,9 +1,13 @@
 project:
   type: website
   output-dir: _site
+  render:
+    - "*.qmd"
+    - "!cv/"
   resources:
     - CNAME
     - images/academicons-1.9.4/
+    - cv/*.pdf
 
 website:
   title: "Gidon Frischkorn"
@@ -40,6 +44,7 @@ format:
     theme:
       light: [cosmo, theme-light.scss, custom.scss]
       dark:  [cosmo, theme-dark.scss, custom.scss]
+    canonical-url: true
     include-in-header:
       - text: |
           <link rel="stylesheet" href="/images/academicons-1.9.4/css/academicons.min.css">

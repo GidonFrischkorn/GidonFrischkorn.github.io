@@ -1,0 +1,47 @@
+- title:
+    en: "Dr. phil. (PhD), Psychology"
+    de: "Dr. phil., Psychologie"
+  description:
+    en: "Ruprecht-Karls Universität Heidelberg"
+    de: "Ruprecht-Karls-Universität Heidelberg"
+  location:
+    en: "Heidelberg, Germany"
+    de: "Heidelberg, Deutschland"
+  date: "09/2015 -- 03/2019"
+  details:
+    en:
+      - "With distinction: *summa cum laude*"
+    de:
+      - "Prädikat: *summa cum laude*"
+
+- title:
+    en: "Master of Science, Psychology"
+    de: "Master of Science, Psychologie"
+  description:
+    en: "Ruprecht-Karls Universität Heidelberg"
+    de: "Ruprecht-Karls-Universität Heidelberg"
+  location:
+    en: "Heidelberg, Germany"
+    de: "Heidelberg, Deutschland"
+  date: "10/2013 -- 08/2015"
+  details:
+    en:
+      - "GPA 1.0 (top grade)"
+    de:
+      - "Abschlussnote 1.0 (Bestnote)"
+
+- title:
+    en: "Bachelor of Science, Psychology"
+    de: "Bachelor of Science, Psychologie"
+  description:
+    en: "Ruprecht-Karls Universität Heidelberg"
+    de: "Ruprecht-Karls-Universität Heidelberg"
+  location:
+    en: "Heidelberg, Germany"
+    de: "Heidelberg, Deutschland"
+  date: "10/2009 -- 08/2012"
+  details:
+    en:
+      - "GPA 1.6 (equivalent: very good)"
+    de:
+      - "Abschlussnote 1.6 (sehr gut)"

@@ -1,0 +1,111 @@
+---
+title: "Curriculum Vitae"
+author:
+  firstname: Gidon T.
+  lastname: Frischkorn
+  address: "Leutschenbachstrasse 77 - CH-8050 Zurich, Switzerland"
+  position: "Data Science · Bayesian Statistics · Psychometrics · R & Python"
+  contacts:
+    - icon: fa envelope
+      text: gidon.frischkorn@unilu.ch
+      url: "mailto:gidon.frischkorn@unilu.ch"
+    - icon: fa link
+      text: gfrischkorn.org
+      url: "https://www.gfrischkorn.org"
+    - icon: fa brands github
+      text: GidonFrischkorn
+      url: "https://github.com/GidonFrischkorn"
+    - icon: fa brands linkedin
+      text: LinkedIn
+      url: "https://www.linkedin.com/in/gidon-frischkorn-4913431b1/"
+format:
+  awesomecv-typst:
+    keep-typ: false
+knitr:
+  opts_chunk:
+    dev: png
+    fig.show: hide
+execute:
+  echo: false
+  output: asis
+---
+
+```{r}
+#| label: setup
+#| include: false
+source("helpers.R")
+lang <- "en"
+```
+
+# Professional Summary
+
+```{=typst}
+#resume-item[
+Quantitative psychologist and data scientist with 10+ years of experience designing experiments, building Bayesian measurement models, and turning behavioural data into reproducible, interpretable findings. Secured over CHF 1,000,000 in competitive research funding as PI and led an independent four-person research group. Developed and published the open-source R package bmm (CRAN), now used by researchers across multiple institutions. Translates theoretical questions about human cognition into concrete data products — from experimental paradigm design through Bayesian modelling to documented, shareable code.
+]
+```
+
+# Professional Experience
+
+```{r}
+render_work(lang, max_entries = 3, max_details = 3)
+```
+
+# Key Skills
+
+```{=typst}
+#resume-item[
+- *Statistical Modeling:* Bayesian hierarchical models, structural equation models, drift diffusion models, signal detection theory, mixture models
+- *Programming & Tools:* R (expert), Python, Git, Quarto, Stan, brms, jsPsych, JATOS
+- *Data Science:* Predictive modeling, experimental design, A/B testing, data visualization (ggplot2), reproducible analyses
+- *Software Development:* Lead author of bmm R package (published on CRAN; Bayesian measurement models)
+]
+```
+
+# Education
+
+```{r}
+render_education(lang, compact = TRUE)
+```
+
+# Language Skills
+
+```{r}
+render_languages(lang)
+```
+
+# Research Funding
+
+```{r}
+data <- yaml::read_yaml("data/funding.yml")
+typst_block(sprintf("_%s_\n\n", data$total$en))
+render_funding(lang, include_summaries = FALSE, max_entries = 2)
+```
+
+# Selected Publications
+
+```{r}
+data <- yaml::read_yaml("data/publications.yml")
+stats <- data$citation_stats
+typst_block(sprintf(
+  '34 peer-reviewed articles | h-index: %s | > %s citations (Google Scholar)\n\n',
+  stats$h_index, gsub("> ", "", stats$total_citations)
+))
+render_selected_publications(lang)
+```
+
+# Selected Awards
+
+```{r}
+data <- yaml::read_yaml("data/awards.yml")
+entries <- vapply(data[1:2], function(entry) {
+  inst <- if (!is.null(entry$institution)) get_lang(entry$institution, lang) else ""
+  typst_entry(
+    title = get_lang(entry$title, lang),
+    location = inst,
+    date = entry$date,
+    description = get_lang(entry$description, lang)
+  )
+}, character(1))
+typst_block(entries)
+```

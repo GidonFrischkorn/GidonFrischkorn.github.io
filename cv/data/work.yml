@@ -1,0 +1,113 @@
+- title:
+    en: "Lecturer and Research Associate in Statistics & Methods"
+    de: "Dozent und Wissenschaftlicher Mitarbeiter für Statistik & Methoden"
+  description:
+    en: "University of Lucerne, Switzerland (20% appointment)"
+    de: "Universität Luzern, Schweiz (20% Anstellung)"
+  location:
+    en: "Lucerne, Switzerland"
+    de: "Luzern, Schweiz"
+  date: "08/2025 -- present"
+  details:
+    en:
+      - "Designed and launched a Statistics I curriculum for 150+ undergraduates, including interactive R-based exercise materials built for reproducibility"
+      - "Sole responsible instructor for a full-semester statistics lecture: design, delivery, exercises, and examination"
+      - "Developed open teaching materials in R and Quarto supporting hands-on statistical training across large cohorts"
+      - "Shaping the curricular design of the methods track"
+    de:
+      - "Konzeption und Einführung eines Statistik I-Curriculums für 150+ Studierende, einschließlich interaktiver R-basierter Übungsmaterialien für reproduzierbare Analysen"
+      - "Alleinige Lehrverantwortung für eine Statistikvorlesung: Planung, Durchführung, Übungen und Prüfung"
+      - "Entwicklung offener Lehrmaterialien in R und Quarto für praxisnahe Statistikausbildung großer Kohorten"
+      - "Mitgestaltung der curricularen Ausrichtung des Methodenstrangs"
+
+- title:
+    en: "SNF Ambizione Fellow"
+    de: "SNF Ambizione Fellow"
+  description:
+    en: "University of Zurich (UZH), Switzerland"
+    de: "Universität Zürich (UZH), Schweiz"
+  location:
+    en: "Zurich, Switzerland"
+    de: "Zürich, Schweiz"
+  date: "01/2023 -- present"
+  details:
+    en:
+      - "Secured and managed CHF 950,000 in competitive SNF funding as PI, leading an independent four-person research group from inception to publication"
+      - "Developed and published the bmm R package (CRAN) for Bayesian measurement models — a fully documented, open-source tool adopted across multiple research groups"
+      - "Designed and executed multiple experimental studies (lab and online), producing 10+ peer-reviewed publications on cognitive processes and individual differences"
+      - "Developing and applying hierarchical Bayesian modeling approaches to measure and dissociate cognitive processes"
+      - "Managing budget, personnel planning, and scientific direction of an SNSF-funded research project (CHF 950,000, 4 years)"
+      - "Planning, conducting, and analyzing experimental studies (lab and online)"
+      - "Teaching advanced statistical methods"
+    de:
+      - "CHF 950.000 an kompetitiven SNF-Drittmitteln als PI eingeworben und verwaltet; Leitung einer unabhängigen vierköpfigen Forschungsgruppe von der Gründung bis zur Publikation"
+      - "Entwicklung und Veröffentlichung des bmm R-Pakets (CRAN) für Bayesianische Messmodelle — ein vollständig dokumentiertes Open-Source-Tool im Einsatz in mehreren Forschungsgruppen"
+      - "Planung und Durchführung mehrerer experimenteller Studien (Labor und Online) mit 10+ publizierten Fachartikeln zu kognitiven Prozessen und individuellen Unterschieden"
+      - "Entwicklung und Anwendung hierarchischer Bayes-Modellierungsansätze zur Messung und Dissoziation kognitiver Prozesse"
+      - "Leitung von Budget, Personalplanung und wissenschaftlicher Ausrichtung eines SNF-Forschungsprojekts (CHF 950'000, 4 Jahre)"
+      - "Planung, Durchführung und Auswertung experimenteller Studien (Labor und Online)"
+      - "Lehre in fortgeschrittenen statistischen Methoden"
+
+- title:
+    en: "Postdoctoral Researcher"
+    de: "Postdoktorand"
+  description:
+    en: "University of Zurich (UZH), Switzerland"
+    de: "Universität Zürich (UZH), Schweiz"
+  location:
+    en: "Zurich, Switzerland"
+    de: "Zürich, Schweiz"
+  date: "01/2019 -- 12/2022"
+  details:
+    en:
+      - "Led international multi-site research projects at the intersection of psychometrics and cognitive psychology, contributing to 15+ peer-reviewed publications"
+      - "Secured external network funding (DFG, €44,645 as co-PI) and authored competitive grant applications across two funding cycles"
+      - "Advised a research group of 10+ on statistical methodology — Bayesian inference, mixed-effects models, and reproducible analysis pipelines"
+      - "Teaching courses and supervising bachelor and master theses"
+      - "Advising on statistical methodology and research computing for the group"
+    de:
+      - "Leitung internationaler Forschungsprojekte an der Schnittstelle von Psychometrie und kognitiver Psychologie mit Beitrag zu 15+ begutachteten Publikationen"
+      - "Einwerbung externer Drittmittel (DFG, €44.645 als Co-PI) und Entwicklung kompetitiver Förderanträge über zwei Förderzyklen"
+      - "Beratung einer Forschungsgruppe von 10+ Personen in statistischer Methodik — Bayesianische Inferenz, gemischte Modelle und reproduzierbare Analyse-Workflows"
+      - "Lehrtätigkeit und Betreuung von Bachelor- und Masterarbeiten"
+      - "Beratung zur statistischen Methodik und zum wissenschaftlichen Rechnen in der Arbeitsgruppe"
+
+- title:
+    en: "Ph.D. Student"
+    de: "Doktorand"
+  description:
+    en: "Heidelberg University, Germany"
+    de: "Universität Heidelberg, Deutschland"
+  location:
+    en: "Heidelberg, Germany"
+    de: "Heidelberg, Deutschland"
+  date: "09/2015 -- 12/2018"
+  details:
+    en:
+      - "Junior researcher in the \"Differential Psychology & Diagnostics\" research group"
+      - "Independently conducting a research project on individual differences in intelligence"
+      - "Applying advanced statistical and psychometric modeling techniques"
+      - "Teaching programming and experimental methods"
+    de:
+      - "Wissenschaftlicher Mitarbeiter in der AG \"Differentielle Psychologie & Diagnostik\""
+      - "Eigenständige Durchführung eines Forschungsprojekts zu individuellen Unterschieden in der Intelligenz"
+      - "Anwendung fortgeschrittener statistischer und psychometrischer Modellierungstechniken"
+      - "Lehre in Programmierung und experimentellen Methoden"
+
+- title:
+    en: "Research Assistant"
+    de: "Wissenschaftliche Hilfskraft"
+  description:
+    en: "Heidelberg University, Germany"
+    de: "Universität Heidelberg, Deutschland"
+  location:
+    en: "Heidelberg, Germany"
+    de: "Heidelberg, Deutschland"
+  date: "09/2010 -- 08/2015"
+  details:
+    en:
+      - "Conducting and analyzing behavioral experiments"
+      - "Data management and preparation for empirical research projects"
+    de:
+      - "Durchführung und Auswertung verhaltensexperimenteller Studien"
+      - "Datenmanagement und -aufbereitung für empirische Forschungsprojekte"

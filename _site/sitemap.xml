@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.gfrischkorn.org/index.html</loc>
-    <lastmod>2026-02-17T14:35:30.301Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.gfrischkorn.org/about.html</loc>
-    <lastmod>2026-02-17T09:41:12.945Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.gfrischkorn.org/projects/measurement-models.html</loc>
-    <lastmod>2026-02-17T14:35:30.301Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.gfrischkorn.org/contact.html</loc>
-    <lastmod>2026-02-17T14:35:30.279Z</lastmod>
-  </url>
-  <url>
     <loc>https://www.gfrischkorn.org/teaching.html</loc>
-    <lastmod>2026-02-17T14:35:30.302Z</lastmod>
+    <lastmod>2026-05-25T17:54:54.655Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/publications.html</loc>
+    <lastmod>2026-05-25T18:21:34.025Z</lastmod>
   </url>
   <url>
     <loc>https://www.gfrischkorn.org/projects/binding-hypothesis.html</loc>
     <lastmod>2026-02-17T14:35:30.301Z</lastmod>
   </url>
   <url>
-    <loc>https://www.gfrischkorn.org/publications.html</loc>
-    <lastmod>2026-02-17T14:35:30.302Z</lastmod>
+    <loc>https://www.gfrischkorn.org/cv.html</loc>
+    <lastmod>2026-02-21T19:46:58.198Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/contact.html</loc>
+    <lastmod>2026-02-17T14:35:30.279Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/index.html</loc>
+    <lastmod>2026-05-25T17:54:49.484Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gfrischkorn.org/projects/measurement-models.html</loc>
+    <lastmod>2026-02-17T14:35:30.301Z</lastmod>
   </url>
   <url>
     <loc>https://www.gfrischkorn.org/software.html</loc>
-    <lastmod>2026-02-18T13:23:28.626Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.gfrischkorn.org/cv.html</loc>
-    <lastmod>2026-02-17T14:35:30.279Z</lastmod>
+    <lastmod>2026-05-25T17:54:53.548Z</lastmod>
   </url>
 </urlset>

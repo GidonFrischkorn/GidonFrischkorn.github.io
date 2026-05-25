@@ -1,0 +1,212 @@
+---
+title: "Curriculum Vitae"
+author:
+  firstname: Gidon T.
+  lastname: Frischkorn
+  address: "Binzmühlerstrasse 14/22 - CH-8050 Zürich, Schweiz"
+  position: "Kognitive Psychometrie · Bayesianische Methoden · Intelligenzforschung"
+  contacts:
+    - icon: fa envelope
+      text: gidon.frischkorn@unilu.ch
+      url: "mailto:gidon.frischkorn@unilu.ch"
+    - icon: fa link
+      text: gfrischkorn.org
+      url: "https://www.gfrischkorn.org"
+    - icon: fa brands github
+      text: GidonFrischkorn
+      url: "https://github.com/GidonFrischkorn"
+    - icon: fa brands orcid
+      text: 0000-0002-7340-3409
+      url: "https://orcid.org/0000-0002-7340-3409"
+format:
+  awesomecv-typst:
+    keep-typ: false
+knitr:
+  opts_chunk:
+    dev: png
+    fig.show: hide
+execute:
+  echo: false
+  output: asis
+---
+
+```{r}
+#| label: setup
+#| include: false
+source("helpers.R")
+lang <- "de"
+```
+
+# Ausbildung
+
+```{r}
+render_education(lang)
+```
+
+# Berufserfahrung
+
+```{r}
+render_work(lang)
+```
+
+# Berufungsverfahren
+
+```{r}
+render_appointments(lang)
+```
+
+# Sprachkenntnisse
+
+```{r}
+render_languages(lang)
+```
+
+# Auszeichnungen und Stipendien
+
+```{r}
+render_awards(lang)
+```
+
+```{=typst}
+#pagebreak()
+```
+
+# Drittmittel
+
+```{r}
+render_funding(lang, include_summaries = TRUE)
+```
+
+## Reisestipendien
+
+```{r}
+render_travel_awards(lang)
+```
+
+# Publikationen und Forschungsbeitraege
+
+```{r}
+render_citation_stats(lang)
+```
+
+## Software
+
+```{r}
+render_software(lang)
+```
+
+## Preprints
+
+```{r}
+render_publications("preprints", lang)
+```
+
+## Begutachtete Zeitschriftenartikel
+
+```{r}
+render_publications("articles", lang)
+```
+
+# Vortraege und Praesentationen
+
+## Vortragsreihe
+
+```{r}
+data <- yaml::read_yaml("data/presentations.yml")
+ts <- data$talk_series[[1]]
+typst_block(typst_entry(
+  title = get_lang(ts$title, lang),
+  date = as.character(ts$year),
+  description = get_lang(ts$description, lang)
+))
+```
+
+## Eingeladene Vortraege
+
+```{r}
+render_invited_talks(lang)
+```
+
+## Konferenzbeitraege
+
+```{r}
+render_conference_summary(lang)
+```
+
+```{=typst}
+#pagebreak()
+```
+
+# Lehre
+
+```{r}
+data <- yaml::read_yaml("data/teaching.yml")
+typst_block(sprintf("Lehrueberblick (seit 2015, zusammengefasst): %s\n", get_lang(data$overview, lang)))
+```
+
+## Vorlesungen
+
+```{r}
+render_lectures(lang)
+```
+
+## Seminare
+
+```{r}
+render_seminars(lang)
+```
+
+## Workshops
+
+```{r}
+render_workshops(lang)
+```
+
+## Hochschuldidaktische Weiterbildung
+
+```{r}
+data <- yaml::read_yaml("data/teaching.yml")
+entries <- vapply(data$professional_development, function(entry) {
+  typst_entry(
+    title = get_lang(entry$title, lang),
+    date = entry$date,
+    description = get_lang(entry$details, lang)
+  )
+}, character(1))
+typst_block(entries)
+```
+
+## Thematische Breite
+
+```{r}
+data <- yaml::read_yaml("data/teaching.yml")
+breadth <- get_lang(data$breadth, lang)
+bullets <- paste0("- ", breadth, collapse = "\n")
+typst_block(bullets)
+```
+
+# Engagement in der Wissenschaft
+
+## Herausgebertaetigkeiten
+
+```{r}
+render_editorial(lang)
+```
+
+## Gutachtertaetigkeiten
+
+```{r}
+render_reviewing(lang)
+```
+
+## Mitgliedschaften
+
+```{r}
+render_memberships(lang)
+```
+
+# Akademische Selbstverwaltung
+
+```{r}
+render_self_governance(lang)
+```

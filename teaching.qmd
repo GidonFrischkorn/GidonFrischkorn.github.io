@@ -26,6 +26,6 @@ These are typically weekly 2-hour sessions with work to be completed between mee
 
 ## Teaching philosophy
 
-My starting point is that statistical methods carry direct meaning for scientific questions — they are not just mathematical formalism to get through on the way to a result. I cover the mathematical foundations (probability theory, sampling, Bayes' theorem) and connect them to both frequentist and Bayesian analyses, rather than presenting these as separate toolboxes. Students learn to implement analyses in R and to connect what the software outputs to what they were actually asking.
+My starting point is that statistical methods carry direct meaning for scientific questions — they are not just mathematical formalism to get through on the way to a result. I cover the mathematical foundations (probability theory, sampling, Bayes' theorem) and connect them to both frequentist and Bayesian analyses, rather than presenting these as separate toolboxes. Students implement analyses in R and learn to read the output in terms of the scientific question they were actually asking.
 
 I also treat reproducibility as part of methods training, not an add-on. Students document their code and data, preregister where appropriate, and share materials on OSF.
