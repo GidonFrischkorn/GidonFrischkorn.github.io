@@ -35,7 +35,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          Rscript -e 'install.packages(c("yaml", "knitr", "rmarkdown"), repos = "https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("yaml", "knitr", "rmarkdown"))'
 
       - name: Render site
         run: quarto render
