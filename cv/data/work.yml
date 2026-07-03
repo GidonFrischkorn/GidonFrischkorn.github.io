@@ -1,26 +1,4 @@
 - title:
-    en: "Lecturer and Research Associate in Statistics & Methods"
-    de: "Dozent und Wissenschaftlicher Mitarbeiter für Statistik & Methoden"
-  description:
-    en: "University of Lucerne, Switzerland (20% appointment)"
-    de: "Universität Luzern, Schweiz (20% Anstellung)"
-  location:
-    en: "Lucerne, Switzerland"
-    de: "Luzern, Schweiz"
-  date: "08/2025 -- present"
-  details:
-    en:
-      - "Designed and launched a Statistics I curriculum for 150+ undergraduates, including interactive R-based exercise materials built for reproducibility"
-      - "Sole responsible instructor for a full-semester statistics lecture: design, delivery, exercises, and examination"
-      - "Developed open teaching materials in R and Quarto supporting hands-on statistical training across large cohorts"
-      - "Shaping the curricular design of the methods track"
-    de:
-      - "Konzeption und Einführung eines Statistik I-Curriculums für 150+ Studierende, einschließlich interaktiver R-basierter Übungsmaterialien für reproduzierbare Analysen"
-      - "Alleinige Lehrverantwortung für eine Statistikvorlesung: Planung, Durchführung, Übungen und Prüfung"
-      - "Entwicklung offener Lehrmaterialien in R und Quarto für praxisnahe Statistikausbildung großer Kohorten"
-      - "Mitgestaltung der curricularen Ausrichtung des Methodenstrangs"
-
-- title:
     en: "SNF Ambizione Fellow"
     de: "SNF Ambizione Fellow"
   description:
@@ -32,21 +10,43 @@
   date: "01/2023 -- present"
   details:
     en:
-      - "Secured and managed CHF 950,000 in competitive SNF funding as PI, leading an independent four-person research group from inception to publication"
+      - "Secured and managed CHF 916,510 in competitive SNF funding as PI, leading an independent four-person research group from inception to publication"
       - "Developed and published the bmm R package (CRAN) for Bayesian measurement models — a fully documented, open-source tool adopted across multiple research groups"
       - "Designed and executed multiple experimental studies (lab and online), producing 10+ peer-reviewed publications on cognitive processes and individual differences"
       - "Developing and applying hierarchical Bayesian modeling approaches to measure and dissociate cognitive processes"
-      - "Managing budget, personnel planning, and scientific direction of an SNSF-funded research project (CHF 950,000, 4 years)"
+      - "Managing budget, personnel planning, and scientific direction of an SNSF-funded research project (over CHF 1 million incl. Flexibility Grant, 4 years)"
       - "Planning, conducting, and analyzing experimental studies (lab and online)"
       - "Teaching advanced statistical methods"
     de:
-      - "CHF 950.000 an kompetitiven SNF-Drittmitteln als PI eingeworben und verwaltet; Leitung einer unabhängigen vierköpfigen Forschungsgruppe von der Gründung bis zur Publikation"
+      - "CHF 916'510 an kompetitiven SNF-Drittmitteln als PI eingeworben und verwaltet; Leitung einer unabhängigen vierköpfigen Forschungsgruppe von der Gründung bis zur Publikation"
       - "Entwicklung und Veröffentlichung des bmm R-Pakets (CRAN) für Bayesianische Messmodelle — ein vollständig dokumentiertes Open-Source-Tool im Einsatz in mehreren Forschungsgruppen"
       - "Planung und Durchführung mehrerer experimenteller Studien (Labor und Online) mit 10+ publizierten Fachartikeln zu kognitiven Prozessen und individuellen Unterschieden"
       - "Entwicklung und Anwendung hierarchischer Bayes-Modellierungsansätze zur Messung und Dissoziation kognitiver Prozesse"
-      - "Leitung von Budget, Personalplanung und wissenschaftlicher Ausrichtung eines SNF-Forschungsprojekts (CHF 950'000, 4 Jahre)"
+      - "Leitung von Budget, Personalplanung und wissenschaftlicher Ausrichtung eines SNF-Forschungsprojekts (über CHF 1 Mio. inkl. Flexibility Grant, 4 Jahre)"
       - "Planung, Durchführung und Auswertung experimenteller Studien (Labor und Online)"
       - "Lehre in fortgeschrittenen statistischen Methoden"
+
+- title:
+    en: "Lecturer and Research Associate in Statistics & Methods"
+    de: "Dozent und Wissenschaftlicher Mitarbeiter für Statistik & Methoden"
+  description:
+    en: "University of Lucerne, Switzerland (20% appointment)"
+    de: "Universität Luzern, Schweiz (20% Anstellung)"
+  location:
+    en: "Lucerne, Switzerland"
+    de: "Luzern, Schweiz"
+  date: "08/2025 -- 07/2026"
+  details:
+    en:
+      - "Designed and taught Statistics I and Statistics IV (incl. reproducible data analysis in R) for 150+ undergraduates, with interactive R-based exercise materials built for reproducibility"
+      - "Sole responsible instructor for both statistics lectures: design, delivery, accompanying exercises, and examination"
+      - "Developed open teaching materials in R and Quarto supporting hands-on statistical training across large cohorts"
+      - "Shaping the curricular design of the methods track"
+    de:
+      - "Konzeption und Durchführung von Statistik I und Statistik IV (u.a. reproduzible Datenanalyse in R) für 150+ Studierende, mit interaktiven R-basierten Übungsmaterialien für reproduzierbare Analysen"
+      - "Alleinige Lehrverantwortung für beide Statistikvorlesungen: Planung, Durchführung, begleitende Übungen und Prüfung"
+      - "Entwicklung offener Lehrmaterialien in R und Quarto für praxisnahe Statistikausbildung großer Kohorten"
+      - "Mitgestaltung der curricularen Ausrichtung des Methodenstrangs"
 
 - title:
     en: "Postdoctoral Researcher"

@@ -17,8 +17,26 @@ lectures:
       en: "3 contact hours/week; 5 ECTS"
       de: "3 SWS; 5 ECTS"
     evaluation:
-      en: "Overall course rating: 3.0; Instructor: 3.4"
-      de: "Gesamtbewertung: 3.0; Dozent: 3.4"
+      en: "Overall course rating: 3.0; Instructor: 3.4 (first delivery; large mandatory introductory cohort)"
+      de: "Gesamtbewertung: 3.0; Dozent: 3.4 (erstmalige Durchführung; grosse Pflicht-Einführungskohorte)"
+
+  - title:
+      en: "Statistics IV (Reproducible Data Analysis in R)"
+      de: "Statistik IV (Reproduzible Datenanalyse in R)"
+    program:
+      en: "B.Sc. Psychology, approx. 80 students"
+      de: "B.Sc. Psychologie, ca. 80 Studierende"
+    institution:
+      en: "University of Lucerne"
+      de: "Universität Luzern"
+    date: "FS 2026"
+    details:
+      en: "Reproducible data analysis in R with interactive Quarto/webR exercise materials"
+      de: "Reproduzible Datenanalyse in R mit interaktiven Quarto/webR-Übungsmaterialien"
+    # TODO: SWS/ECTS und genaue Lehrrolle (Vorlesung vs. Übung) bestätigen; ggf. offizielle Gesamtbewertung/Dozent-Werte wie bei Statistik I einsetzen
+    evaluation:
+      en: "Clearly positive evaluation (1–6 scale; item medians 5–6): e.g., learning climate 5.2, instructor contact 5.7"
+      de: "Klar positive Evaluation (6er-Skala; Item-Mediane 5–6): u.a. Lernklima 5.2, Betreuung 5.7"
 
   - title:
       en: "Cognitive Psychology I"

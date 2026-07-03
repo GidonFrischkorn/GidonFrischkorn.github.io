@@ -130,13 +130,13 @@ render_citation_stats <- function(lang = "en") {
   stats <- data$citation_stats
   if (lang == "de") {
     out <- sprintf(
-      'Gesamtzitationen (Google Scholar): %s\\ h-Index: %s | i-10 Index: %s\\ Begutachtete Artikel: %s | Preprints: %s\n',
+      'Gesamtzitationen: %s\\ h-Index: %s | i-10 Index: %s\\ Begutachtete Artikel: %s | Preprints: %s\n',
       stats$total_citations, stats$h_index, stats$i10_index,
       stats$total_articles, stats$total_preprints
     )
   } else {
     out <- sprintf(
-      'Total citations (Google Scholar): %s\\ h-index: %s | i-10 index: %s\\ Peer-reviewed articles: %s | Preprints: %s\n',
+      'Total citations: %s\\ h-index: %s | i-10 index: %s\\ Peer-reviewed articles: %s | Preprints: %s\n',
       stats$total_citations, stats$h_index, stats$i10_index,
       stats$total_articles, stats$total_preprints
     )

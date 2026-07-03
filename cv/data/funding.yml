@@ -5,8 +5,8 @@ total:
 grants:
   - number: 1
     title:
-      en: "The Binding Hypothesis -- A Unified Account of Cognitive Individual Differences"
-      de: "Die Bindungshypothese -- Ein einheitlicher Ansatz für kognitive individuelle Unterschiede"
+      en: "The binding hypothesis – A unified account of cognitive individual differences?"
+      de: "The binding hypothesis – A unified account of cognitive individual differences?"
     agency: "SNF"
     type:
       en: "competitive"
@@ -14,6 +14,9 @@ grants:
     role: "PI"
     duration: "2023--2026"
     amount: "CHF 916'510"
+    # SNF grant #208828. Official approved total on data.snf.ch is CHF 1'051'797 =
+    # base grant (916'510) + Flexibility Grant (120'000, listed separately below) +
+    # a PhD-student mobility grant. Base kept separate here by choice — do not merge.
     summary:
       en: "This project investigates individual differences in cognitive processes by combining experimental paradigms with formal measurement and process models. The aim is to develop theoretically grounded indicators of cognitive processes and examine their relationship with higher-order performance measures. The project is run as an independent research group with full budget and personnel responsibility."
       de: "Dieses Projekt untersucht individuelle Unterschiede in kognitiven Prozessen durch die Kombination experimenteller Paradigmen mit formalen Mess- und Prozessmodellen. Ziel ist die Entwicklung theoretisch fundierter Indikatoren kognitiver Prozesse und die Untersuchung ihres Zusammenhangs mit höheren Leistungsmassen. Das Projekt wird als unabhängige Forschungsgruppe mit voller Budget- und Personalverantwortung geleitet."
@@ -35,8 +38,23 @@ grants:
 
   - number: 3
     title:
+      en: "SNSF Starting Grant 2026 — BASIC"
+      de: "SNSF Starting Grant 2026 — BASIC"
+    agency: "SNF"
+    type:
+      en: "competitive — submitted, decision pending"
+      de: "kompetitiv — eingereicht, Entscheid ausstehend"
+    role: "PI"
+    duration: "ab 2027 (geplant)"
+    amount: "ca. CHF 1.8 Mio. (beantragt)"
+    summary:
+      en: "Submitted to the SNSF on 2026-05-01, decision pending. Project on process-oriented, bias-reduced assessment of individual differences using cognitive measurement models."
+      de: "Eingereicht beim SNF am 01.05.2026, Entscheid ausstehend. Projekt zur prozessorientierten, verzerrungsarmen Erfassung individueller Unterschiede mit kognitiven Messmodellen."
+
+  - number: 4
+    title:
       en: "Neurocognitive Psychometrics (research network)"
-      de: "Neurokognitive Psychometrie (Forschungsnetzwerk)"
+      de: "Neurocognitive Psychometrics (research network)"
     agency: "DFG"
     type:
       en: "competitive"
@@ -48,10 +66,10 @@ grants:
       en: "An international scientific network to foster exchange between psychometrics, cognitive psychology, and neurocognition. My role involved co-coordinating the network and shaping its conceptual direction and grant applications."
       de: "Ein internationales wissenschaftliches Netzwerk zur Förderung des Austauschs zwischen Psychometrie, kognitiver Psychologie und Neurokognition. Meine Rolle umfasste die Co-Koordination des Netzwerks sowie die Mitgestaltung seiner konzeptuellen Ausrichtung und Antragsstellung."
 
-  - number: 4
+  - number: 5
     title:
       en: "Bayes Factor Estimation for Complex Hierarchical Models"
-      de: "Bayes-Faktor-Schätzung für komplexe hierarchische Modelle"
+      de: "Bayes Factor Estimation for Complex Hierarchical Models"
     agency: "Graduate Campus UZH"
     type:
       en: "competitive"

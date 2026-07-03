@@ -7,8 +7,8 @@ author:
   position: "Kognitive Psychometrie · Bayesianische Methoden · Intelligenzforschung"
   contacts:
     - icon: fa envelope
-      text: gidon.frischkorn@unilu.ch
-      url: "mailto:gidon.frischkorn@unilu.ch"
+      text: gidon.frischkorn@psychologie.uzh.ch
+      url: "mailto:gidon.frischkorn@psychologie.uzh.ch"
     - icon: fa link
       text: gfrischkorn.org
       url: "https://www.gfrischkorn.org"

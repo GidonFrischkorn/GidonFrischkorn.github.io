@@ -7,8 +7,8 @@ author:
   position: "Data Science · Bayesianische Statistik · Psychometrie · R & Python"
   contacts:
     - icon: fa envelope
-      text: gidon.frischkorn@unilu.ch
-      url: "mailto:gidon.frischkorn@unilu.ch"
+      text: gidon.frischkorn@psychologie.uzh.ch
+      url: "mailto:gidon.frischkorn@psychologie.uzh.ch"
     - icon: fa link
       text: gfrischkorn.org
       url: "https://www.gfrischkorn.org"
@@ -88,8 +88,8 @@ render_funding(lang, include_summaries = FALSE, max_entries = 2)
 data <- yaml::read_yaml("data/publications.yml")
 stats <- data$citation_stats
 typst_block(sprintf(
-  '34 begutachtete Artikel | h-Index: %s | > %s Zitationen (Google Scholar)\n\n',
-  stats$h_index, gsub("> ", "", stats$total_citations)
+  '34 begutachtete Artikel | h-Index: %s | Zitationen: %s\n\n',
+  stats$h_index, stats$total_citations
 ))
 render_selected_publications(lang)
 ```
