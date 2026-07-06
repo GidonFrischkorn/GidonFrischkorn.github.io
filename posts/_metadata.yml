@@ -1,0 +1,20 @@
+execute:
+  freeze: auto
+  warning: false
+  message: false
+toc: true
+csl: ../apa.csl
+link-citations: true
+license: "CC BY 4.0"
+comments: false
+format:
+  html:
+    fig-width: 7
+    fig-height: 4.5
+    code-fold: true
+    code-summary: "Show the R code"
+knitr:
+  opts_chunk:
+    dev: svglite
+    dev.args:
+      bg: transparent

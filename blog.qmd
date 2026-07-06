@@ -1,0 +1,15 @@
+---
+title: "Blog"
+description: "Probability distributions for psychological data analysis"
+listing:
+  id: posts
+  contents: posts
+  type: default
+  sort: "date desc"
+  categories: true
+  sort-ui: false
+  filter-ui: false
+  fields: [image, date, title, description, categories, reading-time]
+  feed: true
+page-layout: full
+---
