@@ -4,7 +4,7 @@ author:
   firstname: Gidon T.
   lastname: Frischkorn
   address: "Leutschenbachstrasse 77 - CH-8050 Zurich, Switzerland"
-  position: "Data Science · Bayesian Statistics · Psychometrics · R & Python"
+  position: "Data Science · Experimentation & A/B Testing · Bayesian Statistics · Psychometrics"
   contacts:
     - icon: fa envelope
       text: gidon.frischkorn@psychologie.uzh.ch
@@ -41,24 +41,35 @@ lang <- "en"
 
 ```{=typst}
 #resume-item[
-Quantitative psychologist and data scientist with 10+ years of experience designing experiments, building Bayesian measurement models, and turning behavioural data into reproducible, interpretable findings. Secured over CHF 1,000,000 in competitive research funding as PI and led an independent four-person research group. Developed and published the open-source R package bmm (CRAN), now used by researchers across multiple institutions. Translates theoretical questions about human cognition into concrete data products — from experimental paradigm design through Bayesian modelling to documented, shareable code.
+Quantitative psychologist and data scientist with 10+ years of experience in experimental design and Bayesian statistics. Leads an independent four-person research team with full budget and personnel responsibility, funded by more than CHF 1,000,000 secured as PI in competitive grants. Lead author and maintainer of bmm (CRAN, 8,000+ downloads), an open-source R package for Bayesian measurement models. Core strength: designing randomized experiments and hierarchical models that turn noisy behavioural data into clear decisions, and explaining the results to statisticians and stakeholders alike.
 ]
-```
-
-# Professional Experience
-
-```{r}
-render_work(lang, max_entries = 3, max_details = 3)
 ```
 
 # Key Skills
 
 ```{=typst}
 #resume-item[
-- *Statistical Modeling:* Bayesian hierarchical models, structural equation models, drift diffusion models, signal detection theory, mixture models
-- *Programming & Tools:* R (expert), Python, Git, Quarto, Stan, brms, jsPsych, JATOS
-- *Data Science:* Predictive modeling, experimental design, A/B testing, data visualization (ggplot2), reproducible analyses
-- *Software Development:* Lead author of bmm R package (published on CRAN; Bayesian measurement models)
+- *Statistical modelling:* hierarchical Bayesian models (brms/Stan), causal inference from randomized experiments, structural equation models, mixture and process models, uncertainty quantification
+- *Experimentation:* end-to-end design and analysis of randomized experiments, power analysis and sample-size planning, A/B-test methodology, sequential designs
+- *Programming:* R (expert: package development, tidyverse, automated testing, CI/CD), Python (working knowledge), Git/GitHub, Quarto
+- *Communication:* data visualization (ggplot2), reproducible reports and dashboards, statistics teaching for 150+ students, statistical advice for non-specialists
+]
+```
+
+# Professional Experience
+
+```{r}
+render_work(lang, max_entries = 3, details_key = "details_industry")
+```
+
+# Open-Source Software
+
+```{=typst}
+#resume-entry(title: [bmm: Bayesian Measurement Models in R], location: [CRAN], date: [2023 -- present], description: [Lead author and maintainer])
+#resume-item[
+- Makes hierarchical Bayesian measurement models accessible through a brms-style interface; 8,000+ downloads, used by research groups internationally
+- Full software life cycle: API design, unit tests, CI/CD on GitHub Actions, CRAN releases, versioned documentation and tutorials
+- Peer-reviewed companion tutorial published in _Behavior Research Methods_ (2025)
 ]
 ```
 
@@ -74,23 +85,20 @@ render_education(lang, compact = TRUE)
 render_languages(lang)
 ```
 
-# Research Funding
-
-```{r}
-data <- yaml::read_yaml("data/funding.yml")
-typst_block(sprintf("_%s_\n\n", data$total$en))
-render_funding(lang, include_summaries = FALSE, max_entries = 2)
-```
-
-# Selected Publications
+# Research Track Record
 
 ```{r}
 data <- yaml::read_yaml("data/publications.yml")
 stats <- data$citation_stats
 typst_block(sprintf(
-  '34 peer-reviewed articles | h-index: %s | citations: %s\n\n',
-  stats$h_index, stats$total_citations
+  "#resume-item[\n- %s peer-reviewed articles and %s preprints in quantitative psychology; h-index %s, citations: %s\n- More than CHF 1,000,000 in competitive research funding secured as PI (SNSF Ambizione incl. Flexibility Grant); Co-PI of a DFG-funded international research network\n]\n",
+  stats$total_articles, stats$total_preprints, stats$h_index, stats$total_citations
 ))
+```
+
+# Selected Publications
+
+```{r}
 render_selected_publications(lang)
 ```
 
@@ -98,7 +106,7 @@ render_selected_publications(lang)
 
 ```{r}
 data <- yaml::read_yaml("data/awards.yml")
-entries <- vapply(data[1:2], function(entry) {
+entries <- vapply(data[c(2, 3, 6)], function(entry) {
   inst <- if (!is.null(entry$institution)) get_lang(entry$institution, lang) else ""
   typst_entry(
     title = get_lang(entry$title, lang),

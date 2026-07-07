@@ -74,20 +74,25 @@ render_education <- function(lang = "en", compact = FALSE) {
 }
 
 # Render work experience entries
-render_work <- function(lang = "en", max_entries = NULL, max_details = NULL) {
+# details_key selects an alternative bullet set (e.g. "details_industry");
+# entries without that key fall back to "details"
+render_work <- function(lang = "en", max_entries = NULL, max_details = NULL,
+                        details_key = "details") {
   data <- yaml::read_yaml("data/work.yml")
   if (!is.null(max_entries)) {
     data <- data[seq_len(min(max_entries, length(data)))]
   }
   entries <- vapply(data, function(entry) {
-    details <- get_lang(entry$details, lang)
+    detail_field <- entry[[details_key]]
+    if (is.null(detail_field)) detail_field <- entry$details
+    details <- get_lang(detail_field, lang)
     if (!is.null(max_details) && length(details) > max_details) {
       details <- details[seq_len(max_details)]
     }
     typst_entry(
       title = get_lang(entry$title, lang),
       location = get_lang(entry$location, lang),
-      date = entry$date,
+      date = get_lang(entry$date, lang),
       description = get_lang(entry$description, lang),
       details = details
     )
@@ -115,9 +120,10 @@ render_selected_publications <- function(lang = "en") {
   articles <- data$articles
   selected <- articles[vapply(articles, function(a) a$number %in% selected_nums, logical(1))]
   entries <- vapply(selected, function(pub) {
-    base <- paste0(pub$number, ". ", md_to_typst(pub$text))
-    if (!is.null(pub$industry_annotation)) {
-      base <- paste0(base, "\n\n    _", pub$industry_annotation, "_")
+    base <- paste0("- ", md_to_typst(pub$text))
+    annotation <- get_lang(pub$industry_annotation, lang)
+    if (nchar(annotation) > 0) {
+      base <- paste0(base, "\n  _", annotation, "_")
     }
     paste0(base, "\n\n")
   }, character(1))

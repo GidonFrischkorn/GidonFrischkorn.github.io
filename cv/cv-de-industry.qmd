@@ -4,7 +4,7 @@ author:
   firstname: Gidon T.
   lastname: Frischkorn
   address: "Leutschenbachstrasse 77 - CH-8050 Zürich, Schweiz"
-  position: "Data Science · Bayesianische Statistik · Psychometrie · R & Python"
+  position: "Data Science · Experimente & A/B-Testing · Bayesianische Statistik · Psychometrie"
   contacts:
     - icon: fa envelope
       text: gidon.frischkorn@psychologie.uzh.ch
@@ -41,24 +41,35 @@ lang <- "de"
 
 ```{=typst}
 #resume-item[
-Quantitativer Psychologe und Data Scientist mit über 10 Jahren Erfahrung in der Planung von Experimenten, der Entwicklung Bayesianischer Messmodelle und der Aufbereitung verhaltenswissenschaftlicher Daten zu reproduzierbaren, interpretierbaren Befunden. Als PI wurden über CHF 1.000.000 an kompetitiven Drittmitteln eingeworben und eine unabhängige vierköpfige Forschungsgruppe geleitet. Das Open-Source-R-Paket bmm (CRAN) wurde entwickelt und veröffentlicht und wird mittlerweile in mehreren Forschungsgruppen weltweit eingesetzt. Theoretische Fragen über menschliche Kognition werden in konkrete Datenprodukte übersetzt — vom experimentellen Paradigmendesign über Bayesianische Modellierung bis hin zu dokumentiertem, nachnutzbarem Code.
+Quantitativer Psychologe und Data Scientist mit über 10 Jahren Erfahrung in experimentellem Design und Bayesianischer Statistik. Leitet ein unabhängiges vierköpfiges Forschungsteam mit voller Budget- und Personalverantwortung, finanziert durch über CHF 1 Mio. kompetitiv eingeworbene Drittmittel als PI. Hauptautor und Maintainer von bmm (CRAN, 8'000+ Downloads), einem Open-Source-R-Paket für Bayesianische Messmodelle. Kernstärke: randomisierte Experimente und hierarchische Modelle, die aus verrauschten Verhaltensdaten belastbare Entscheidungsgrundlagen machen — verständlich aufbereitet für Fachleute wie Entscheidungsträger.
 ]
-```
-
-# Berufserfahrung
-
-```{r}
-render_work(lang, max_entries = 3, max_details = 3)
 ```
 
 # Kernkompetenzen
 
 ```{=typst}
 #resume-item[
-- *Statistische Modellierung:* Bayesianische hierarchische Modelle, Strukturgleichungsmodelle, Diffusionsmodelle, Signalentdeckungstheorie, Mischverteilungsmodelle
-- *Programmierung & Tools:* R (Experte), Python, Git, Quarto, Stan, brms, jsPsych, JATOS
-- *Data Science:* Praediktive Modellierung, experimentelles Design, A/B-Tests, Datenvisualisierung (ggplot2), reproduzierbare Analysen
-- *Softwareentwicklung:* Hauptautor des bmm R-Pakets (auf CRAN publiziert; Bayesianische Messmodelle)
+- *Statistische Modellierung:* hierarchische Bayes-Modelle (brms/Stan), kausale Inferenz aus randomisierten Experimenten, Strukturgleichungsmodelle, Mischverteilungs- und Prozessmodelle, Unsicherheitsquantifizierung
+- *Experimente:* Design und Auswertung randomisierter Experimente end-to-end, Poweranalyse und Fallzahlplanung, A/B-Test-Methodik, sequenzielle Designs
+- *Programmierung:* R (Experte: Paketentwicklung, tidyverse, automatisierte Tests, CI/CD), Python (Grundkenntnisse), Git/GitHub, Quarto
+- *Kommunikation:* Datenvisualisierung (ggplot2), reproduzierbare Berichte und Dashboards, Statistik-Lehre für 150+ Studierende, statistische Beratung für Nicht-Fachleute
+]
+```
+
+# Berufserfahrung
+
+```{r}
+render_work(lang, max_entries = 3, details_key = "details_industry")
+```
+
+# Open-Source-Software
+
+```{=typst}
+#resume-entry(title: [bmm: Bayesianische Messmodelle in R], location: [CRAN], date: [2023 -- heute], description: [Hauptautor und Maintainer])
+#resume-item[
+- Macht hierarchische Bayesianische Messmodelle über eine brms-ähnliche Schnittstelle zugänglich; 8'000+ Downloads, international im Einsatz
+- Vollständiger Software-Lebenszyklus: API-Design, Unit-Tests, CI/CD über GitHub Actions, CRAN-Releases, versionierte Dokumentation und Tutorials
+- Begutachtetes Tutorial publiziert in _Behavior Research Methods_ (2025)
 ]
 ```
 
@@ -74,31 +85,28 @@ render_education(lang, compact = TRUE)
 render_languages(lang)
 ```
 
-# Drittmittel
-
-```{r}
-data <- yaml::read_yaml("data/funding.yml")
-typst_block(sprintf("_%s_\n\n", data$total$de))
-render_funding(lang, include_summaries = FALSE, max_entries = 2)
-```
-
-# Ausgewaehlte Publikationen
+# Wissenschaftliche Bilanz
 
 ```{r}
 data <- yaml::read_yaml("data/publications.yml")
 stats <- data$citation_stats
 typst_block(sprintf(
-  '34 begutachtete Artikel | h-Index: %s | Zitationen: %s\n\n',
-  stats$h_index, stats$total_citations
+  "#resume-item[\n- %s begutachtete Fachartikel und %s Preprints in quantitativer Psychologie; h-Index %s, Zitationen: %s\n- Über CHF 1'000'000 an kompetitiven Forschungsmitteln als PI eingeworben (SNF Ambizione inkl. Flexibility Grant); Co-PI eines internationalen DFG-Forschungsnetzwerks\n]\n",
+  stats$total_articles, stats$total_preprints, stats$h_index, stats$total_citations
 ))
+```
+
+# Ausgewählte Publikationen
+
+```{r}
 render_selected_publications(lang)
 ```
 
-# Ausgewaehlte Auszeichnungen
+# Ausgewählte Auszeichnungen
 
 ```{r}
 data <- yaml::read_yaml("data/awards.yml")
-entries <- vapply(data[1:2], function(entry) {
+entries <- vapply(data[c(2, 3, 6)], function(entry) {
   inst <- if (!is.null(entry$institution)) get_lang(entry$institution, lang) else ""
   typst_entry(
     title = get_lang(entry$title, lang),

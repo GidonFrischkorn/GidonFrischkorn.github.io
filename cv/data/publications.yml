@@ -62,9 +62,12 @@ articles:
   year: '2025'
   text: '**Frischkorn, G. T.**, & Oberauer, K. (2025). Is the antisaccade task a valid
     measure of inhibition? *Journal of Experimental Psychology: General*. https://doi.org/10.1037/xge0001808'
-  industry_annotation: Rigorous quantitative validation of a widely-used psychological
-    measure — directly applicable to psychometric tool evaluation and test validity
-    assessment.
+  industry_annotation:
+    en: Rigorous quantitative validation of a widely-used psychological measure —
+      directly applicable to psychometric tool evaluation and test validity assessment.
+    de: Rigorose quantitative Validierung eines weit verbreiteten psychologischen
+      Messverfahrens — direkt übertragbar auf die Evaluation psychometrischer Instrumente
+      und Validitätsprüfung.
 - number: 30
   year: '2025'
   text: 'Li, C., **Frischkorn, G. T.**, Dames, H., & Oberauer, K. (2025). The Benefit
@@ -82,8 +85,11 @@ articles:
     hierarchical mixture models for visual working memory tasks: Introducing the Bayesian
     Measurement Modeling (bmm) package for R. *Behavior Research Methods*, *57*(5),
     144. https://doi.org/10.3758/s13428-025-02643-0'
-  industry_annotation: 'Full software documentation cycle: from Bayesian model specification
-    to a published tutorial adopted by applied researchers internationally.'
+  industry_annotation:
+    en: 'Full software documentation cycle: from Bayesian model specification to
+      a published tutorial adopted by applied researchers internationally.'
+    de: 'Vollständiger Software-Dokumentationszyklus: von der Bayesianischen Modellspezifikation
+      bis zum publizierten Tutorial, international von Anwendern genutzt.'
 - number: 27
   year: '2025'
   text: 'Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2025). Updating of information
@@ -143,9 +149,12 @@ articles:
   text: '**Frischkorn, G. T.**, von Bastian, C. C., Souza, A. S., & Oberauer, K. (2022).
     Individual differences in updating are not related to reasoning ability and working
     memory capacity. *Journal of Experimental Psychology: General*. https://doi.org/10.1037/xge0001141'
-  industry_annotation: Latent-variable modelling to separate true cognitive signal
-    from measurement artefacts — foundational to building reliable, construct-valid
-    psychometric indicators.
+  industry_annotation:
+    en: Latent-variable modelling to separate true cognitive signal from measurement
+      artefacts — foundational to building reliable, construct-valid psychometric
+      indicators.
+    de: Latent-Variablen-Modellierung zur Trennung von echtem kognitivem Signal und
+      Messartefakten — Grundlage für reliable, konstruktvalide psychometrische Indikatoren.
 - number: 15
   year: '2022'
   text: Löffler, C., **Frischkorn, G. T.**, Rummel, J., Hagemann, D., & Schubert,
@@ -237,5 +246,3 @@ selected_for_industry:
 - 31
 - 28
 - 16
-- 18
-- 14

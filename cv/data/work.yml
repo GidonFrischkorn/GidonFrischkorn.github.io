@@ -7,7 +7,20 @@
   location:
     en: "Zurich, Switzerland"
     de: "Zürich, Schweiz"
-  date: "01/2023 -- present"
+  date:
+    en: "01/2023 -- present"
+    de: "01/2023 -- heute"
+  details_industry:
+    en:
+      - "Lead an independent four-person research team with full budget and personnel responsibility, funded by more than CHF 1 million secured as PI in competitive SNSF grants"
+      - "Design, run, and analyse randomized experiments end-to-end: power analysis, online and lab data collection, hierarchical Bayesian modelling, and results prepared for expert and non-expert audiences"
+      - "Develop and maintain the open-source R package bmm (CRAN, 8,000+ downloads): API design, automated testing, CI/CD on GitHub Actions, and full documentation"
+      - "Publish reproducible analysis pipelines in R (tidyverse, brms/Stan, Quarto) with open data and code across 10+ peer-reviewed studies"
+    de:
+      - "Leitung eines unabhängigen vierköpfigen Forschungsteams mit voller Budget- und Personalverantwortung; über CHF 1 Mio. an kompetitiven SNF-Mitteln als PI eingeworben"
+      - "Randomisierte Experimente end-to-end: Poweranalyse, Datenerhebung online und im Labor, hierarchische Bayes-Modellierung und Ergebnisaufbereitung für Fach- und Nicht-Fachpublikum"
+      - "Entwicklung und Wartung des Open-Source-R-Pakets bmm (CRAN, 8'000+ Downloads): API-Design, automatisierte Tests, CI/CD über GitHub Actions und vollständige Dokumentation"
+      - "Reproduzierbare Analysepipelines in R (tidyverse, brms/Stan, Quarto) mit offenen Daten und offenem Code in 10+ begutachteten Studien"
   details:
     en:
       - "Secured and managed CHF 916,510 in competitive SNF funding as PI, leading an independent four-person research group from inception to publication"
@@ -36,6 +49,13 @@
     en: "Lucerne, Switzerland"
     de: "Luzern, Schweiz"
   date: "08/2025 -- 07/2026"
+  details_industry:
+    en:
+      - "Sole instructor for Statistics I and IV (150+ undergraduates): course design, lectures, exercises, and examinations"
+      - "Developed open, interactive course materials in R and Quarto for reproducible data analysis"
+    de:
+      - "Alleinige Lehrverantwortung für Statistik I und IV (150+ Studierende): Konzeption, Vorlesung, Übungen und Prüfung"
+      - "Entwicklung offener, interaktiver Lehrmaterialien in R und Quarto für reproduzierbare Datenanalyse"
   details:
     en:
       - "Designed and taught Statistics I and Statistics IV (incl. reproducible data analysis in R) for 150+ undergraduates, with interactive R-based exercise materials built for reproducibility"
@@ -58,6 +78,15 @@
     en: "Zurich, Switzerland"
     de: "Zürich, Schweiz"
   date: "01/2019 -- 12/2022"
+  details_industry:
+    en:
+      - "Led international multi-site research projects in psychometrics and cognitive psychology, contributing to 15+ peer-reviewed publications"
+      - "Statistical advisor to a research group of 10+ scientists: Bayesian inference, mixed-effects models, and reproducible analysis workflows"
+      - "Co-acquired DFG network funding (€44,645) and co-coordinated an international research network"
+    de:
+      - "Leitung internationaler Multi-Site-Forschungsprojekte in Psychometrie und kognitiver Psychologie mit Beitrag zu 15+ begutachteten Publikationen"
+      - "Statistische Beratung einer Forschungsgruppe von 10+ Forschenden: Bayes-Inferenz, gemischte Modelle und reproduzierbare Analyse-Workflows"
+      - "Co-Einwerbung von DFG-Netzwerkmitteln (€44.645) und Co-Koordination eines internationalen Forschungsnetzwerks"
   details:
     en:
       - "Led international multi-site research projects at the intersection of psychometrics and cognitive psychology, contributing to 15+ peer-reviewed publications"
