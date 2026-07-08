@@ -3,6 +3,7 @@ title: "The Binding Hypothesis"
 subtitle: "A unified account of cognitive individual differences?"
 description: "Testing whether the ability to form and maintain bindings in working memory explains why working memory capacity is limited and why it predicts intelligence."
 date: 2023-01-01
+date-modified: 2026-07-08
 image: /images/Banner.png
 ---
 
