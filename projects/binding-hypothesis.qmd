@@ -18,6 +18,49 @@ Two types of binding matter here. Declarative bindings link pieces of informatio
 
 Two problems have blocked a clean test of the binding hypothesis so far. First, standard tests for procedural bindings — speeded choice tasks, mainly — do not adequately control for contributions from long-term memory, which contaminates the measure. Second, behavioral performance indicators alone cannot isolate binding ability; measurement models are needed to separate it from other sources of variance.
 
-I address both problems directly, using newly developed tasks and measurement models to ask: does a general binding ability explain why WMC is limited, and does it account for why individual differences in WMC predict intelligence, processing speed, and learning?
+I address both problems directly, with three goals:
 
-That is the test the binding hypothesis has been waiting for.
+1. Develop tasks and measurement models that isolate binding ability in both domains.
+2. Test whether binding ability explains why working memory capacity is limited.
+3. Test whether binding ability explains why working memory capacity predicts intelligence, processing speed, and learning.
+
+That is the test the binding hypothesis has been waiting for. The project runs from 2023 to 2026 at the University of Zurich, funded by an Ambizione grant from the Swiss National Science Foundation (grant PZ00P1_208828).
+
+## What we have found so far
+
+### Old information is unbound, not erased
+
+Three studies followed what happens to information in working memory once it is no longer needed ([Li, Frischkorn, & Oberauer, 2025](https://doi.org/10.1016/j.cogpsych.2024.101702); [Li, Frischkorn, Dames, & Oberauer, 2025](https://doi.org/10.1016/j.cognition.2025.106134); [Li, Frischkorn, & Oberauer, 2026](https://doi.org/10.1037/xlm0001585)). The short answer: it is not deleted. When people replace or deliberately forget information, the item itself lingers in memory. What breaks is the binding — the link that tied the item to its place in the task. Letting go frees room to bind new information, but it does not strengthen what is already there. And information we merely think about briefly is stored whether we want it or not, even when we know in advance that we will never need it.
+
+Working memory, in other words, is not a storage box whose slots we fill and empty at will. What we manage when we update, forget, or get distracted are the bindings.
+
+### A test of self-control that measures bindings instead
+
+In the antisaccade task, a light flashes on one side of a screen and the correct response is to look at the opposite side. Resisting the pull of the flash is considered a classic test of inhibition, and people differ a lot in how well they do it. But when we broke performance down into its component processes, inhibition explained only 5–10% of those differences ([Frischkorn & Oberauer, 2025](https://doi.org/10.1037/xge0001808)). What mattered far more was how strongly people could set up the rule "flash left, so look right" — a binding between what they see and what they do. It was this binding strength, not inhibition, that went along with working memory capacity and processing speed.
+
+### A prediction that did not hold up
+
+The binding hypothesis predicts that speed tests should relate more closely to working memory capacity when the response rules keep changing, because changing rules put more strain on bindings. They did not: the relation was the same with constant and with changing rules ([Courage & Frischkorn, 2026](https://osf.io/bh4ps_v1)). This result counts against one version of the hypothesis, and it is reported here just like the results that came out in its favor.
+
+### Theory and tools
+
+Two theoretical papers place these findings in a larger context. One connects working memory research with the study of action control, a field that has described very similar bindings in its own vocabulary ([Frischkorn et al., 2026](https://doi.org/10.5334/joc.488)). The other proposes that the precision of a person's information processing — like a radio signal with more or less static — could explain why almost all cognitive abilities go together ([Oberauer et al., 2025](https://osf.io/nkms3_v2)).
+
+Alongside the studies, the project builds the statistical tools needed to measure binding ability in the first place, most visibly the [bmm R package](https://venpopov.com/bmm/). These tools and the accompanying methods papers are described on the [measurement models project page](measurement-models.qmd).
+
+## Publications & preprints
+
+All outputs listed here acknowledge funding from SNSF grant PZ00P1_208828. The measurement and methods papers from the project are listed on the [measurement models project page](measurement-models.qmd).
+
+**Published:**
+
+- **Frischkorn, G. T.**, Courage, I., Dames, H., Dignath, D., Pfeuffer, C. U., Schiltenwolf, M., Kiesel, A., & Oberauer, K. (2026). Bindings for Action: Bridging the Gap Between Theories of Procedural Working Memory and Action Control Research. *Journal of Cognition*, *9*(1), 16. <https://doi.org/10.5334/joc.488>
+- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2026). Can we process information without encoding it into working memory? *Journal of Experimental Psychology: Learning, Memory, and Cognition*. Advance online publication. <https://doi.org/10.1037/xlm0001585>
+- **Frischkorn, G. T.**, & Oberauer, K. (2025). Is the antisaccade task a valid measure of inhibition? *Journal of Experimental Psychology: General*. Advance online publication. <https://doi.org/10.1037/xge0001808>
+- Li, C., **Frischkorn, G. T.**, Dames, H., & Oberauer, K. (2025). The Benefit of Removing Information from Working Memory: Increasing Available Cognitive Resources or Reducing Interference? *Cognition*, *260*, 106134. <https://doi.org/10.1016/j.cognition.2025.106134>
+- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2025). Updating of information in working memory: Time course and consequences. *Cognitive Psychology*, *156*, 101702. <https://doi.org/10.1016/j.cogpsych.2024.101702>
+
+**Preprints:**
+
+- Courage, I., & **Frischkorn, G. T.** (2026). The relation between processing speed and working memory capacity: No difference across varying procedural working memory demands. <https://osf.io/bh4ps_v1>
+- Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M. D., & Fiebach, C. J. (2025). The Signal-To-Noise Ratio Hypothesis of Intelligence. <https://osf.io/nkms3_v2>
