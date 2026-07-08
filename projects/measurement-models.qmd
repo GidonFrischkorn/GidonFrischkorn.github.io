@@ -14,11 +14,48 @@ Cognitive measurement models (the diffusion model for processing speed is a well
 
 Researchers who develop cognitive measurement models usually provide code, but running it typically requires fluency in JAGS or Stan. That is a real barrier. Researchers who would benefit from these models often cannot use them without weeks of investment in a new programming environment — so they fall back on behavioral summary statistics that are theoretically ambiguous.
 
-## Goals
+## The bmm package
 
-Together with [Ven Popov](https://venpopov.com), I co-develop the R package [bmm](https://venpopov.github.io/bmm/), which implements these models in a hierarchical Bayesian framework via [brms](https://paul-buerkner.github.io/brms/). Current models for visual working memory tasks include:
+Together with [Ven Popov](https://venpopov.com), I co-develop the R package [bmm](https://venpopov.com/bmm/) ([CRAN](https://cran.r-project.org/package=bmm)), which implements these models in a hierarchical Bayesian framework via [brms](https://paul-buerkner.github.io/brms/). The package started with models for visual working memory, but it has since grown into a broader collection covering both memory and speeded decision-making.
 
-- [2-parameter mixture model](http://dx.doi.org/10.1038/nature06860)
-- [3-parameter mixture model](https://doi.org/10.1167/9.10.7)
-- [Interference Measurement Model](https://doi.org/10.1167/17.5.11)
-- [Signal Discrimination Model](http://doi.org/10.1037/rev0000328)
+**Visual working memory (continuous reproduction tasks):**
+
+- [2-parameter mixture model](http://dx.doi.org/10.1038/nature06860) (Zhang & Luck, 2008)
+- [3-parameter mixture model](https://doi.org/10.1167/9.10.7) (Bays et al., 2009)
+- [Interference Measurement Model](https://doi.org/10.1167/17.5.11) (Oberauer et al., 2017)
+- [Signal Discrimination Model](http://doi.org/10.1037/rev0000328) (Oberauer, 2023)
+
+**Working memory tasks with categorical responses:**
+
+- [Memory Measurement Model (M3)](https://doi.org/10.1037/rev0000159) (Oberauer & Lewandowsky, 2019), with ready-made versions for simple and complex span tasks and a custom version for other categorical decision tasks
+
+**Speeded decision-making (new in the upcoming release, already available in the [development version](https://venpopov.com/bmm/dev/)):**
+
+- [Diffusion Decision Model](https://doi.org/10.1037/0033-295X.85.2.59) (Ratcliff, 1978)
+- [EZ-diffusion model](https://doi.org/10.3758/BF03194023) (Wagenmakers et al., 2007), estimated hierarchically following [Chávez De la Peña & Vandekerckhove (2025)](https://doi.org/10.3758/s13423-025-02729-y)
+- [Censored Shifted Wald model](https://doi.org/10.1177/0146621617710465) (Miller et al., 2017), with a censoring version for high-accuracy tasks and a competing-risks version for tasks with balanced accuracy
+
+Each model ships with documentation, default priors, a worked-example [vignette](https://venpopov.com/bmm/articles/index.html), and density and random generation functions for exploring what the model predicts before fitting it.
+
+## Teaching these models to PhD students
+
+Making the models accessible in software is only half the job — researchers also need training in how to use them well. I currently pursue this through:
+
+- **A 2–3 day workshop for PhD and graduate programs:** [Analyzing Data on the Level of Cognitive Processes — an Introduction to the R package bmm](https://github.com/GidonFrischkorn/ws-process-level-data-analysis). The workshop moves from the rationale of measurement models to hands-on model fitting, prior specification, and interpreting parameters with respect to substantive research questions. All materials are openly available. If you want to bring this workshop to your graduate program, [get in touch](../contact.qmd).
+- **Tutorial papers written as self-study material:** the [bmm tutorial](https://doi.org/10.3758/s13428-025-02643-0) in *Behavior Research Methods* and a [tutorial on the M3 model](https://osf.io/tcuzx_v1) walk readers through complete analyses, so PhD students can adopt the models without a course or workshop.
+
+An overview of my other workshops is on the [teaching page](../teaching.qmd).
+
+## Publications & preprints
+
+**Published:**
+
+- **Frischkorn, G. T.**, & Popov, V. (2025). A tutorial for estimating Bayesian hierarchical mixture models for visual working memory tasks: Introducing the Bayesian Measurement Modeling (bmm) package for R. *Behavior Research Methods*, *57*(5), 144. <https://doi.org/10.3758/s13428-025-02643-0>
+- Nunez, M. D., Schubert, A.-L., **Frischkorn, G. T.**, & Oberauer, K. (2025). Cognitive models of decision-making with identifiable parameters: Diffusion decision models with within-trial noise. *Journal of Mathematical Psychology*, *125*, 102917. <https://doi.org/10.1016/j.jmp.2025.102917>
+
+**Preprints:**
+
+- **Frischkorn, G. T.**, & Li, C. (invited for revision at Advances in Methods & Practices for Psychological Science). Applying the Memory Measurement Model (M3): A tutorial using the bmm R package. <https://osf.io/tcuzx_v1>
+- Li, C., **Frischkorn, G. T.**, & Oberauer, K. (under review at Behavior Research Methods). Measuring individual differences with Bayesian hierarchical cognitive models. <https://osf.io/24w3z_v1>
+- Göttmann, J., **Frischkorn, G. T.**, Oberauer, K., Schaefer, S. B., & Schubert, A.-L. (invited for revision at Journal of Mathematical Psychology). Modeling individual differences in working memory: Subject-level parameter recovery within the Memory Measurement Model framework (M³). <https://doi.org/10.31234/osf.io/945d2_v2>
+- **Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (under review at Psychological Review). Validity is a theoretical problem: A computational psychometrics perspective on how to measure cognition. <https://osf.io/pczua_v3>
