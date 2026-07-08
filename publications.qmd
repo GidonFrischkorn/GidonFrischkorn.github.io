@@ -23,7 +23,7 @@ Courage, I. & **Frischkorn, G. T.** (2026). The relation between processing spee
 </li>
 <li>
 
-**Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (2026). Validity is a Theoretical Problem: A Computational Psychometrics Perspective on How to Measure Cognition. \[[preprint](https://osf.io/pczua_v1)\]
+**Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (2026). Validity is a Theoretical Problem: A Computational Psychometrics Perspective on How to Measure Cognition. \[[preprint](https://osf.io/pczua_v3)\]
 
 </li>
 <li>
@@ -33,7 +33,7 @@ Courage, I. & **Frischkorn, G. T.** (2026). The relation between processing spee
 </li>
 <li>
 
-**Frischkorn, G. T.**, Dutli, J., Musfeld, P., & Oberauer, K. (2026). How to Set Priors for Hypothesis Testing in Generalized Linear Models: A Three-Step Workflow with an Application to Binomial Models. \[[preprint](https://osf.io/q7byw_v1)\]
+**Frischkorn, G. T.**, Dutli, J., Musfeld, P., & Oberauer, K. (2026). Principled Default Priors for Bayesian Hypothesis Testing in Binomial GLMs: A Matched-Prior Framework with Empirical Evaluation. \[[preprint](https://osf.io/q7byw_v3)\]
 
 </li>
 <li>
@@ -43,7 +43,7 @@ Li, C., **Frischkorn, G. T.**, & Oberauer, K. (2026). Measuring Individual Diffe
 </li>
 <li>
 
-Göttmann, J., **Frischkorn, G. T.**, Oberauer, K., Schaefer, S., & Schubert, A.-L. (2025). Modeling Individual Differences in Working Memory: Subject-Level Parameter Recovery within the Memory Measurement Model Framework (M³). \[[preprint](https://osf.io/945d2_v1)\]
+Göttmann, J., **Frischkorn, G. T.**, Oberauer, K., Schaefer, S., & Schubert, A.-L. (2025). Modeling Individual Differences in Working Memory: Subject-Level Parameter Recovery within the Memory Measurement Model Framework (M³). \[[preprint](https://osf.io/945d2_v2)\]
 
 </li>
 <li>
@@ -53,7 +53,7 @@ Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M., & Fiebach, C. (
 </li>
 <li>
 
-Rey-Mermet, A., Haaf, J., Donzallaz, M., **Frischkorn, G. T.**, Hedge, C., Kempkens, N., Oberauer, K., & Schubert, A.-L. (2025). How can we achieve a good measurement of attentional control?. \[[preprint](https://osf.io/ugk4h_v1)\]
+Rey-Mermet, A., Haaf, J., Donzallaz, M., **Frischkorn, G. T.**, Hedge, C., Kempkens, N., Oberauer, K., & Schubert, A.-L. (2025). How can we achieve a good measurement of attentional control?. \[[preprint](https://osf.io/ugk4h_v2)\]
 
 </li>
 <li>

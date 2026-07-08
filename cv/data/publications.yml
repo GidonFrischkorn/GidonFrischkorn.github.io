@@ -9,22 +9,22 @@ preprints:
     Models. Preprint: https://osf.io/24w3z_v1'
 - number: 7
   text: '**Frischkorn, G. T.**, Dutli, J., Musfeld, P., & Oberauer, K. (under review
-    at Advances in Methods & Practices for Psychological Science). How to Set Priors
-    for Hypothesis Testing in Generalized Linear Models: A Three-Step Workflow with
-    an Application to Binomial Models. Preprint: https://osf.io/q7byw_v1'
+    at Psychological Methods). Principled Default Priors for Bayesian Hypothesis
+    Testing in Binomial GLMs: A Matched-Prior Framework with Empirical Evaluation.
+    Preprint: https://osf.io/q7byw_v3'
 - number: 6
-  text: '**Frischkorn, G. T.**, & Li, C. (under review at Advances in Methods & Practices
+  text: '**Frischkorn, G. T.**, & Li, C. (invited for revision at Advances in Methods & Practices
     for Psychological Science). Applying the Memory Measurement Model (M3): A Tutorial
     Using the bmm R Package. Preprint: https://osf.io/tcuzx_v1'
 - number: 5
   text: '**Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (under review at Psychological
     Review). Validity is a Theoretical Problem: A Computational Psychometrics Perspective
-    on How to Measure Cognition. Preprint: https://osf.io/pczua_v1'
+    on How to Measure Cognition. Preprint: https://osf.io/pczua_v3'
 - number: 4
   text: 'Göttmann, J., **Frischkorn, G. T.**, Oberauer, K., Schaefer, S. B., & Schubert,
     A.-L. (invited for revision at Journal of Mathematical Psychology). *Modeling
     Individual Differences in Working Memory: Subject-Level Parameter Recovery within
-    the Memory Measurement Model Framework (M^3^)*. Preprint: https://doi.org/10.31234/osf.io/945d2_v1'
+    the Memory Measurement Model Framework (M^3^)*. Preprint: https://doi.org/10.31234/osf.io/945d2_v2'
 - number: 3
   text: 'Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M. D., & Fiebach,
     C. J. (under review at Perspectives on Psychological Science). The Signal-To-Noise
@@ -33,7 +33,7 @@ preprints:
   text: 'Rey-Mermet, A., Haaf, J., Donzallaz, M., **Frischkorn, G.**, Hedge, C., Kempkens,
     N., Oberauer, K., & Schubert, A.-L. (invited for revision at Perspectives on Psychological
     Science). *How can we achieve a good measurement of attentional control?* Preprint:
-    https://doi.org/10.31234/osf.io/ugk4h_v1'
+    https://doi.org/10.31234/osf.io/ugk4h_v2'
 - number: 1
   text: 'Von Bastian, C. C., Blais, C., Brewer, G., Gyurkovics, M., Hedge, C., Kałamała,
     P., Meier, M., Oberauer, K., Rey-Mermet, A., Rouder, J. N., Souza, A. S., Bartsch,
