@@ -3,7 +3,7 @@ title: "Curriculum Vitae"
 author:
   firstname: Gidon T.
   lastname: Frischkorn
-  address: "Binzmühlerstrasse 14/22 - CH-8050 Zürich, Schweiz"
+  address: "Binzmühlestrasse 14/22 - CH-8050 Zürich, Schweiz"
   position: "Kognitive Psychometrie · Bayesianische Methoden · Intelligenzforschung"
   contacts:
     - icon: fa envelope
@@ -133,10 +133,6 @@ render_invited_talks(lang)
 render_conference_summary(lang)
 ```
 
-```{=typst}
-#pagebreak()
-```
-
 # Lehre
 
 ```{r}
@@ -154,6 +150,10 @@ render_lectures(lang)
 
 ```{r}
 render_seminars(lang)
+```
+
+```{=typst}
+#pagebreak()
 ```
 
 ## Workshops
