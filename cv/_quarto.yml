@@ -1,3 +1,15 @@
 project:
   type: default
   output-dir: ../_site/cv
+  render:
+    - "*.qmd"          # only the CVs; keeps stray .md files (e.g. font licences)
+                       # from being picked up as documents to render
+
+# Render from the fonts committed in cv/fonts/ rather than whatever happens to be
+# installed on the machine. Without this, CI (which has neither Roboto nor
+# Source Sans 3) silently fell back to Libertinus Serif, so the published CVs
+# did not match the ones rendered locally.
+format:
+  awesomecv-typst:
+    font-paths:
+      - fonts
