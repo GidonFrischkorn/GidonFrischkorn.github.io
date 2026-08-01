@@ -18,7 +18,8 @@
 #   Status: invited for revision at Journal of Mathematical Psychology
 #   Status: in preparation
 #
-# Required R packages: httr2, stringr, purrr, yaml
+# Required R packages: httr2, jsonlite (used by httr2::resp_body_json), stringr,
+#                      purrr, yaml
 
 suppressPackageStartupMessages({
   library(httr2)
