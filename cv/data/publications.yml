@@ -9,13 +9,13 @@ preprints:
     Models. Preprint: https://osf.io/24w3z_v1'
 - number: 7
   text: '**Frischkorn, G. T.**, Dutli, J., Musfeld, P., & Oberauer, K. (under review
-    at Psychological Methods). Principled Default Priors for Bayesian Hypothesis
-    Testing in Binomial GLMs: A Matched-Prior Framework with Empirical Evaluation.
-    Preprint: https://osf.io/q7byw_v3'
+    at Psychological Methods). Principled Default Priors for Bayesian Hypothesis Testing
+    in Binomial GLMs: A Matched-Prior Framework with Empirical Evaluation. Preprint:
+    https://osf.io/q7byw_v3'
 - number: 6
-  text: '**Frischkorn, G. T.**, & Li, C. (invited for revision at Advances in Methods & Practices
-    for Psychological Science). Applying the Memory Measurement Model (M3): A Tutorial
-    Using the bmm R Package. Preprint: https://osf.io/tcuzx_v1'
+  text: '**Frischkorn, G. T.**, & Li, C. (invited for revision at Advances in Methods
+    & Practices for Psychological Science). Applying the Memory Measurement Model
+    (M3): A Tutorial Using the bmm R Package. Preprint: https://osf.io/tcuzx_v1'
 - number: 5
   text: '**Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (under review at Psychological
     Review). Validity is a Theoretical Problem: A Computational Psychometrics Perspective
@@ -86,8 +86,8 @@ articles:
     Measurement Modeling (bmm) package for R. *Behavior Research Methods*, *57*(5),
     144. https://doi.org/10.3758/s13428-025-02643-0'
   industry_annotation:
-    en: 'Full software documentation cycle: from Bayesian model specification to
-      a published tutorial adopted by applied researchers internationally.'
+    en: 'Full software documentation cycle: from Bayesian model specification to a
+      published tutorial adopted by applied researchers internationally.'
     de: 'Vollständiger Software-Dokumentationszyklus: von der Bayesianischen Modellspezifikation
       bis zum publizierten Tutorial, international von Anwendern genutzt.'
 - number: 27
