@@ -27,6 +27,12 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          # Pinned so CI renders with the same Typst as the local machine.
+          # Unpinned, this tracks the latest release and the CV layout drifts
+          # away from the locally previewed version. Bump together with the
+          # local install.
+          version: 1.10.18
 
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
