@@ -674,9 +674,12 @@ function turnCross(pos, flip, face, times){
   for(let t=0;t<times;t++)
     for(let i=0;i<4;i++){ flip[i] ^= fl[pos[i]]; pos[i] = dest[pos[i]]; }
 }
-/* All 18 moves, as [face, quarter-turns, printed name]. */
+/* All 18 moves, as [face, quarter-turns, printed name]. Note the name is not
+   SUFFIX[t-1]: two quarter turns prints "2" and three prints "'", so that
+   parseAlg(name) round-trips back to t. */
+const turnName = (f,t) => f + (t === 2 ? "2" : t === 3 ? "'" : "");
 const MOVES18 = [];
-FACES.forEach(f => [1,2,3].forEach(t => MOVES18.push([f, t, f + SUFFIX[t-1]])));
+FACES.forEach(f => [1,2,3].forEach(t => MOVES18.push([f, t, turnName(f,t)])));
 
 let crossDist = null;
 function buildCrossTable(){
@@ -789,6 +792,32 @@ function renderSession(){
 
   $("prev").disabled = view === 0;
   $("next").disabled = view === DAYS.length-1;
+
+  renderScramble();
+}
+
+/* ---------------- scramble panel ---------------- */
+let solveN = 1, seedOverride = "", scrambleView = -1;
+function currentSeed(){
+  const custom = seedOverride.trim();
+  return custom || ("day-" + String(view+1).padStart(2,"0") + "-" + solveN);
+}
+function renderScramble(){
+  if(scrambleView !== view){ scrambleView = view; solveN = 1; seedOverride = ""; }
+  const seed = currentSeed();
+  $("scrambleMoves").textContent = makeScramble(seed, 20);
+  if($("seedInput").value !== seed) $("seedInput").value = seed;
+  $("crossOut").classList.remove("show");
+  $("crossOut").innerHTML = "";
+}
+function showCross(){
+  const box = $("crossOut");
+  if(box.classList.contains("show")){ box.classList.remove("show"); return; }
+  const moves = solveCross($("scrambleMoves").textContent);
+  box.innerHTML = moves.length
+    ? `Cross: <b>${moves.join(" ")}</b><i>${moves.length} move${moves.length===1?"":"s"} — apply this after the scramble, then practise F2L from there. It is the shortest cross that exists for this scramble, so don't treat it as the one you should have found.</i>`
+    : `Cross: <b>already solved</b><i>This scramble happens to leave the cross intact.</i>`;
+  box.classList.add("show");
 }
 
 function renderGrid(){
@@ -933,7 +962,9 @@ function renderAlgs(){
     div.innerHTML =
       (diagram ? `<div class="acase" aria-hidden="true">${diagram}</div>` : "") +
       `<div class="aname">${r.n}<small>${r.s}</small></div>` +
-      `<div class="alg${tab==="f2l"?" plain":""}">${r.a}</div>` +
+      `<div class="alg${tab==="f2l"?" plain":""}">${r.a}` +
+        (diagram ? `<span class="setup"><b>set up</b> ${invertAlg(r.a)}</span>` : "") +
+      `</div>` +
       (r.note ? `<details class="anote"><summary>What it does</summary><p>${r.note}</p></details>` : "");
     l.appendChild(div);
   });
@@ -961,6 +992,13 @@ $("mark").addEventListener("click", ()=>{
     const cell = $("weeks").querySelectorAll(".sticker")[idx];
     if(cell){ cell.classList.add("pop"); setTimeout(()=>cell.classList.remove("pop"), 200); }
   }
+});
+$("nextScramble").addEventListener("click", ()=>{
+  seedOverride = ""; solveN++; renderScramble();
+});
+$("crossBtn").addEventListener("click", showCross);
+$("seedInput").addEventListener("change", e=>{
+  seedOverride = e.target.value; renderScramble();
 });
 $("prev").addEventListener("click", ()=>{ if(view>0){ view--; renderSession(); renderGrid(); }});
 $("next").addEventListener("click", ()=>{ if(view<DAYS.length-1){ view++; renderSession(); renderGrid(); }});
