@@ -9,13 +9,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* Cube sticker colours are semantic — they are the physical cube, so they are
+   identical in both themes. Everything else is a theme token.
+   The light/dark palettes are taken from the main site's theme-light.scss and
+   theme-dark.scss so this page reads as part of gfrischkorn.org. We deliberately
+   do NOT link the site's compiled bootstrap CSS: those filenames are
+   content-hashed and would break silently here, and it is half a megabyte per
+   theme against a page this size. */
 :root{
-  --plastic:#16171B;
-  --panel:#1F2126;
-  --panel-2:#252831;
-  --hair:#31353F;
-  --ink:#E8E9EC;
-  --muted:#8B9099;
   --w:#F2F3F0;
   --y:#FFD500;
   --g:#009E60;
@@ -25,11 +26,62 @@
   --display:"Space Grotesk",system-ui,sans-serif;
   --body:"IBM Plex Sans",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  /* light — matches theme-light.scss (#ffffff / #212529 / #2780e3) */
+  --bg:#ffffff;
+  --panel:#f7f7f8;
+  --panel-2:#eceef0;
+  --hair:#d9dce0;
+  --ink:#212529;
+  --ink-2:#3f464d;
+  --muted:#6c757d;
+  --faint:#495057;
+  --edge:#b5bcc4;
+  --edge-2:#98a1ab;
+  --hover:#e4e7ea;
+  --link:#2780e3;
+  --alg:#7a5c00;
+  --facelet-off:#c6c9ce;
+  --facelet-dim:#e3e5e8;
+  --arrow:#212529;
+  --setup-fg:#6c757d;
+  --warn-line:#d9b45f;
+  --warn-bg:#fff8e6;
+  --warn-fg:#6b4a12;
+  /* Week 1 is cube-white, which would vanish on a white page, so completed
+     squares get an outline in light mode. */
+  --done-edge:rgba(0,0,0,.30);
+  --wk1:#b9c0c7;
+}
+:root[data-theme="dark"]{
+  /* dark — matches theme-dark.scss (#1f1f1f / #d8d8d8 / #75aadb) */
+  --bg:#1f1f1f;
+  --panel:#272727;
+  --panel-2:#303030;
+  --hair:#3a3a3a;
+  --ink:#d8d8d8;
+  --ink-2:#bdbdbd;
+  --muted:#8a8a8a;
+  --faint:#a8a8a8;
+  --edge:#4d4d4d;
+  --edge-2:#5c5c5c;
+  --hover:#333333;
+  --link:#75aadb;
+  --alg:#FFD500;
+  --facelet-off:#3a3a3a;
+  --facelet-dim:#2b2b2b;
+  --arrow:#1f1f1f;
+  --setup-fg:#9a9a9a;
+  --warn-line:#6B4A12;
+  --warn-bg:#241C0C;
+  --warn-fg:#D8C08A;
+  --done-edge:transparent;
+  --wk1:#F2F3F0;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
-  background:var(--plastic);
+  background:var(--bg);
   color:var(--ink);
   font-family:var(--body);
   font-size:16px;
@@ -64,7 +116,7 @@ select{
   background:var(--panel-2);color:var(--ink);border:1px solid var(--hair);
   border-radius:6px;padding:7px 12px;cursor:pointer;transition:border-color .15s,background .15s;
 }
-.btn:hover{border-color:#4A505E;background:#2C3038}
+.btn:hover{border-color:var(--edge);background:var(--hover)}
 .btn:focus-visible,select:focus-visible,input:focus-visible,.sticker:focus-visible,.tab:focus-visible{
   outline:2px solid var(--y);outline-offset:2px;
 }
@@ -76,7 +128,8 @@ select{
   text-transform:uppercase;color:var(--muted);
   display:flex;align-items:center;gap:9px;margin-bottom:12px;
 }
-.eyebrow .chip{width:9px;height:9px;border-radius:2px;display:inline-block}
+.eyebrow .chip{width:9px;height:9px;border-radius:2px;display:inline-block;
+  border:1px solid var(--done-edge)}
 .card{
   background:var(--panel);border:1px solid var(--hair);border-radius:12px;
   padding:26px 26px 22px;position:relative;overflow:hidden;
@@ -106,7 +159,7 @@ select{
   font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--muted);flex:0 0 42px;padding-top:4px;
 }
-.drill .v{font-size:15px;color:#C9CDD4}
+.drill .v{font-size:15px;color:var(--ink-2)}
 
 /* ---------- scramble ---------- */
 .scram{
@@ -136,22 +189,22 @@ select{
 .sseed input:focus{color:var(--ink)}
 .scross{
   margin-top:10px;padding:9px 12px;border:1px solid var(--hair);border-radius:7px;
-  font-size:13px;color:#C9CDD4;display:none;
+  font-size:13px;color:var(--ink-2);display:none;
 }
 .scross.show{display:block}
-.scross b{font-family:var(--mono);color:var(--y);font-weight:500;word-spacing:.2em}
+.scross b{font-family:var(--mono);color:var(--alg);font-weight:500;word-spacing:.2em}
 .scross i{font-style:normal;color:var(--muted);display:block;margin-top:4px;font-size:12px}
 
 .setup{
   display:block;font-family:var(--mono);font-size:12px;color:var(--muted);
   margin-top:5px;word-spacing:.15em;font-weight:400;
 }
-.setup b{color:#9AA0AA;font-weight:400}
+.setup b{color:var(--setup-fg);font-weight:400}
 
 .controls{display:flex;gap:10px;align-items:center;margin-top:22px;flex-wrap:wrap}
 .mark{
   font-family:var(--display);font-weight:500;font-size:14.5px;
-  background:var(--ink);color:var(--plastic);border:1px solid var(--ink);
+  background:var(--ink);color:var(--bg);border:1px solid var(--ink);
   border-radius:6px;padding:9px 18px;cursor:pointer;transition:opacity .15s;
 }
 .mark:hover{opacity:.85}
@@ -161,7 +214,7 @@ select{
   background:transparent;border:1px solid var(--hair);color:var(--muted);
   border-radius:6px;width:34px;height:34px;cursor:pointer;font-size:15px;line-height:1;
 }
-.nav button:hover:not(:disabled){color:var(--ink);border-color:#4A505E}
+.nav button:hover:not(:disabled){color:var(--ink);border-color:var(--edge)}
 .nav button:disabled{opacity:.3;cursor:default}
 
 /* ---------- sticker grid ---------- */
@@ -186,8 +239,8 @@ select{
   background:var(--panel);cursor:pointer;position:relative;padding:0;
   transition:transform .18s cubic-bezier(.2,.9,.3,1.4),background .18s,border-color .18s;
 }
-.sticker:hover{border-color:#565D6C}
-.sticker.done{background:var(--c);border-color:var(--c)}
+.sticker:hover{border-color:var(--edge-2)}
+.sticker.done{background:var(--c);border-color:var(--done-edge)}
 .sticker.today::after{
   content:"";position:absolute;inset:-4px;border:1px solid var(--muted);border-radius:8px;
 }
@@ -208,7 +261,7 @@ select{
   border-radius:20px;padding:6px 14px;cursor:pointer;transition:.15s;
 }
 .tab:hover{color:var(--ink)}
-.tab[aria-selected="true"]{background:var(--ink);color:var(--plastic);border-color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .alist{display:flex;flex-direction:column;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:9px;overflow:hidden}
 .arow{
   background:var(--panel);padding:13px 16px;
@@ -217,7 +270,7 @@ select{
 .arow.nodiagram{grid-template-columns:150px 1fr}
 .aname{font-family:var(--display);font-weight:500;font-size:14.5px}
 .aname small{display:block;font-family:var(--body);font-weight:400;font-size:12px;color:var(--muted);margin-top:2px}
-.alg{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--y);word-spacing:.18em}
+.alg{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--alg);word-spacing:.18em}
 .alg.plain{color:var(--ink)}
 .acase{align-self:start}
 .acase svg{display:block;width:52px;height:52px}
@@ -234,7 +287,7 @@ select{
 .anote summary:hover{color:var(--ink)}
 .anote summary:focus-visible{outline:2px solid var(--y);outline-offset:2px}
 .anote[open] summary{margin-bottom:7px}
-.anote p{margin:0;font-size:14px;color:#C9CDD4;max-width:66ch}
+.anote p{margin:0;font-size:14px;color:var(--ink-2);max-width:66ch}
 
 /* ---------- stage primer ---------- */
 .primer{
@@ -245,7 +298,7 @@ select{
   font-family:var(--display);font-weight:700;font-size:15px;margin:0 0 10px;
   letter-spacing:.01em;
 }
-.primer p{margin:0 0 11px;font-size:15px;color:#C9CDD4;max-width:70ch}
+.primer p{margin:0 0 11px;font-size:15px;color:var(--ink-2);max-width:70ch}
 .primer p:last-of-type{margin-bottom:0}
 .primer b{color:var(--ink);font-weight:600}
 .pitfalls{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--hair)}
@@ -253,7 +306,7 @@ select{
   font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--muted);margin-bottom:7px;
 }
-.pitfalls ul{margin:0;padding-left:18px;font-size:14px;color:#C9CDD4}
+.pitfalls ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)}
 .pitfalls li{margin-bottom:4px;max-width:66ch}
 
 /* ---------- further reading ---------- */
@@ -264,17 +317,27 @@ select{
 }
 .reading li{margin-bottom:5px}
 .reading ul{margin:0;padding-left:18px;font-size:13px}
-.reading a{color:#B6BBC4}
-.reading a:hover{color:var(--y)}
+.reading a{color:var(--link)}
+.reading a:hover{color:var(--ink)}
 .reading span{color:var(--muted)}
+
+/* ---------- link home / theme toggle ---------- */
+.home{
+  display:inline-block;margin-bottom:16px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:var(--muted);text-decoration:none;
+}
+.home:hover{color:var(--link)}
+.home:focus-visible{outline:2px solid var(--y);outline-offset:3px}
+.icon{line-height:1;padding:7px 9px;font-size:14px}
 
 /* ---------- footer / notice ---------- */
 .notice{
   margin-top:44px;padding:14px 16px;border:1px solid var(--hair);border-radius:9px;
   font-size:13px;color:var(--muted);line-height:1.6;
 }
-.notice b{color:#B6BBC4;font-weight:500}
-.warn{border-color:#6B4A12;background:#241C0C;color:#D8C08A;display:none}
+.notice b{color:var(--faint);font-weight:500}
+.warn{border-color:var(--warn-line);background:var(--warn-bg);color:var(--warn-fg);display:none}
 .warn.show{display:block}
 
 @media (max-width:640px){
@@ -287,9 +350,23 @@ select{
   *{transition:none!important;animation:none!important}
 }
 </style>
+<script>
+/* Apply the theme before first paint so there is no flash. The key and its
+   values are Quarto's own (localStorage "quarto-color-scheme", "alternate" for
+   dark and "default" for light), so toggling here carries over to the rest of
+   gfrischkorn.org and vice versa. Quarto defaults to light when unset, and so
+   do we. */
+(function(){
+  var v = "default";
+  try { v = localStorage.getItem("quarto-color-scheme") || "default"; } catch(e){}
+  document.documentElement.setAttribute("data-theme", v === "alternate" ? "dark" : "light");
+})();
+</script>
 </head>
 <body>
 <div class="wrap">
+
+  <a class="home" href="/">&larr; gfrischkorn.org</a>
 
   <div class="topbar">
     <div class="brand">
@@ -300,6 +377,7 @@ select{
       <label for="profile">Solver</label>
       <select id="profile"></select>
       <button class="btn" id="addProfile">Add</button>
+      <button class="btn icon" id="themeToggle" title="Switch between light and dark" aria-label="Switch between light and dark"></button>
     </div>
   </div>
 
@@ -386,7 +464,7 @@ if (!Store.ok) document.getElementById("storageWarn").classList.add("show");
 
 /* ---------------- program data ---------------- */
 const WEEKS = [
-  { n:1, name:"Cross and F2L",  color:"var(--w)", light:true  },
+  { n:1, name:"Cross and F2L",  color:"var(--wk1)", light:true  },
   { n:2, name:"Last layer",     color:"var(--y)", light:true  },
   { n:3, name:"Recognition",    color:"var(--g)", light:false },
   { n:4, name:"Removing pauses",color:"var(--r)", light:false },
@@ -866,7 +944,9 @@ function rimRect(i){
   return [0, D.pad + (11-i)*(D.cell+D.gap), D.rim, D.cell];
 }
 const COLOUR = {B:"var(--b)",R:"var(--r)",G:"var(--g)",O:"var(--o)",Y:"var(--y)",W:"var(--w)"};
-const DULL = "#3A3F4A", DIM = "#2A2E37";
+/* Custom properties resolve inside SVG presentation attributes, so the
+   diagrams re-theme themselves with the rest of the page. */
+const DULL = "var(--facelet-off)", DIM = "var(--facelet-dim)";
 const svgOpen = `<svg viewBox="0 0 ${D.size} ${D.size}" role="img" focusable="false">`;
 const rect = (x,y,w,h,fill,rx) =>
   `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx||1.5}" fill="${fill}"/>`;
@@ -914,7 +994,7 @@ function renderPLL(ring, moves){
   const all = moves || [];
   const has = (a,b) => all.some(m => m[0]===a && m[1]===b);
   const head = (x,y,ux,uy) =>
-    `<polygon points="${x.toFixed(1)},${y.toFixed(1)} ${(x-ux*3.4-uy*2.1).toFixed(1)},${(y-uy*3.4+ux*2.1).toFixed(1)} ${(x-ux*3.4+uy*2.1).toFixed(1)},${(y-uy*3.4-ux*2.1).toFixed(1)}" fill="#16171B"/>`;
+    `<polygon points="${x.toFixed(1)},${y.toFixed(1)} ${(x-ux*3.4-uy*2.1).toFixed(1)},${(y-uy*3.4+ux*2.1).toFixed(1)} ${(x-ux*3.4+uy*2.1).toFixed(1)},${(y-uy*3.4-ux*2.1).toFixed(1)}" fill="var(--arrow)"/>`;
   const drawn = new Set();
   all.forEach(([a,b])=>{
     const swap = has(b,a);
@@ -925,7 +1005,7 @@ function renderPLL(ring, moves){
     const ux = dx/len, uy = dy/len, back = 3.2;
     const sx = x1 + ux*back, sy = y1 + uy*back;
     const ex = x2 - ux*back, ey = y2 - uy*back;
-    out += `<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="#16171B" stroke-width="1.6" stroke-linecap="round"/>`
+    out += `<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="var(--arrow)" stroke-width="1.6" stroke-linecap="round"/>`
          + head(ex,ey,ux,uy) + (swap ? head(sx,sy,-ux,-uy) : "");
   });
   return out + "</svg>";
@@ -980,7 +1060,26 @@ function renderReading(){
 
 function renderAll(){ renderProfiles(); renderSession(); renderGrid(); renderAlgs(); renderReading(); }
 
+/* ---------------- theme ----------------
+   Shares Quarto's storage key and values, so the choice made here is the choice
+   the rest of the site sees, and vice versa. */
+const THEME_KEY = "quarto-color-scheme";
+function currentTheme(){
+  return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+}
+function applyTheme(mode){
+  document.documentElement.setAttribute("data-theme", mode);
+  Store.set(THEME_KEY, mode === "dark" ? "alternate" : "default");
+  const b = $("themeToggle");
+  b.textContent = mode === "dark" ? "☀" : "☾";
+  b.setAttribute("aria-label", mode === "dark" ? "Switch to light" : "Switch to dark");
+  b.setAttribute("title", mode === "dark" ? "Switch to light" : "Switch to dark");
+}
+
 /* ---------------- events ---------------- */
+$("themeToggle").addEventListener("click", ()=>{
+  applyTheme(currentTheme() === "dark" ? "light" : "dark");
+});
 $("mark").addEventListener("click", ()=>{
   const wasDone = done.has(view);
   if(wasDone) done.delete(view); else done.add(view);
@@ -1022,6 +1121,7 @@ document.addEventListener("keydown", e=>{
 });
 
 /* ---------------- boot ---------------- */
+applyTheme(currentTheme());
 saveProfiles();
 loadProgress();
 renderAll();
