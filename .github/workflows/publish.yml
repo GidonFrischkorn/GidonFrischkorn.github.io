@@ -49,6 +49,34 @@ jobs:
       - name: Render CV PDFs
         run: cd cv && quarto render
 
+      # The practice page is an unlisted static file copied through by the
+      # `resources:` key in _quarto.yml. Nothing links to it, so if that entry
+      # is ever dropped the build still succeeds and the URL just starts
+      # returning 404 with no other symptom. Equally, if it ever got pulled
+      # into `render:` it would silently enter the sitemap and search index and
+      # stop being unlisted. Assert both directions here.
+      - name: Check the unlisted practice page shipped correctly
+        run: |
+          set -euo pipefail
+          src="apps/practice/index.html"
+          out="_site/apps/practice/index.html"
+
+          if [ ! -f "$out" ]; then
+            echo "::error::$out is missing. Is the 'apps/practice/' entry still under project.resources in _quarto.yml?"
+            exit 1
+          fi
+          if ! cmp -s "$src" "$out"; then
+            echo "::error::$out differs from its source. It must be copied verbatim, never rendered by Quarto."
+            exit 1
+          fi
+          for index in sitemap.xml search.json; do
+            if [ -f "_site/$index" ] && grep -q "apps/practice" "_site/$index"; then
+              echo "::error::apps/practice appears in _site/$index. This page is meant to stay unlisted."
+              exit 1
+            fi
+          done
+          echo "practice page: present, byte-identical to source, absent from sitemap.xml and search.json"
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
