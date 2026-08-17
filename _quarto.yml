@@ -8,6 +8,10 @@ project:
     - CNAME
     - images/academicons-1.9.4/
     - cv/*.pdf
+    # Self-contained static page, copied verbatim (never rendered by Quarto).
+    # Deliberately unlisted: no navbar entry, no link from any page, and it stays
+    # out of sitemap.xml/search.json because only rendered .qmd pages go in those.
+    - apps/practice/
 
 website:
   title: "Gidon Frischkorn"
