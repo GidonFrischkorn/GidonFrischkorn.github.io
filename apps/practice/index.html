@@ -98,7 +98,15 @@
   <div class="notice">
     <b>Everyone shares this page, nobody shares progress.</b> Each solver's checkmarks are stored in the browser they use, so two people on two devices stay separate — but two people on the same browser see the same profile list, and clearing your browser data erases progress. There are no passwords here and nothing is private.
     <br><br>
-    <button class="btn" id="reset">Reset this solver's progress</button>
+    <b>Your data is yours to take.</b> The JSON export restores exactly, in this browser or another one. The CSV is one row per event, ready for <code>read_csv()</code> with nothing to unpack first.
+    <div class="drow">
+      <button class="btn" id="exportJson">Export JSON</button>
+      <button class="btn" id="exportCsv">Export CSV</button>
+      <button class="btn" id="importBtn">Import JSON</button>
+      <input type="file" id="importFile" accept="application/json,.json" class="vhide">
+      <button class="btn" id="reset">Reset this solver's progress</button>
+    </div>
+    <div class="dmsg" id="dataMsg" role="status" aria-live="polite"></div>
   </div>
 
 </div>

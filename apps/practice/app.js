@@ -263,7 +263,464 @@ const CUBE = (function(){
 })();
 /*== ENGINE:END ==*/
 
-/* ---------------- storage: localStorage with in-memory fallback ---------------- */
+/*== LOG:BEGIN ==*/
+/* ---------------- event log ----------------
+   An append-only record of what the learner actually did. The completion grid
+   is *derived* from it, never the reverse: `dayDone` events are the record and
+   the Set is a projection of them.
+
+   Pure by construction — no DOM, no globals, no direct localStorage. Storage
+   arrives as an adapter `st = {get, set, del, now}` whose `set` returns false
+   when the write did not land. local/store_test.mjs slices this region out by
+   the sentinels and runs it against a fake store and an independent reference
+   implementation of the same rules. Keep it free of page dependencies.       */
+const LOG = (function(){
+
+/* Event types, stored as the index into this array. APPEND-ONLY: reordering or
+   removing an entry rewrites the meaning of every event already sitting in
+   somebody's browser. */
+const TYPES = ["","recog","recall","predict","cross","solve","reflect","dayDone","repeat"];
+const CODE = {};
+TYPES.forEach((t,i)=>{ if(t) CODE[t] = i; });
+
+/* Types that survive compaction. Everything else is anonymous drill telemetry:
+   informative in aggregate, reconstructible by drilling again, safe to drop.
+   `dayDone` is none of those things — evicting it would silently roll the
+   completion grid backwards, which is why eviction here is type-aware rather
+   than the FIFO the cap seems to invite. */
+const DURABLE = new Set(["dayDone","repeat","reflect"]);
+
+const CHUNK = 500;        // events per storage key — ~22 KB rewritten per append
+const CAP = 5000;         // events in the rolling log before compaction starts
+const KEEP_CAP = 600;     // entries in the durable store (42 days + reflections)
+const REFLECT_MAX = 1000; // characters of a written reflection kept
+const FORMAT = "cfop-trainer/events-1";
+
+/* Storage is short-keyed — a verbose event measures 146 bytes and 5000 of them
+   is 718 KB per profile, against a ~5 MB origin quota this page shares with the
+   rest of gfrischkorn.org. Export expands back to the readable schema, so the
+   analysis artefact stays legible while the browser copy stays small. */
+const K = {
+  profiles: "cfop.profiles.v2",
+  active:   "cfop.active.v2",
+  idx:   id => "cfop.evx." + id,
+  chunk: (id,n) => "cfop.ev." + id + "." + n,
+  keep:  id => "cfop.keep." + id,
+  /* Legacy, name-keyed. Still written for one release: a tab holding the
+     previous cached build reads these and nothing else, and GitHub Pages
+     caching is real. */
+  lProfiles: "cfop.profiles",
+  lActive:   "cfop.active",
+  lDone:     name => "cfop.done." + name
+};
+
+const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
+
+function readJSON(st, k, dflt){
+  const raw = st.get(k);
+  if(raw == null) return dflt;
+  try { const v = JSON.parse(raw); return v == null ? dflt : v; }
+  catch(e){ return dflt; }
+}
+function put(st, k, v){ return st.set(k, JSON.stringify(v)) !== false; }
+
+/* Composite identity. Not `ts` alone: two events can share a millisecond — a
+   reveal timeout and the requeue it triggers — and merging on the timestamp
+   would drop one of them on every import. */
+const idOf = e => e.ts + "|" + e.type + "|" + e.day + "|" + (e.caseId == null ? "" : e.caseId);
+const sortEvents = list => list.slice().sort((a,b) => a.ts - b.ts);   // stable: ties keep insertion order
+
+/* An unknown type would be stored as code 0 and read back as "", which is the
+   silent-skip failure the notation parser already had once. Reject it here; the
+   page only ever passes literals, and import validates before it gets this far. */
+function normalise(ev, now){
+  if(!ev || !CODE[ev.type]) throw new Error("LOG: unknown event type " + JSON.stringify(ev && ev.type));
+  const day = Math.trunc(num(ev.day));
+  const e = { ts: Number.isFinite(Number(ev.ts)) ? Math.round(Number(ev.ts)) : now, day, type: ev.type };
+  if(ev.caseId != null) e.caseId = String(ev.caseId);
+  if(ev.angle != null) e.angle = Math.trunc(num(ev.angle));
+  if(ev.auf != null) e.auf = Math.trunc(num(ev.auf));
+  if(ev.correct != null) e.correct = !!ev.correct;
+  if(ev.latencyMs != null) e.latencyMs = Math.round(num(ev.latencyMs));
+  if(ev.extra && typeof ev.extra === "object" && Object.keys(ev.extra).length){
+    e.extra = Object.assign({}, ev.extra);
+    if(typeof e.extra.text === "string") e.extra.text = e.extra.text.slice(0, REFLECT_MAX);
+  }
+  return e;
+}
+/* ts is a millisecond epoch — well past 2^31, so no `|0` anywhere near it. */
+function enc(e){
+  const o = { t: e.ts, d: e.day, y: CODE[e.type] };
+  if(e.caseId != null) o.c = e.caseId;
+  if(e.angle != null) o.a = e.angle;
+  if(e.auf != null) o.f = e.auf;
+  if(e.correct != null) o.k = e.correct ? 1 : 0;
+  if(e.latencyMs != null) o.l = e.latencyMs;
+  if(e.extra != null) o.x = e.extra;
+  return o;
+}
+function dec(o){
+  const e = { ts: num(o.t), day: Math.trunc(num(o.d)), type: TYPES[o.y] || "" };
+  if(o.c != null) e.caseId = o.c;
+  if(o.a != null) e.angle = o.a;
+  if(o.f != null) e.auf = o.f;
+  if(o.k != null) e.correct = o.k === 1;
+  if(o.l != null) e.latencyMs = o.l;
+  if(o.x != null) e.extra = o.x;
+  return e;
+}
+
+/* The grid, folded out of the log: for each day the last `dayDone` wins, and a
+   `dayDone` with correct:false is how undo is recorded without deleting. */
+function doneFrom(events){
+  const last = new Map();
+  for(const e of events) if(e.type === "dayDone") last.set(e.day, e.correct !== false);
+  const s = new Set();
+  last.forEach((v,d)=>{ if(v) s.add(d); });
+  return s;
+}
+
+function readAll(st, id){
+  const out = readJSON(st, K.keep(id), []).map(dec);
+  const idx = readJSON(st, K.idx(id), null);
+  if(idx) for(let n = num(idx.lo); n <= num(idx.hi); n++)
+    for(const o of readJSON(st, K.chunk(id, n), [])) out.push(dec(o));
+  return sortEvents(out);
+}
+
+/* Write a whole log from scratch. Every chunk but the last is exactly full,
+   which is what makes the cap arithmetic in count() exact. */
+function writeChunks(st, id, events){
+  let hi = 0, buf = [], ok = true;
+  for(const e of events){
+    buf.push(enc(e));
+    if(buf.length >= CHUNK){ ok = put(st, K.chunk(id, hi), buf) && ok; hi++; buf = []; }
+  }
+  ok = put(st, K.chunk(id, hi), buf) && ok;
+  ok = put(st, K.idx(id), { lo:0, hi }) && ok;
+  return ok;
+}
+
+function trimKeep(list){
+  /* Latest dayDone per day wins — an earlier one says nothing the later one
+     does not, and 42 days is the bound the durable store is sized for. Written
+     reflections and repeat markers are all kept; if even those overflow, the
+     oldest reflections go first and dayDone never does. */
+  const sorted = list.slice().sort((a,b) => num(a.t) - num(b.t));
+  const at = new Map(), out = [];
+  for(const o of sorted){
+    if(TYPES[o.y] === "dayDone"){
+      if(at.has(o.d)){ out[at.get(o.d)] = o; continue; }
+      at.set(o.d, out.length);
+    }
+    out.push(o);
+  }
+  let over = out.length - KEEP_CAP;
+  if(over <= 0) return out;
+  const kept = [];
+  for(const o of out){
+    if(over > 0 && TYPES[o.y] === "reflect"){ over--; continue; }
+    kept.push(o);
+  }
+  return kept;
+}
+
+/* ---- a log, open on one profile ---- */
+function open(st, id){
+  let idx = readJSON(st, K.idx(id), null);
+  if(!idx || !Number.isFinite(Number(idx.hi))) idx = { lo:0, hi:0 };
+  idx = { lo: Math.trunc(num(idx.lo)), hi: Math.trunc(num(idx.hi)) };
+  let tail = readJSON(st, K.chunk(id, idx.hi), []);
+  const events = readAll(st, id);
+  const done = doneFrom(events);
+  let didCompact = false, quota = false;
+
+  const count = () => (idx.hi - idx.lo) * CHUNK + tail.length;
+
+  function resync(){
+    /* Storage is the truth. Cheap enough at once per 500 events, and it makes
+       the incrementally-maintained `done` agree with a fold over the log by
+       construction rather than by hope. */
+    const re = readAll(st, id);
+    events.length = 0;
+    for(const e of re) events.push(e);
+    tail = readJSON(st, K.chunk(id, idx.hi), []);
+    done.clear();
+    doneFrom(re).forEach(d => done.add(d));
+  }
+
+  function compactOldest(){
+    if(idx.lo >= idx.hi) return false;            // the tail chunk is never evicted
+    const ch = readJSON(st, K.chunk(id, idx.lo), []);
+    const durable = ch.filter(o => DURABLE.has(TYPES[o.y]));
+    if(durable.length){
+      const keep = readJSON(st, K.keep(id), []).concat(durable);
+      /* If the durable store cannot be written, the chunk does not go. Dropping
+         it anyway is the one move that turns "storage is full" into "your
+         completed days are gone", so a full quota surfaces as a banner instead. */
+      if(!put(st, K.keep(id), trimKeep(keep))) return false;
+    }
+    st.del(K.chunk(id, idx.lo));
+    idx.lo++;
+    put(st, K.idx(id), { lo: idx.lo, hi: idx.hi });
+    didCompact = true;
+    return true;
+  }
+
+  function flush(){
+    /* On a refused write, evict oldest-first and retry. Compaction has already
+       moved the durable types aside, so eviction under pressure costs drill
+       telemetry and never the grid. */
+    for(let attempt = 0; attempt < 16; attempt++){
+      if(put(st, K.chunk(id, idx.hi), tail) && put(st, K.idx(id), { lo: idx.lo, hi: idx.hi })){
+        quota = false;
+        return true;
+      }
+      if(!compactOldest()) break;
+    }
+    quota = true;
+    return false;
+  }
+
+  return {
+    id,
+    all: () => events.slice(),
+    done: () => done,                 // the live Set — read-only to callers
+    count,
+    quotaHit: () => quota,
+    append(ev){
+      const e = normalise(ev, st.now());
+      didCompact = false;
+      events.push(e);
+      if(e.type === "dayDone"){ if(e.correct === false) done.delete(e.day); else done.add(e.day); }
+      tail.push(enc(e));
+      const ok = flush();
+      if(ok && tail.length >= CHUNK){
+        idx.hi++; tail = [];
+        put(st, K.idx(id), { lo: idx.lo, hi: idx.hi });
+      }
+      while(ok && count() > CAP && compactOldest()){ /* type-aware, not FIFO */ }
+      if(ok && didCompact) resync();
+      return ok;
+    },
+    replaceAll(list){
+      for(let n = idx.lo; n <= idx.hi; n++) st.del(K.chunk(id, n));
+      st.del(K.keep(id));
+      const sorted = sortEvents(list.map(e => normalise(e, st.now())));
+      const ok = writeChunks(st, id, sorted);
+      idx = readJSON(st, K.idx(id), { lo:0, hi:0 });
+      tail = readJSON(st, K.chunk(id, idx.hi), []);
+      didCompact = false;
+      while(count() > CAP && compactOldest()){ /* honour the cap on import too */ }
+      resync();
+      return ok;
+    },
+    wipe(){
+      for(let n = idx.lo; n <= idx.hi; n++) st.del(K.chunk(id, n));
+      st.del(K.keep(id));
+      st.del(K.idx(id));
+      idx = { lo:0, hi:0 };
+      tail = [];
+      events.length = 0;
+      done.clear();
+    }
+  };
+}
+
+/* ---- profiles: raw typed name -> stable id ---- */
+/* A profile added from the page gets a clock-minted id — nothing else could
+   name it. */
+function newId(st, existing){
+  const base = "p" + Number(st.now()).toString(36);
+  const taken = new Set((existing || []).map(p => p.id));
+  for(let i = 0; ; i++){
+    const id = base + "-" + i.toString(36);
+    if(!taken.has(id)) return id;
+  }
+}
+/* A *migrated* profile does not: its id is derived from the legacy name (FNV-1a),
+   so re-running the migration lands on the same id every time. That is what makes
+   the "a log already exists" guard below a live check rather than a formality —
+   with clock-minted ids a second migration would mint a fresh id, find no log
+   under it, and rebuild from the legacy mirror while orphaning the real event
+   history under an id nothing references. Losing cfop.profiles.v2 to a refused
+   write is exactly the case this block has to survive, so it must re-adopt. */
+function hash36(s){
+  let h = 0x811c9dc5;
+  for(let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  return h.toString(36);
+}
+function legacyId(name, taken){
+  const base = "p" + hash36(name);
+  if(!taken.has(base)) return base;
+  for(let i = 1; ; i++) if(!taken.has(base + "-" + i.toString(36))) return base + "-" + i.toString(36);
+}
+
+/* The legacy format recorded only *which* days were done, never when. A
+   backdated guess would put fabricated timestamps into an export meant for
+   analysis in R, so these carry ts 0 and extra.migrated: unmistakably
+   synthetic, and sorting before every real event. */
+function migratedEvents(days){
+  const seen = new Set(), out = [];
+  if(Array.isArray(days)) for(const d of days){
+    const n = Number(d);
+    if(!Number.isInteger(n) || n < 0 || seen.has(n)) continue;
+    seen.add(n);
+    out.push({ ts: 0, day: n, type: "dayDone", correct: true, extra: { migrated: 1 } });
+  }
+  return out.sort((a,b) => a.day - b.day);
+}
+
+function migrate(st){
+  const legacy = readJSON(st, K.lProfiles, null);
+  const names = [];
+  if(Array.isArray(legacy)) for(const n of legacy){
+    const s = String(n).trim();
+    if(s && names.indexOf(s) < 0) names.push(s);      // duplicates would fight over one id
+  }
+  if(!names.length) names.push("Me");
+  const profiles = [], taken = new Set();
+  for(const name of names){
+    const id = legacyId(name, taken);
+    taken.add(id);
+    profiles.push({ id, name });
+  }
+  for(const p of profiles){
+    if(st.get(K.idx(p.id)) != null) continue;          // idempotent: a log already exists
+    writeChunks(st, p.id, migratedEvents(readJSON(st, K.lDone(p.name), [])));
+  }
+  return { profiles, migrated: true };
+}
+
+function loadProfiles(st){
+  const v2 = readJSON(st, K.profiles, null);
+  if(Array.isArray(v2) && v2.length && v2.every(p => p && p.id != null))
+    return { profiles: v2.map(p => ({ id: String(p.id), name: String(p.name == null ? "" : p.name) })), migrated: false };
+  return migrate(st);
+}
+function loadActive(st, profiles){
+  const a = st.get(K.active);
+  if(a && profiles.some(p => p.id === a)) return a;
+  const byName = profiles.find(p => p.name === st.get(K.lActive));
+  return byName ? byName.id : profiles[0].id;
+}
+function saveProfiles(st, profiles, active){
+  put(st, K.profiles, profiles);
+  st.set(K.active, active);
+  put(st, K.lProfiles, profiles.map(p => p.name));
+  const cur = profiles.find(p => p.id === active);
+  if(cur) st.set(K.lActive, cur.name);
+}
+function mirrorDone(st, name, done){
+  put(st, K.lDone(name), [...done].sort((a,b) => a - b));
+}
+
+/* Re-import what a tab on the previous cached build recorded. ADDITIVE ONLY: a
+   day present in the log but missing from the legacy mirror is left alone,
+   because the two readings are indistinguishable — a stale tab un-marking it,
+   or this tab marking it after that tab last looked. Adding a completion
+   wrongly costs one click to undo; removing one wrongly is exactly the silent
+   rollback this design exists to prevent. */
+function reconcileLegacy(st, profile, done, now){
+  const legacy = readJSON(st, K.lDone(profile.name), null);
+  if(!Array.isArray(legacy)) return [];
+  const seen = new Set(), out = [];
+  for(const d of legacy){
+    const n = Number(d);
+    if(!Number.isInteger(n) || n < 0 || done.has(n) || seen.has(n)) continue;
+    seen.add(n);
+    out.push({ ts: now, day: n, type: "dayDone", correct: true, extra: { reconciled: 1 } });
+  }
+  return out;
+}
+
+/* ---- export / import ---- */
+const FIELDS = ["ts","day","type","caseId","angle","auf","correct","latencyMs","extra"];
+const readable = e => {
+  const o = {};
+  for(const f of FIELDS) o[f] = e[f] === undefined ? null : e[f];
+  return o;
+};
+
+function toJSON(profile, events, isoNow){
+  return JSON.stringify({
+    format: FORMAT,
+    exported: isoNow,
+    profile: { id: profile.id, name: profile.name },
+    count: events.length,
+    events: sortEvents(events).map(readable)
+  }, null, 1);
+}
+
+/* Long format, one row per event, so readr::read_csv() gives a usable frame
+   with no parsing step. `extra` stays a JSON string because its keys vary by
+   event type; nothing else needs it to be read. */
+const CSV_COLS = ["event_id","ts_ms","ts_iso","profile_id","profile_name",
+                  "day_index","day_number","type","case_id","angle","auf",
+                  "correct","latency_ms","extra"];
+function cell(v){
+  if(v === null || v === undefined) return "";
+  if(typeof v === "boolean") return v ? "TRUE" : "FALSE";
+  const s = String(v);
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function toCSV(profile, events){
+  const rows = [CSV_COLS.join(",")];
+  for(const e of sortEvents(events)) rows.push([
+    idOf(e), e.ts, new Date(e.ts).toISOString(), profile.id, profile.name,
+    e.day, e.day + 1, e.type,
+    e.caseId == null ? null : e.caseId,
+    e.angle == null ? null : e.angle,
+    e.auf == null ? null : e.auf,
+    e.correct == null ? null : e.correct,
+    e.latencyMs == null ? null : e.latencyMs,
+    e.extra == null ? null : JSON.stringify(e.extra)
+  ].map(cell).join(","));
+  return rows.join("\n") + "\n";
+}
+
+function fromJSON(text){
+  let o;
+  try { o = JSON.parse(text); }
+  catch(e){ return { ok:false, error:"That file isn't valid JSON." }; }
+  if(!o || o.format !== FORMAT)
+    return { ok:false, error:"That isn't a CFOP trainer export (expected format " + FORMAT + ")." };
+  if(!o.profile || !o.profile.id || !Array.isArray(o.events))
+    return { ok:false, error:"That export is missing its profile or event list." };
+  const events = [];
+  for(const raw of o.events){
+    if(!raw || !CODE[raw.type]) return { ok:false, error:"That export contains an event with an unknown type." };
+    try { events.push(normalise(raw, 0)); }
+    catch(e){ return { ok:false, error:"That export contains an event this version can't read." }; }
+  }
+  return { ok:true, profile: { id: String(o.profile.id), name: String(o.profile.name || "Imported") }, events };
+}
+
+function mergeEvents(existing, incoming){
+  const seen = new Set(existing.map(idOf));
+  const out = existing.slice();
+  let added = 0;
+  for(const e of incoming){
+    const k = idOf(e);
+    if(seen.has(k)) continue;
+    seen.add(k); out.push(e); added++;
+  }
+  return { events: sortEvents(out), added };
+}
+
+return { TYPES, CHUNK, CAP, FORMAT, K, open, newId, loadProfiles, loadActive,
+         saveProfiles, mirrorDone, reconcileLegacy, migratedEvents, doneFrom,
+         toJSON, toCSV, fromJSON, mergeEvents, idOf, enc, dec, normalise };
+})();
+/*== LOG:END ==*/
+
+/*== STORE:BEGIN ==*/
+/* ---------------- storage: localStorage with in-memory fallback ----------------
+   Three states worth keeping straight: storage works; storage is blocked
+   outright (preview panes, some private modes) and everything runs from memory
+   for the session; storage works but is full, which is a per-write failure the
+   caller has to hear about. local/store_test.mjs slices this out by the
+   sentinels and checks all three. */
 const Store = (() => {
   let ok = true;
   try {
@@ -274,10 +731,20 @@ const Store = (() => {
   return {
     ok,
     get(k){ try { return ok ? localStorage.getItem(k) : (mem[k] ?? null); } catch(e){ return mem[k] ?? null; } },
-    set(k,v){ try { if(ok) localStorage.setItem(k,v); else mem[k]=v; } catch(e){ mem[k]=v; } },
+    /* Returns false when the write did not reach localStorage — a full quota,
+       almost always. It deliberately does *not* stash the value in `mem` as a
+       consolation prize: `mem` is only ever read when storage is unavailable
+       outright, so a copy written here would never be read by anything. The
+       report is the useful part — LOG's eviction path keys off it. */
+    set(k,v){
+      if(!ok){ mem[k]=v; return true; }
+      try { localStorage.setItem(k,v); return true; }
+      catch(e){ return false; }
+    },
     del(k){ try { if(ok) localStorage.removeItem(k); else delete mem[k]; } catch(e){ delete mem[k]; } }
   };
 })();
+/*== STORE:END ==*/
 if (!Store.ok) document.getElementById("storageWarn").classList.add("show");
 
 /* ---------------- program data ---------------- */
@@ -697,21 +1164,48 @@ function invertAlg(alg){
   return p.ok ? CUBE.fmtMoves(CUBE.invertMoves(p.moves)) : "";
 }
 
-/* ---------------- state ---------------- */
-const P_KEY = "cfop.profiles", A_KEY = "cfop.active";
-let profiles = JSON.parse(Store.get(P_KEY) || 'null') || ["Me"];
-let active = Store.get(A_KEY) || profiles[0];
-if (!profiles.includes(active)) active = profiles[0];
+/* ---------------- state ----------------
+   `done` is a projection of the event log, not a stored value. Nothing writes
+   it directly; marking a day appends an event and the Set follows.          */
+const st = { get: k => Store.get(k), set: (k,v) => Store.set(k,v),
+             del: k => Store.del(k), now: () => Date.now() };
+
+let profiles = [];      // [{id, name}] — keyed by a stable id, not the typed name
+let active = "";        // profile id
+let log = null;         // LOG handle for the active profile
 let done = new Set();
 let view = 0;
 
-const dKey = name => "cfop.done." + name;
+function activeProfile(){ return profiles.find(p => p.id === active) || profiles[0]; }
+function saveProfiles(){ LOG.saveProfiles(st, profiles, active); }
+function mirrorLegacy(){ LOG.mirrorDone(st, activeProfile().name, done); }
+
 function loadProgress(){
-  done = new Set(JSON.parse(Store.get(dKey(active)) || "[]"));
+  log = LOG.open(st, active);
+  /* A tab still serving the previous cached build writes only the legacy key.
+     Pick up anything it recorded before deriving the grid. */
+  for(const e of LOG.reconcileLegacy(st, activeProfile(), log.done(), Date.now())) log.append(e);
+  done = log.done();
   view = firstUndone();
+  mirrorLegacy();
 }
-function saveProgress(){ Store.set(dKey(active), JSON.stringify([...done])); }
-function saveProfiles(){ Store.set(P_KEY, JSON.stringify(profiles)); Store.set(A_KEY, active); }
+
+/* The one way progress changes. */
+function logEvent(ev){
+  const ok = log.append(ev);
+  done = log.done();
+  mirrorLegacy();
+  if(!ok) storageFull();
+  return ok;
+}
+function storageFull(){
+  const box = $("storageWarn");
+  box.innerHTML = "<b>Browser storage is full.</b> Your completed days and written notes are safe — " +
+    "the oldest drill measurements were dropped to make room. Export your data from the bottom of " +
+    "this page if you want to keep it, then reset the solver to clear space.";
+  box.classList.add("show");
+}
+
 function firstUndone(){
   for (let i=0;i<DAYS.length;i++) if(!done.has(i)) return i;
   return DAYS.length-1;
@@ -726,7 +1220,7 @@ function renderProfiles(){
   sel.innerHTML = "";
   profiles.forEach(p=>{
     const o = document.createElement("option");
-    o.value = p; o.textContent = p; if(p===active) o.selected = true;
+    o.value = p.id; o.textContent = p.name; if(p.id===active) o.selected = true;
     sel.appendChild(o);
   });
 }
@@ -962,9 +1456,11 @@ $("themeToggle").addEventListener("click", ()=>{
 });
 $("mark").addEventListener("click", ()=>{
   const wasDone = done.has(view);
-  if(wasDone) done.delete(view); else done.add(view);
-  saveProgress();
   const idx = view;
+  /* Undo is recorded, not erased: a dayDone carrying correct:false. The fold in
+     LOG.doneFrom takes the last one per day, so the grid reads the same either
+     way while the log keeps what actually happened. */
+  logEvent({ day: view, type: "dayDone", correct: !wasDone });
   if(!wasDone && view < DAYS.length-1) view = firstUndone();
   renderSession(); renderGrid();
   if(!wasDone){
@@ -987,21 +1483,99 @@ $("profile").addEventListener("change", e=>{
 $("addProfile").addEventListener("click", ()=>{
   const name = (prompt("Name for this solver") || "").trim();
   if(!name) return;
-  if(!profiles.includes(name)) profiles.push(name);
-  active = name; saveProfiles(); loadProgress(); renderAll();
+  const p = { id: LOG.newId(st, profiles), name };
+  profiles.push(p);
+  active = p.id; saveProfiles(); loadProgress(); renderAll();
 });
 $("reset").addEventListener("click", ()=>{
-  if(!confirm(`Clear all progress for ${active}? This can't be undone.`)) return;
-  done.clear(); saveProgress(); view = 0; renderSession(); renderGrid();
+  const p = activeProfile();
+  if(!confirm(`Clear all progress for ${p.name}? This erases the recorded event log too and can't be undone — export it first if you want to keep it.`)) return;
+  log.wipe();
+  done = log.done();
+  mirrorLegacy();
+  view = 0; renderSession(); renderGrid();
+  dataMsg(`Cleared everything for ${p.name}.`);
 });
+
+/* ---------------- export / import ----------------
+   The log is the point of this iteration, so it has to be able to leave the
+   browser. JSON round-trips exactly; the CSV is long format so read_csv() gives
+   a usable frame with no parsing step. */
+function dataMsg(text){ $("dataMsg").textContent = text; }
+function fileStem(name){
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+  return "cfop-" + (slug || "solver") + "-" + new Date().toISOString().slice(0,10);
+}
+function download(filename, text, mime){
+  const url = URL.createObjectURL(new Blob([text], { type: mime + ";charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 0);
+}
+$("exportJson").addEventListener("click", ()=>{
+  const p = activeProfile(), events = log.all();
+  download(fileStem(p.name) + ".json", LOG.toJSON(p, events, new Date().toISOString()), "application/json");
+  dataMsg(`Exported ${events.length} event${events.length===1?"":"s"} for ${p.name} as JSON.`);
+});
+$("exportCsv").addEventListener("click", ()=>{
+  const p = activeProfile(), events = log.all();
+  download(fileStem(p.name) + ".csv", LOG.toCSV(p, events), "text/csv");
+  dataMsg(`Exported ${events.length} event${events.length===1?"":"s"} for ${p.name} as CSV.`);
+});
+$("importBtn").addEventListener("click", ()=> $("importFile").click());
+$("importFile").addEventListener("change", e=>{
+  const file = e.target.files && e.target.files[0];
+  e.target.value = "";                       // so re-picking the same file fires again
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onerror = ()=> dataMsg("That file could not be read.");
+  reader.onload = ()=> importText(String(reader.result));
+  reader.readAsText(file);
+});
+function importText(text){
+  const parsed = LOG.fromJSON(text);
+  if(!parsed.ok){ dataMsg(parsed.error); return; }
+  /* Identity is the profile id, so an export re-imported into the browser it
+     came from merges back into the same solver. An export from somewhere else
+     carries an id nothing here matches, and arrives as its own solver rather
+     than silently blending into a same-named one. */
+  let p = profiles.find(x => x.id === parsed.profile.id);
+  let created = false;
+  if(!p){
+    let name = parsed.profile.name;
+    if(profiles.some(x => x.name === name)) name += " (imported)";
+    p = { id: parsed.profile.id, name };
+    profiles.push(p);
+    created = true;
+  }
+  active = p.id;
+  saveProfiles();
+  loadProgress();
+  const merged = LOG.mergeEvents(log.all(), parsed.events);
+  const ok = log.replaceAll(merged.events);
+  done = log.done();
+  view = firstUndone();
+  mirrorLegacy();
+  renderAll();
+  dataMsg(`Imported ${merged.added} new event${merged.added===1?"":"s"} into ${p.name}` +
+          (created ? " (a new solver)" : "") + ". " +
+          `${done.size} of 42 days complete.` + (ok ? "" : " Storage was full, so some of it did not save."));
+  if(!ok) storageFull();
+}
 document.addEventListener("keydown", e=>{
   if(e.target.matches("input,select,textarea")) return;
   if(e.key === "ArrowLeft") $("prev").click();
   if(e.key === "ArrowRight") $("next").click();
 });
 
-/* ---------------- boot ---------------- */
+/* ---------------- boot ----------------
+   Order matters: migrate before anything writes. Reading legacy progress and
+   deriving from an empty log the other way round would mirror an empty Set
+   straight back over cfop.done.<name> and take the history with it. */
 applyTheme(currentTheme());
+profiles = LOG.loadProfiles(st).profiles;
+active = LOG.loadActive(st, profiles);
 saveProfiles();
 loadProgress();
 renderAll();
