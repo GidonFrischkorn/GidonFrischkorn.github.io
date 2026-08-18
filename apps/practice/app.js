@@ -306,9 +306,9 @@ const K = {
   idx:   id => "cfop.evx." + id,
   chunk: (id,n) => "cfop.ev." + id + "." + n,
   keep:  id => "cfop.keep." + id,
-  /* Legacy, name-keyed. Still written for one release: a tab holding the
-     previous cached build reads these and nothing else, and GitHub Pages
-     caching is real. */
+  /* Legacy, name-keyed. Read once by the migration below and never written:
+     the page is still in development, so a stale cached tab losing progress is
+     not worth a permanent second source of truth. */
   lProfiles: "cfop.profiles",
   lActive:   "cfop.active",
   lDone:     name => "cfop.done." + name
@@ -338,6 +338,11 @@ function normalise(ev, now){
   const day = Math.trunc(num(ev.day));
   const e = { ts: Number.isFinite(Number(ev.ts)) ? Math.round(Number(ev.ts)) : now, day, type: ev.type };
   if(ev.caseId != null) e.caseId = String(ev.caseId);
+  /* Which rendering the learner was shown. A first-class field rather than an
+     `extra` key because `extra` is one JSON blob in the CSV, and the point of
+     the CSV is read_csv() with nothing to unpack — a planned stimulus
+     manipulation has to arrive as its own column. */
+  if(ev.view != null) e.view = String(ev.view);
   if(ev.angle != null) e.angle = Math.trunc(num(ev.angle));
   if(ev.auf != null) e.auf = Math.trunc(num(ev.auf));
   if(ev.correct != null) e.correct = !!ev.correct;
@@ -352,6 +357,7 @@ function normalise(ev, now){
 function enc(e){
   const o = { t: e.ts, d: e.day, y: CODE[e.type] };
   if(e.caseId != null) o.c = e.caseId;
+  if(e.view != null) o.v = e.view;
   if(e.angle != null) o.a = e.angle;
   if(e.auf != null) o.f = e.auf;
   if(e.correct != null) o.k = e.correct ? 1 : 0;
@@ -362,6 +368,7 @@ function enc(e){
 function dec(o){
   const e = { ts: num(o.t), day: Math.trunc(num(o.d)), type: TYPES[o.y] || "" };
   if(o.c != null) e.caseId = o.c;
+  if(o.v != null) e.view = o.v;
   if(o.a != null) e.angle = o.a;
   if(o.f != null) e.auf = o.f;
   if(o.k != null) e.correct = o.k === 1;
@@ -607,35 +614,10 @@ function loadActive(st, profiles){
 function saveProfiles(st, profiles, active){
   put(st, K.profiles, profiles);
   st.set(K.active, active);
-  put(st, K.lProfiles, profiles.map(p => p.name));
-  const cur = profiles.find(p => p.id === active);
-  if(cur) st.set(K.lActive, cur.name);
-}
-function mirrorDone(st, name, done){
-  put(st, K.lDone(name), [...done].sort((a,b) => a - b));
-}
-
-/* Re-import what a tab on the previous cached build recorded. ADDITIVE ONLY: a
-   day present in the log but missing from the legacy mirror is left alone,
-   because the two readings are indistinguishable — a stale tab un-marking it,
-   or this tab marking it after that tab last looked. Adding a completion
-   wrongly costs one click to undo; removing one wrongly is exactly the silent
-   rollback this design exists to prevent. */
-function reconcileLegacy(st, profile, done, now){
-  const legacy = readJSON(st, K.lDone(profile.name), null);
-  if(!Array.isArray(legacy)) return [];
-  const seen = new Set(), out = [];
-  for(const d of legacy){
-    const n = Number(d);
-    if(!Number.isInteger(n) || n < 0 || done.has(n) || seen.has(n)) continue;
-    seen.add(n);
-    out.push({ ts: now, day: n, type: "dayDone", correct: true, extra: { reconciled: 1 } });
-  }
-  return out;
 }
 
 /* ---- export / import ---- */
-const FIELDS = ["ts","day","type","caseId","angle","auf","correct","latencyMs","extra"];
+const FIELDS = ["ts","day","type","caseId","angle","auf","correct","latencyMs","view","extra"];
 const readable = e => {
   const o = {};
   for(const f of FIELDS) o[f] = e[f] === undefined ? null : e[f];
@@ -657,7 +639,7 @@ function toJSON(profile, events, isoNow){
    event type; nothing else needs it to be read. */
 const CSV_COLS = ["event_id","ts_ms","ts_iso","profile_id","profile_name",
                   "day_index","day_number","type","case_id","angle","auf",
-                  "correct","latency_ms","extra"];
+                  "correct","latency_ms","view","extra"];
 function cell(v){
   if(v === null || v === undefined) return "";
   if(typeof v === "boolean") return v ? "TRUE" : "FALSE";
@@ -674,6 +656,7 @@ function toCSV(profile, events){
     e.auf == null ? null : e.auf,
     e.correct == null ? null : e.correct,
     e.latencyMs == null ? null : e.latencyMs,
+    e.view == null ? null : e.view,
     e.extra == null ? null : JSON.stringify(e.extra)
   ].map(cell).join(","));
   return rows.join("\n") + "\n";
@@ -709,7 +692,7 @@ function mergeEvents(existing, incoming){
 }
 
 return { TYPES, CHUNK, CAP, FORMAT, K, open, newId, loadProfiles, loadActive,
-         saveProfiles, mirrorDone, reconcileLegacy, migratedEvents, doneFrom,
+         saveProfiles, migratedEvents, doneFrom,
          toJSON, toCSV, fromJSON, mergeEvents, idOf, enc, dec, normalise };
 })();
 /*== LOG:END ==*/
@@ -856,6 +839,7 @@ const DAYS = [
    so the diagram always matches what the algorithm actually solves.
    PLL `r` is the 12 side stickers clockwise from the back-left corner, and `x`
    lists the piece movements as [from, to] over the 3x3 grid indexed 0-8. */
+/*== ALGS:BEGIN ==*/
 const ALGS = {
   cross: { label:"Cross", rows:[] },
   f2l: { label:"F2L", rows:[
@@ -873,59 +857,60 @@ const ALGS = {
      note:"The second piece of vocabulary. Once you can see sexy moves and sledgehammers inside longer algorithms, the last-layer set stops looking arbitrary."}
   ]},
   oll: { label:"OLL · 10", rows:[
-    {n:"Line",s:"Edges — bar running left to right",a:"F R U R' U' F'",edges:true,
+    {id:"oll.line",short:"Line",n:"Line",s:"Edges — bar running left to right",a:"F R U R' U' F'",edges:true,
      e:"010100100111010010010",
      note:"Hold the bar horizontally, across your view. You are only orienting edges here, so the corners will still be a mess afterwards — that is correct, not a mistake. This is the algorithm every other edge case is built from."},
-    {n:"L-shape",s:"Edges — L occupying front and right",a:"f R U R' U' f'",edges:true,
+    {id:"oll.l-shape",short:"L-shape",n:"L-shape",s:"Edges — L occupying front and right",a:"f R U R' U' f'",edges:true,
      e:"010100101011010110000",
      note:"Hold the L so its two oriented edges sit at the front and the right. This holding is specific to this algorithm: the common variant F U R U' R' F' solves the same case held the opposite way, so don't mix an algorithm from one source with a picture from another."},
-    {n:"Dot",s:"Edges — none oriented; run the other two in sequence",a:"F R U R' U' F' · f R U R' U' f'",edges:true,
+    {id:"oll.dot",short:"Dot",n:"Dot",s:"Edges — none oriented; run the other two in sequence",a:"F R U R' U' F' · f R U R' U' f'",edges:true,
      e:"011100001010110000011",
      note:"No separate algorithm needed and no separate holding either — this one works from any angle. Run the Line algorithm, which turns the dot into an L, then run the L algorithm. Don't memorise it as a third sequence."},
-    {n:"Sune",s:"Corners — one oriented, at the front left",a:"R U R' U R U2 R'",
+    {id:"oll.sune",short:"Sune",confusable:["oll.antisune"],n:"Sune",s:"Corners — one oriented, at the front left",a:"R U R' U R U2 R'",
      e:"100001010111001100001",
      note:"The backbone of the corner set. Hold the single oriented corner at the front left. It twists exactly three corners, which is why six repetitions on a solved cube bring it back to solved — a good drill that needs no scrambling."},
-    {n:"Antisune",s:"Corners — one oriented, at the back right",a:"R U2 R' U' R U' R'",
+    {id:"oll.antisune",short:"Antisune",n:"Antisune",s:"Corners — one oriented, at the back right",a:"R U2 R' U' R U' R'",
      e:"000101100111000101100",
      note:"Sune's mirror, and the other one-corner case. Learn it immediately after Sune while the shape of that algorithm is still fresh; taken together they are much less than two algorithms' worth of work."},
-    {n:"T / Chameleon",s:"Corners — two oriented, both on the right",a:"r U R' U' r' F R F'",
+    {id:"oll.t",short:"T",n:"T / Chameleon",s:"Corners — two oriented, both on the right",a:"r U R' U' r' F R F'",
      e:"100001100111000110100",
      note:"The lowercase r is a wide turn: it moves the right layer and the middle slice together. A wide turn that slips into a single-layer turn scrambles the cube in a confusing way, so check your grip before you start."},
-    {n:"L / Bowtie",s:"Corners — two oriented, diagonally opposite",a:"F' r U R' U' r' F R",
+    {id:"oll.bowtie",short:"Bowtie",n:"L / Bowtie",s:"Corners — two oriented, diagonally opposite",a:"F' r U R' U' r' F R",
      e:"000101100111001100001",
      note:"The other wide-turn case, and the only corner case with its two oriented corners diagonally across from each other. Some sources give this algorithm with a y rotation in front; the diagram here matches the algorithm as written."},
-    {n:"Headlights",s:"Corners — two oriented, both at the back",a:"R2 D R' U2 R D' R' U2 R'",
+    {id:"oll.headlights",short:"Headlights",n:"Headlights",s:"Corners — two oriented, both at the back",a:"R2 D R' U2 R D' R' U2 R'",
      e:"000011100111000100101",
      note:"The odd one out with no mirror partner. It uses D, which no other last-layer algorithm here does, so it tends to feel unfamiliar for longer than the others — worth extra repetitions."},
-    {n:"H",s:"Corners — none oriented; yellow on left and right",a:"R U R' U R U' R' U R U2 R'",
+    {id:"oll.h",short:"OLL H",confusable:["oll.pi"],n:"H",s:"Corners — none oriented; yellow on left and right",a:"R U R' U R U' R' U R U2 R'",
      e:"000101010111010101000",
      note:"Looks identical to Pi from directly above: a bare yellow cross either way. What separates them is the rim — H shows yellow in matching pairs on the left and right faces. It is essentially Sune done three times."},
-    {n:"Pi",s:"Corners — none oriented; rim pattern differs from H",
+    {id:"oll.pi",short:"Pi",n:"Pi",s:"Corners — none oriented; rim pattern differs from H",
      a:"R U2 R2 U' R2 U' R2 U2 R",
      e:"001101000111010100001",
      note:"The other no-corners case. Compare the rim against H before you commit: this is the one case pair where reading only the top face cannot possibly tell you which you have, and confusing them costs a whole extra algorithm to recover."}
   ]},
   pll: { label:"PLL · 6", rows:[
-    {n:"Corner 3-cycle",s:"Corners — headlights at the back",a:"R' F R' B2 R F' R' B2 R2",
+    {id:"pll.corners-3cycle",short:"3-cycle",confusable:["pll.corners-diagonal"],n:"Corner 3-cycle",s:"Corners — headlights at the back",a:"R' F R' B2 R F' R' B2 R2",
      r:"RBRGROBGGOOB",x:[[0,2],[2,8],[8,0]],
      note:"Not a two-corner swap — swapping just two corners is impossible on a cube. Three corners rotate positions and one stays put. Find the face showing two matching corner stickers (the headlights) and put it at the back. This one leaves the edges completely alone, which keeps the two-stage picture clean."},
-    {n:"Diagonal swap",s:"Corners — no headlights anywhere",a:"F R U' R' U' R U R' F' R U R' U' R' F R F'",
+    {id:"pll.corners-diagonal",short:"Diagonal",n:"Diagonal swap",s:"Corners — no headlights anywhere",a:"F R U' R' U' R U R' F' R U R' U' R' F R F'",
      r:"GOBRROBGGOBR",x:[[0,8],[8,0],[1,3],[3,1]],
      note:"The Y-perm. Recognition is the absence of a cue: check all four faces, and if none shows headlights, this is your case. Long but it works from any angle, so there is no holding to get wrong. It also swaps two edges, which is harmless because edges are the next step anyway."},
-    {n:"Ua",s:"Edges — solved edge at the back, cycle runs one way",a:"M2 U M U2 M' U M2",
+    {id:"pll.ua",short:"Ua",confusable:["pll.ub"],n:"Ua",s:"Edges — solved edge at the back, cycle runs one way",a:"M2 U M U2 M' U M2",
      r:"BBBRORGRGOGO",x:[[7,5],[5,3],[3,7]],
      note:"Three edges rotate positions; the fourth is already home and goes at the back. Ua and Ub move exactly the same three edges and differ only in direction, so the whole difficulty is telling them apart. Follow the arrows: here the front edge travels to the right."},
-    {n:"Ub",s:"Edges — solved edge at the back, cycle runs the other way",a:"M2 U' M U2 M' U' M2",
+    {id:"pll.ub",short:"Ub",n:"Ub",s:"Edges — solved edge at the back, cycle runs the other way",a:"M2 U' M U2 M' U' M2",
      r:"BBBRGRGOGORO",x:[[7,3],[3,5],[5,7]],
      note:"The mirror of Ua, and the only difference in the algorithm is which way the U turns go. Here the front edge travels to the left. If you keep confusing the two, name the direction out loud before you start turning."},
-    {n:"H",s:"Edges — both opposite pairs swap",a:"M2 U M2 U2 M2 U M2",
+    {id:"pll.h",short:"PLL H",n:"H",s:"Edges — both opposite pairs swap",a:"M2 U M2 U2 M2 U M2",
      r:"BGBRORGBGORO",x:[[1,7],[7,1],[3,5],[5,3]],
      note:"Front swaps with back, left swaps with right. Fully symmetrical, so there is no wrong angle to start from — the one last-layer case you never have to line up first. Also the easiest algorithm here to execute once the M slice is comfortable."},
-    {n:"Z",s:"Edges — both adjacent pairs swap",a:"M2 U M2 U M' U2 M2 U2 M' U2",
+    {id:"pll.z",short:"Z",n:"Z",s:"Edges — both adjacent pairs swap",a:"M2 U M2 U M' U2 M2 U2 M' U2",
      r:"BOBRGRGRGOBO",x:[[1,3],[3,1],[7,5],[5,7]],
      note:"The other swap case: neighbours trade rather than opposites. Some published versions of this algorithm finish a quarter turn out, needing a final U to line the layer up — if yours does, that is normal and not a mistake."}
   ]}
 };
+/*== ALGS:END ==*/
 
 const STAGES = {
   cross: {h:"Cross", p:[
@@ -974,6 +959,103 @@ const READING = [
   {t:"Speedsolving wiki",u:"https://www.speedsolving.com/wiki/index.php/CFOP",d:"Reference rather than tutorial — case lists, terminology, and the full 41-case F2L set when you want it."},
   {t:"Full PLL",u:"https://www.speedsolving.com/wiki/index.php/PLL",d:"The natural next step after this programme. 21 algorithms; learn a few at a time."}
 ];
+
+/*== DIAGRAM:BEGIN ==*/
+/* ---------------- case diagrams ----------------
+   A last-layer plan view: the 3x3 top face with a rim of 12 side stickers,
+   drawn as a 5x5 grid with the corners left empty. Front face at the bottom.
+   The geometry below is shared by both renderers.                        */
+const D = { cell:11, gap:2, rim:4, pad:6, size:49 };
+const uxy = (r,c) => [D.pad + c*(D.cell+D.gap), D.pad + r*(D.cell+D.gap)];
+/* Rim slots run clockwise from the back-left: 0-2 back, 3-5 right,
+   6-8 front, 9-11 left. Returns [x, y, width, height]. */
+function rimRect(i){
+  const s = D.pad + (i%3)*(D.cell+D.gap), e = D.size - D.rim;
+  if(i<3)  return [s, 0, D.cell, D.rim];
+  if(i<6)  return [e, D.pad + (i-3)*(D.cell+D.gap), D.rim, D.cell];
+  if(i<9)  return [D.pad + (8-i)*(D.cell+D.gap), e, D.cell, D.rim];
+  return [0, D.pad + (11-i)*(D.cell+D.gap), D.rim, D.cell];
+}
+const COLOUR = {B:"var(--b)",R:"var(--r)",G:"var(--g)",O:"var(--o)",Y:"var(--y)",W:"var(--w)"};
+/* Custom properties resolve inside SVG presentation attributes, so the
+   diagrams re-theme themselves with the rest of the page. */
+const DULL = "var(--facelet-off)", DIM = "var(--facelet-dim)";
+const svgOpen = `<svg viewBox="0 0 ${D.size} ${D.size}" role="img" focusable="false">`;
+const rect = (x,y,w,h,fill,rx) =>
+  `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx||1.5}" fill="${fill}"/>`;
+
+/* A quarter-turn of the whole picture: the learner picking the cube up at a
+   different angle. Not the same thing as AUF, which turns the U layer relative
+   to the centres — this turns the viewer, and leaves the cube alone. It has to
+   happen here rather than on the cube, because orient() makes a whole-cube
+   rotation invisible by construction: every y is absorbed, so `Cube.apply("y")`
+   cannot produce a different picture. Defaults to 0, so every existing caller
+   renders byte-identically. */
+const spin = (body, turns) => {
+  const t = (((turns | 0) % 4) + 4) % 4;
+  return t ? `<g transform="rotate(${t*90} ${D.size/2} ${D.size/2})">${body}</g>` : body;
+};
+
+/* OLL: `enc` is 21 chars — 3 back-rim, then (L,u0,u1,u2,R) per row, then 3
+   front-rim. For the edge-orientation cases the corners are arbitrary, so we
+   draw them dimmed rather than asserting a state that doesn't hold. */
+function renderOLL(enc, edgesOnly, turns){
+  const u=[], rim=[];
+  for(let r=0;r<3;r++){
+    rim[r===0?11:(r===1?10:9)] = enc[3+r*5];
+    for(let c=0;c<3;c++) u[r*3+c] = enc[4+r*5+c];
+    rim[3+r] = enc[7+r*5];
+  }
+  for(let i=0;i<3;i++){ rim[i]=enc[i]; rim[8-i]=enc[18+i]; }
+  const isCorner = i => i%2===0;                       // u-face corner indices 0,2,6,8
+  const rimCorner = i => i%3!==1;                      // rim slots that touch a corner
+  let out = "";
+  for(let i=0;i<9;i++){
+    if(i===4){ out += rect(...uxy(1,1), D.cell, D.cell, COLOUR.Y); continue; }  // centre is always yellow
+    const arbitrary = edgesOnly && isCorner(i);
+    out += rect(...uxy(Math.floor(i/3), i%3), D.cell, D.cell,
+                arbitrary ? DIM : (u[i]==="1" ? COLOUR.Y : DULL));
+  }
+  for(let i=0;i<12;i++){
+    const arbitrary = edgesOnly && rimCorner(i);
+    const [x,y,w,h] = rimRect(i);
+    out += rect(x,y,w,h, arbitrary ? DIM : (rim[i]==="1" ? COLOUR.Y : DULL), 1);
+  }
+  return svgOpen + spin(out, turns) + "</svg>";
+}
+
+/* PLL: top face is fully yellow by this stage, so the rim carries the
+   recognition and the arrows carry what the algorithm does. */
+function renderPLL(ring, moves, turns){
+  let out = "";
+  for(let r=0;r<3;r++) for(let c=0;c<3;c++)
+    out += rect(...uxy(r,c), D.cell, D.cell, COLOUR.Y);   // fully oriented by this stage
+  for(let i=0;i<12;i++){
+    const [x,y,w,h] = rimRect(i);
+    out += rect(x,y,w,h, COLOUR[ring[i]] || DULL, 1);
+  }
+  const centre = i => { const [x,y] = uxy(Math.floor(i/3), i%3);
+                        return [x + D.cell/2, y + D.cell/2]; };
+  const all = moves || [];
+  const has = (a,b) => all.some(m => m[0]===a && m[1]===b);
+  const head = (x,y,ux,uy) =>
+    `<polygon points="${x.toFixed(1)},${y.toFixed(1)} ${(x-ux*3.4-uy*2.1).toFixed(1)},${(y-uy*3.4+ux*2.1).toFixed(1)} ${(x-ux*3.4+uy*2.1).toFixed(1)},${(y-uy*3.4-ux*2.1).toFixed(1)}" fill="var(--arrow)"/>`;
+  const drawn = new Set();
+  all.forEach(([a,b])=>{
+    const swap = has(b,a);
+    if(swap && drawn.has(b+"-"+a)) return;             // a mutual swap is one line
+    drawn.add(a+"-"+b);
+    const [x1,y1] = centre(a), [x2,y2] = centre(b);
+    const dx = x2-x1, dy = y2-y1, len = Math.hypot(dx,dy) || 1;
+    const ux = dx/len, uy = dy/len, back = 3.2;
+    const sx = x1 + ux*back, sy = y1 + uy*back;
+    const ex = x2 - ux*back, ey = y2 - uy*back;
+    out += `<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="var(--arrow)" stroke-width="1.6" stroke-linecap="round"/>`
+         + head(ex,ey,ux,uy) + (swap ? head(sx,sy,-ux,-uy) : "");
+  });
+  return svgOpen + spin(out, turns) + "</svg>";
+}
+/*== DIAGRAM:END ==*/
 
 /* ---------------- scrambles ----------------
    A seeded random-move scrambler. The same seed always produces the same
@@ -1178,23 +1260,17 @@ let view = 0;
 
 function activeProfile(){ return profiles.find(p => p.id === active) || profiles[0]; }
 function saveProfiles(){ LOG.saveProfiles(st, profiles, active); }
-function mirrorLegacy(){ LOG.mirrorDone(st, activeProfile().name, done); }
 
 function loadProgress(){
   log = LOG.open(st, active);
-  /* A tab still serving the previous cached build writes only the legacy key.
-     Pick up anything it recorded before deriving the grid. */
-  for(const e of LOG.reconcileLegacy(st, activeProfile(), log.done(), Date.now())) log.append(e);
   done = log.done();
   view = firstUndone();
-  mirrorLegacy();
 }
 
 /* The one way progress changes. */
 function logEvent(ev){
   const ok = log.append(ev);
   done = log.done();
-  mirrorLegacy();
   if(!ok) storageFull();
   return ok;
 }
@@ -1250,6 +1326,10 @@ function renderSession(){
 
 /* ---------------- scramble panel ---------------- */
 let solveN = 1, seedOverride = "", scrambleView = -1;
+/* The scramble the panel is currently showing. It used to live only as the
+   textContent of #scrambleMoves; the cross trainer needs it in JS, and reading
+   a stimulus back out of the DOM is how a display bug becomes a scoring bug. */
+let scrambleText = "";
 function currentSeed(){
   const custom = seedOverride.trim();
   return custom || ("day-" + String(view+1).padStart(2,"0") + "-" + solveN);
@@ -1257,7 +1337,8 @@ function currentSeed(){
 function renderScramble(){
   if(scrambleView !== view){ scrambleView = view; solveN = 1; seedOverride = ""; }
   const seed = currentSeed();
-  $("scrambleMoves").textContent = makeScramble(seed, 20);
+  scrambleText = makeScramble(seed, 20);
+  $("scrambleMoves").textContent = scrambleText;
   if($("seedInput").value !== seed) $("seedInput").value = seed;
   $("crossOut").classList.remove("show");
   $("crossOut").innerHTML = "";
@@ -1265,7 +1346,7 @@ function renderScramble(){
 function showCross(){
   const box = $("crossOut");
   if(box.classList.contains("show")){ box.classList.remove("show"); return; }
-  const moves = solveCross($("scrambleMoves").textContent);
+  const moves = solveCross(scrambleText);
   box.innerHTML = moves.length
     ? `Cross: <b>${moves.join(" ")}</b><i>${moves.length} move${moves.length===1?"":"s"} — apply this after the scramble, then practise F2L from there. It is the shortest cross that exists for this scramble, so don't treat it as the one you should have found.</i>`
     : `Cross: <b>already solved</b><i>This scramble happens to leave the cross intact.</i>`;
@@ -1302,88 +1383,6 @@ function renderGrid(){
   $("tally").innerHTML = `<b>${n}</b> of 42 sessions · week ${Math.min(6,Math.floor(firstUndone()/7)+1)}`;
 }
 
-/* ---------------- case diagrams ----------------
-   A last-layer plan view: the 3x3 top face with a rim of 12 side stickers,
-   drawn as a 5x5 grid with the corners left empty. Front face at the bottom.
-   The geometry below is shared by both renderers.                        */
-const D = { cell:11, gap:2, rim:4, pad:6, size:49 };
-const uxy = (r,c) => [D.pad + c*(D.cell+D.gap), D.pad + r*(D.cell+D.gap)];
-/* Rim slots run clockwise from the back-left: 0-2 back, 3-5 right,
-   6-8 front, 9-11 left. Returns [x, y, width, height]. */
-function rimRect(i){
-  const s = D.pad + (i%3)*(D.cell+D.gap), e = D.size - D.rim;
-  if(i<3)  return [s, 0, D.cell, D.rim];
-  if(i<6)  return [e, D.pad + (i-3)*(D.cell+D.gap), D.rim, D.cell];
-  if(i<9)  return [D.pad + (8-i)*(D.cell+D.gap), e, D.cell, D.rim];
-  return [0, D.pad + (11-i)*(D.cell+D.gap), D.rim, D.cell];
-}
-const COLOUR = {B:"var(--b)",R:"var(--r)",G:"var(--g)",O:"var(--o)",Y:"var(--y)",W:"var(--w)"};
-/* Custom properties resolve inside SVG presentation attributes, so the
-   diagrams re-theme themselves with the rest of the page. */
-const DULL = "var(--facelet-off)", DIM = "var(--facelet-dim)";
-const svgOpen = `<svg viewBox="0 0 ${D.size} ${D.size}" role="img" focusable="false">`;
-const rect = (x,y,w,h,fill,rx) =>
-  `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx||1.5}" fill="${fill}"/>`;
-
-/* OLL: `enc` is 21 chars — 3 back-rim, then (L,u0,u1,u2,R) per row, then 3
-   front-rim. For the edge-orientation cases the corners are arbitrary, so we
-   draw them dimmed rather than asserting a state that doesn't hold. */
-function renderOLL(enc, edgesOnly){
-  const u=[], rim=[];
-  for(let r=0;r<3;r++){
-    rim[r===0?11:(r===1?10:9)] = enc[3+r*5];
-    for(let c=0;c<3;c++) u[r*3+c] = enc[4+r*5+c];
-    rim[3+r] = enc[7+r*5];
-  }
-  for(let i=0;i<3;i++){ rim[i]=enc[i]; rim[8-i]=enc[18+i]; }
-  const isCorner = i => i%2===0;                       // u-face corner indices 0,2,6,8
-  const rimCorner = i => i%3!==1;                      // rim slots that touch a corner
-  let out = svgOpen;
-  for(let i=0;i<9;i++){
-    if(i===4){ out += rect(...uxy(1,1), D.cell, D.cell, COLOUR.Y); continue; }  // centre is always yellow
-    const arbitrary = edgesOnly && isCorner(i);
-    out += rect(...uxy(Math.floor(i/3), i%3), D.cell, D.cell,
-                arbitrary ? DIM : (u[i]==="1" ? COLOUR.Y : DULL));
-  }
-  for(let i=0;i<12;i++){
-    const arbitrary = edgesOnly && rimCorner(i);
-    const [x,y,w,h] = rimRect(i);
-    out += rect(x,y,w,h, arbitrary ? DIM : (rim[i]==="1" ? COLOUR.Y : DULL), 1);
-  }
-  return out + "</svg>";
-}
-
-/* PLL: top face is fully yellow by this stage, so the rim carries the
-   recognition and the arrows carry what the algorithm does. */
-function renderPLL(ring, moves){
-  let out = svgOpen;
-  for(let r=0;r<3;r++) for(let c=0;c<3;c++)
-    out += rect(...uxy(r,c), D.cell, D.cell, COLOUR.Y);   // fully oriented by this stage
-  for(let i=0;i<12;i++){
-    const [x,y,w,h] = rimRect(i);
-    out += rect(x,y,w,h, COLOUR[ring[i]] || DULL, 1);
-  }
-  const centre = i => { const [x,y] = uxy(Math.floor(i/3), i%3);
-                        return [x + D.cell/2, y + D.cell/2]; };
-  const all = moves || [];
-  const has = (a,b) => all.some(m => m[0]===a && m[1]===b);
-  const head = (x,y,ux,uy) =>
-    `<polygon points="${x.toFixed(1)},${y.toFixed(1)} ${(x-ux*3.4-uy*2.1).toFixed(1)},${(y-uy*3.4+ux*2.1).toFixed(1)} ${(x-ux*3.4+uy*2.1).toFixed(1)},${(y-uy*3.4-ux*2.1).toFixed(1)}" fill="var(--arrow)"/>`;
-  const drawn = new Set();
-  all.forEach(([a,b])=>{
-    const swap = has(b,a);
-    if(swap && drawn.has(b+"-"+a)) return;             // a mutual swap is one line
-    drawn.add(a+"-"+b);
-    const [x1,y1] = centre(a), [x2,y2] = centre(b);
-    const dx = x2-x1, dy = y2-y1, len = Math.hypot(dx,dy) || 1;
-    const ux = dx/len, uy = dy/len, back = 3.2;
-    const sx = x1 + ux*back, sy = y1 + uy*back;
-    const ex = x2 - ux*back, ey = y2 - uy*back;
-    out += `<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="var(--arrow)" stroke-width="1.6" stroke-linecap="round"/>`
-         + head(ex,ey,ux,uy) + (swap ? head(sx,sy,-ux,-uy) : "");
-  });
-  return out + "</svg>";
-}
 
 let tab = "oll";
 function renderAlgs(){
@@ -1492,7 +1491,6 @@ $("reset").addEventListener("click", ()=>{
   if(!confirm(`Clear all progress for ${p.name}? This erases the recorded event log too and can't be undone — export it first if you want to keep it.`)) return;
   log.wipe();
   done = log.done();
-  mirrorLegacy();
   view = 0; renderSession(); renderGrid();
   dataMsg(`Cleared everything for ${p.name}.`);
 });
@@ -1556,7 +1554,6 @@ function importText(text){
   const ok = log.replaceAll(merged.events);
   done = log.done();
   view = firstUndone();
-  mirrorLegacy();
   renderAll();
   dataMsg(`Imported ${merged.added} new event${merged.added===1?"":"s"} into ${p.name}` +
           (created ? " (a new solver)" : "") + ". " +
