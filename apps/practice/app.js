@@ -1218,6 +1218,51 @@ function gatesCross(dayIndex){
   return !!(p && p.kind === "T4" && p.mode === "plan");
 }
 
+/* ---- scoring: cross planning ------------------------------------------------
+   The optimum is supplied by the caller. This region has no reference to the
+   BFS solver at all, and that is deliberate rather than tidy: the solver's
+   front door is a trap. crossStateAfter() returns a *solved* cross whenever a
+   move string fails to parse, so solveCross("R U Q") answers "already solved,
+   0 moves" — feed it a typo and the page congratulates you. Learner input has
+   to be parsed and rejected before anything is computed from it, and the
+   surest way to guarantee that is for the scorer to be unable to reach the
+   solver even by accident.                                                   */
+function classifyMoves(moves){
+  const c = { face:0, slice:0, wide:0, rotation:0 };
+  for(const m of moves){
+    const b = m[0];
+    if("UDRLFB".indexOf(b) >= 0) c.face++;
+    else if("MES".indexOf(b) >= 0) c.slice++;
+    else if("xyz".indexOf(b) >= 0) c.rotation++;
+    else c.wide++;                                   // r l u d f b
+  }
+  return c;
+}
+function scoreCross(item, deps){
+  const p = deps.cube.parseMoves(item.answer);
+  if(!p.ok) return { ok:false, why:p.why, token:p.token };
+  const end = deps.cube.Cube.solved().apply(item.scramble).apply(p.moves);
+  if(!end) return { ok:false, why:"that scramble could not be applied" };
+  const n = classifyMoves(p.moves);
+  const turns = n.face + n.slice + n.wide;           // a rotation is not a turn
+  const opt = item.optimum | 0;
+  return {
+    ok: true,
+    /* crossSolved reads the oriented state, so M M' comes out solved and M does
+       not, and a y in front of an otherwise correct answer is accepted. Odd
+       slice counts are judged, never rejected. */
+    solved: deps.cube.crossSolved(end),
+    moves: turns, opt, delta: turns - opt,
+    /* The optimum is the shortest FACE-TURN cross. An answer using slices or
+       wides is counted in a different currency — and measurably so: on a third
+       of these scrambles a slice solution really is shorter. Printing a signed
+       delta across the two would tell a learner they beat a solver they never
+       competed against, so the display has to know they are not comparable. */
+    comparable: (n.slice + n.wide) === 0,
+    faceTurns: n.face, sliceTurns: n.slice, wideTurns: n.wide, rotations: n.rotation
+  };
+}
+
 /* ---- the one place a quiz event is constructed -----------------------------
    `day` comes from the caller, which captured it when the item was mounted —
    never from whatever day the page is showing when the answer lands. */
@@ -1239,7 +1284,8 @@ function eventFor(item, outcome){
 
 return { DEADLINES, INTRO, PRESCRIPTION, CROSS_CASE, AUF,
          buildCases, orbitOf, presentation, stateFor,
-         plan, gatesCross, poolModeFor, eventFor };
+         plan, gatesCross, poolModeFor, eventFor,
+         scoreCross, classifyMoves };
 })();
 /*== QUIZ:END ==*/
 
@@ -1466,6 +1512,7 @@ function activeProfile(){ return profiles.find(p => p.id === active) || profiles
 function saveProfiles(){ LOG.saveProfiles(st, profiles, active); }
 
 function loadProgress(){
+  quizEpoch++;                 // the log underneath the panel is being replaced
   log = LOG.open(st, active);
   done = log.done();
   view = firstUndone();
@@ -1526,10 +1573,11 @@ function renderSession(){
   $("next").disabled = view === DAYS.length-1;
 
   renderScramble();
+  reconcileQuiz();          // must follow renderScramble: T4's stimulus is the scramble
 }
 
 /* ---------------- scramble panel ---------------- */
-let solveN = 1, seedOverride = "", scrambleView = -1;
+let solveN = 1, seedOverride = "", scrambleView = -1, crossCommitted = false;
 /* The scramble the panel is currently showing. It used to live only as the
    textContent of #scrambleMoves; the cross trainer needs it in JS, and reading
    a stimulus back out of the DOM is how a display bug becomes a scoring bug. */
@@ -1546,9 +1594,24 @@ function renderScramble(){
   if($("seedInput").value !== seed) $("seedInput").value = seed;
   $("crossOut").classList.remove("show");
   $("crossOut").innerHTML = "";
+
+  /* Same button, opposite pedagogical effect. On the cross-planning days it
+     hands over the answer to the exact task being trained, so there it stays
+     shut until the learner has committed a plan. Everywhere else it is the
+     practice affordance it has always been. */
+  crossCommitted = false;
+  const gated = QUIZ.gatesCross(view);
+  const btn = $("crossBtn");
+  btn.textContent = gated ? "Reveal the optimum" : "Skip to F2L";
+  btn.disabled = gated;
+  btn.title = gated ? "Available once you have committed a plan" : "";
+
+  quizScrambleChanged();
 }
 function showCross(){
   const box = $("crossOut");
+  if(QUIZ.gatesCross(view) && !crossCommitted) return;      // the reveal is earned here
+  if(owns() && quiz.live) quiz.item.revealed = true;
   if(box.classList.contains("show")){ box.classList.remove("show"); return; }
   const moves = solveCross(scrambleText);
   box.innerHTML = moves.length
@@ -1637,6 +1700,309 @@ function renderReading(){
 
 function renderAll(){ renderProfiles(); renderSession(); renderGrid(); renderAlgs(); renderReading(); }
 
+/* ---------------- the trainer panel ----------------
+   The one genuinely dangerous thing in this file. Nothing inside #card is ever
+   destroyed — renderSession only writes textContent into nodes that already
+   exist — so a panel mounted here survives a day change with its DOM, its
+   listeners and its pending timers entirely intact. A 5-second reveal armed on
+   day 17 would otherwise fire while the learner is reading day 18 and log an
+   event against the wrong day, and that does not look like a bug afterwards.
+   It looks like data.
+
+   Three guards, but they are not equals and it is worth being straight about
+   which one does the work:
+
+     1. LOAD-BEARING — one timers[] array, cleared by one unmountQuiz(), which
+        reconcileQuiz calls whenever the ownership token changes. Plus the
+        owns()/phase checks at the entry points (commitCross, endPlanning,
+        tickPlan). Break either and local/mutate_quiz.sh goes red.
+     2. Deliberate redundancy — each timer callback re-checks the token it was
+        armed under, and quizCommit re-checks ownership before writing.
+     3. Deliberate redundancy — quiz.day is captured at mount and every event
+        is written against it, so nothing here reads the module-level `view` at
+        write time.
+
+   (2) and (3) cannot be falsified by the current suite: with (1) working, no
+   stray callback ever reaches them. That is the point of defence in depth, not
+   evidence that they are tested — they exist for the path somebody adds next
+   year without noticing this comment. Do not delete them on the grounds that
+   removing them breaks nothing.                                              */
+let quizEpoch = 0;      // bumped whenever the log or profile underneath changes
+let quiz = null;        // the live session, or null
+const timers = [];
+
+/* Three coordinates, not one. `view` alone is not enough: switching profile or
+   importing a file can land on the same day, and resetting on day 0 changes
+   neither of them — quizEpoch is what catches those. */
+const quizToken = () => view + "|" + active + "|" + quizEpoch;
+const owns = () => quiz !== null && quiz.token === quizToken();
+
+function later(fn, ms){
+  const token = quizToken();
+  const id = setTimeout(()=>{
+    const at = timers.indexOf(id);
+    if(at >= 0) timers.splice(at, 1);
+    if(quiz === null || quiz.token !== token) return;   // belt, as well as braces
+    fn();
+  }, ms);
+  timers.push(id);
+  return id;
+}
+function clearTimers(){ while(timers.length) clearTimeout(timers.pop()); }
+
+/* Every quiz write goes through here. `quiz.day` was captured at mount, so even
+   a callback that somehow escaped both guards above would write against the day
+   it belonged to — and the ownership check means it does not write at all. */
+function quizCommit(item, outcome){
+  if(!owns()) return false;
+  return logEvent(QUIZ.eventFor(item, Object.assign({ day: quiz.day }, outcome)));
+}
+
+function unmountQuiz(){
+  clearTimers();
+  quiz = null;
+  $("qstim").textContent = "";
+  $("qprompt").textContent = "";
+  $("qprompt").classList.remove("urgent");
+  $("qans").textContent = "";
+  $("qfeed").textContent = "";
+  $("qfeed").className = "qfeed";
+  $("qprog").textContent = "";
+}
+
+/* Called at the end of renderSession — the single choke point every one of the
+   eight `view` assignments funnels through, keyboard arrows included, since
+   those synthesise clicks on #prev/#next. */
+function reconcileQuiz(){
+  if(owns()){ renderQuiz(); return; }    // same day, same solver, same log: leave it alone
+  unmountQuiz();
+  const p = CASES && QUIZ.plan(view);
+  if(!p || p.kind !== "T4"){ $("quiz").hidden = true; return; }   // T1 arrives in a later block
+  quiz = { token: quizToken(), day: view, plan: p, phase: "idle",
+           i: 0, live: false, hits: 0, item: null };
+  $("quiz").hidden = false;
+  renderQuiz();
+}
+
+/* renderScramble is also reached directly from #nextScramble and #seedInput,
+   which do not go through renderSession. Changing the scramble under a live
+   item abandons it: nothing is logged, because an abandoned item is not data,
+   and the item counter does not move, so n items always means n commits. */
+function quizScrambleChanged(){
+  if(!owns() || !quiz.live) return;
+  /* renderScramble runs on every renderSession, not only when the scramble
+     actually moves — so this has to check rather than assume, or marking a day
+     complete would silently abandon and restart the item the learner is in the
+     middle of, taking their half-typed answer with it. */
+  if(quiz.item && quiz.item.scramble === scrambleText) return;
+  clearTimers();
+  quiz.live = false;
+  startCrossItem();
+}
+
+const fmtClock = ms => Math.max(0, Math.ceil(ms / 1000)) + "s";
+
+function startCrossItem(){
+  if(!owns()) return;
+  const mode = quiz.plan.mode === "plan" ? "T4_plan" : "T4_execute";
+  const rules = QUIZ.DEADLINES[mode];
+  quiz.item = { kind:"T4", caseId: QUIZ.CROSS_CASE, angle:0, auf:0, view:"plan",
+                scramble: scrambleText, seed: currentSeed(), mode: quiz.plan.mode,
+                revealed: false, planTimedOut: false };
+  quiz.live = true;
+  quiz.t0 = Date.now();
+  quiz.phase = rules.planMs > 0 ? "plan" : "type";
+  quiz.planEnds = rules.planMs > 0 ? Date.now() + rules.planMs : 0;
+  quiz.planMs = 0;
+  /* Build the 331,776-entry BFS table now rather than at commit. It costs about
+     300ms of blocked main thread, which is invisible while the learner is
+     staring at a scramble and very visible at the one moment they are waiting
+     for an answer. Memoised, so this happens once per page load. */
+  later(()=>{ buildCrossTable(); }, 400);
+  if(quiz.phase === "plan") tickPlan();
+  else later(()=>softPrompt(), rules.softMs);
+  renderQuiz();
+}
+function tickPlan(){
+  if(!owns() || quiz.phase !== "plan") return;
+  const left = quiz.planEnds - Date.now();
+  if(left <= 0){ quiz.item.planTimedOut = true; endPlanning(); return; }
+  const el = $("qclock");
+  if(el){ el.textContent = fmtClock(left); el.classList.toggle("low", left <= 5000); }
+  later(tickPlan, 250);
+}
+function endPlanning(){
+  if(!owns() || quiz.phase !== "plan") return;
+  clearTimers();
+  quiz.planMs = Date.now() - quiz.t0;
+  quiz.phase = "type";
+  later(()=>{ buildCrossTable(); }, 50);
+  later(()=>softPrompt(), QUIZ.DEADLINES.T4_plan.softMs);
+  renderQuiz();
+  const box = $("qinput");
+  if(box) box.focus();
+}
+function softPrompt(){
+  if(!owns() || quiz.phase !== "type") return;
+  $("qprompt").textContent = "Type what you planned — a partial cross still tells you something.";
+  $("qprompt").classList.add("urgent");
+}
+
+function commitCross(){
+  if(!owns() || quiz.phase !== "type") return;
+  const box = $("qinput");
+  const answer = box ? box.value : "";
+  /* Parse before anything else touches this string. solveCross reports
+     "already solved" for input it cannot read, so an unvalidated typo would be
+     scored as a perfect cross. */
+  const optimum = solveCross(quiz.item.scramble).length;
+  const r = QUIZ.scoreCross({ scramble: quiz.item.scramble, answer, optimum }, { cube: CUBE });
+  if(!r.ok){
+    $("qfeed").className = "qfeed show wrong";
+    $("qfeed").innerHTML = `That isn't notation I can read: ${esc(r.why)}` +
+      (r.token ? ` <b>${esc(r.token)}</b>` : "") +
+      `<i>Nothing was recorded — fix it and commit again.</i>`;
+    return;                                   // deliberately no event
+  }
+  clearTimers();
+  quiz.live = false;
+  quiz.phase = "feedback";
+  quiz.i++;
+  if(r.solved) quiz.hits++;
+  crossCommitted = true;
+  $("crossBtn").disabled = false;
+
+  quizCommit(quiz.item, {
+    correct: r.solved,
+    latencyMs: Date.now() - quiz.t0,
+    extra: { mode: quiz.item.mode, item: quiz.i, of: quiz.plan.n, seed: quiz.item.seed,
+             scramble: quiz.item.scramble, answer: answer.trim(),
+             opt: r.opt, moves: r.moves, delta: r.delta, comparable: r.comparable,
+             faceTurns: r.faceTurns, sliceTurns: r.sliceTurns,
+             wideTurns: r.wideTurns, rotations: r.rotations,
+             planMs: quiz.planMs, planTimedOut: quiz.item.planTimedOut ? 1 : 0,
+             revealed: quiz.item.revealed ? 1 : 0 }
+  });
+  showCrossFeedback(r, optimum);
+  renderQuiz();
+}
+
+function showCrossFeedback(r, optimum){
+  const best = solveCross(quiz.item.scramble).join(" ") || "nothing — it was already solved";
+  const box = $("qfeed");
+  let html;
+  if(!r.solved){
+    html = `Not solved. The shortest cross here is ${optimum}: <b>${esc(best)}</b>` +
+           `<i>Set the scramble up again and follow it through — the gap is usually one edge, not the whole plan.</i>`;
+  } else if(!r.comparable){
+    /* The optimum counts face turns only, so a slice answer is measured in a
+       different currency. Printing "−1" here would tell the learner they beat a
+       solver they never competed against. */
+    const kind = r.sliceTurns ? "slice" : "wide";
+    html = `Solved in ${r.moves}, using ${r.sliceTurns + r.wideTurns} ${kind} turn${r.sliceTurns + r.wideTurns === 1 ? "" : "s"}. ` +
+           `The reference is the shortest cross using face turns only, which is ${optimum}: <b>${esc(best)}</b>` +
+           `<i>Those are two different counts rather than a score to beat — slice moves can genuinely be shorter.</i>`;
+  } else if(r.delta === 0){
+    html = `Solved in ${r.moves}. That is the shortest cross that exists here.` +
+           `<i>Nothing to improve on this one.</i>`;
+  } else {
+    html = `Solved in ${r.moves}. The shortest is ${optimum}: <b>${esc(best)}</b>` +
+           `<i>${r.delta} move${r.delta === 1 ? "" : "s"} longer. Worth setting up again to see where the shorter route starts.</i>`;
+  }
+  box.className = "qfeed show " + (r.solved ? "right" : "wrong");
+  box.innerHTML = html;
+}
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+function renderQuiz(){
+  if(!quiz) return;
+  const n = quiz.plan.n;
+  const planning = quiz.plan.mode === "plan";
+  $("qprog").textContent = quiz.phase === "idle"
+    ? (planning ? `plan the cross · ${n} scrambles` : `${n} crosses`)
+    : `item ${Math.min(quiz.i + (quiz.live ? 1 : 0), n)} of ${n}` +
+      (quiz.i ? ` · ${quiz.hits}/${quiz.i} solved` : "");
+  $("qStart").hidden = quiz.phase !== "idle" && quiz.phase !== "done";
+  $("qStart").textContent = quiz.phase === "done" ? "Run it again" : "Start";
+  $("qEnd").hidden = quiz.phase === "idle" || quiz.phase === "done";
+
+  const stim = $("qstim"), ans = $("qans");
+  /* Only rebuild the answer area when the phase actually changes. renderSession
+     runs on every mark-complete, and a wholesale rebuild here would throw away
+     a half-typed cross solution while the learner was looking at it. */
+  const rebuild = quiz.rendered !== quiz.phase || !ans.firstChild;
+  quiz.rendered = quiz.phase;
+  if(!rebuild && quiz.phase !== "idle" && quiz.phase !== "done") return;
+  ans.textContent = "";
+  if(quiz.phase === "idle"){
+    stim.textContent = planning
+      ? "Plan all four cross edges from the scramble above before you touch the cube, then type the solution. The optimum stays hidden until you commit."
+      : "Solve the cross from the scramble above, then type what you did. You can reveal the shortest cross at any time.";
+    $("qprompt").textContent = "";
+    return;
+  }
+  if(quiz.phase === "done"){
+    stim.textContent = `Drill finished — ${quiz.hits} of ${quiz.i} solved.`;
+    $("qprompt").textContent = "";
+    return;
+  }
+  stim.textContent = planning
+    ? "Plan the cross for the scramble above."
+    : "Solve the cross for the scramble above, then type what you did.";
+
+  if(quiz.phase === "plan"){
+    const row = document.createElement("div");
+    row.className = "qrow";
+    const clock = document.createElement("span");
+    clock.className = "qclock"; clock.id = "qclock";
+    clock.textContent = fmtClock(quiz.planEnds - Date.now());
+    const btn = document.createElement("button");
+    btn.className = "btn sbtn"; btn.textContent = "I've planned it";
+    btn.addEventListener("click", endPlanning);
+    row.appendChild(clock); row.appendChild(btn);
+    ans.appendChild(row);
+    $("qprompt").textContent = "Work out all four edges before the clock runs out. Don't turn anything yet.";
+    $("qprompt").classList.remove("urgent");
+  } else if(quiz.phase === "type"){
+    const box = document.createElement("input");
+    box.className = "qinput"; box.id = "qinput";
+    box.setAttribute("spellcheck","false"); box.setAttribute("autocomplete","off");
+    box.setAttribute("aria-label","Your cross solution, in cube notation");
+    box.placeholder = "e.g. F R' D2 L";
+    box.addEventListener("keydown", e => { if(e.key === "Enter") commitCross(); });
+    const row = document.createElement("div");
+    row.className = "qrow";
+    const go = document.createElement("button");
+    go.className = "btn sbtn"; go.textContent = "Commit";
+    go.addEventListener("click", commitCross);
+    row.appendChild(go);
+    ans.appendChild(box); ans.appendChild(row);
+    if(!$("qprompt").classList.contains("urgent")) $("qprompt").textContent = "";
+  } else if(quiz.phase === "feedback"){
+    const row = document.createElement("div");
+    row.className = "qrow";
+    const next = document.createElement("button");
+    next.className = "btn sbtn";
+    next.textContent = quiz.i >= quiz.plan.n ? "Finish" : "Next scramble";
+    next.addEventListener("click", nextCrossItem);
+    row.appendChild(next);
+    ans.appendChild(row);
+    $("qprompt").textContent = "";
+    $("qprompt").classList.remove("urgent");
+  }
+}
+
+function nextCrossItem(){
+  if(!owns()) return;
+  if(quiz.i >= quiz.plan.n){ quiz.phase = "done"; $("qfeed").className = "qfeed"; renderQuiz(); return; }
+  $("qfeed").className = "qfeed";
+  $("qfeed").textContent = "";
+  seedOverride = ""; solveN++;
+  renderScramble();          // quiz.live is false here, so this does not abandon
+  startCrossItem();
+}
+
 /* ---------------- theme ----------------
    Shares Quarto's storage key and values, so the choice made here is the choice
    the rest of the site sees, and vice versa. */
@@ -1675,6 +2041,30 @@ $("nextScramble").addEventListener("click", ()=>{
   seedOverride = ""; solveN++; renderScramble();
 });
 $("crossBtn").addEventListener("click", showCross);
+$("qStart").addEventListener("click", ()=>{
+  if(!owns()) return;
+  quiz.i = 0; quiz.hits = 0;
+  $("qfeed").className = "qfeed"; $("qfeed").textContent = "";
+  startCrossItem();
+});
+$("qEnd").addEventListener("click", ()=>{
+  if(!owns()) return;
+  clearTimers();
+  quiz.live = false;
+  quiz.phase = quiz.i ? "done" : "idle";
+  renderQuiz();
+});
+/* A reveal firing in a background tab logs a timeout nobody saw. Abandon the
+   item instead — it records nothing, which is the honest outcome. */
+document.addEventListener("visibilitychange", ()=>{
+  if(document.hidden && owns() && quiz.live){
+    clearTimers();
+    quiz.live = false;
+    quiz.phase = "idle";
+    renderQuiz();
+  }
+});
+window.addEventListener("pagehide", unmountQuiz);
 $("seedInput").addEventListener("change", e=>{
   seedOverride = e.target.value; renderScramble();
 });
@@ -1694,6 +2084,7 @@ $("reset").addEventListener("click", ()=>{
   const p = activeProfile();
   if(!confirm(`Clear all progress for ${p.name}? This erases the recorded event log too and can't be undone — export it first if you want to keep it.`)) return;
   log.wipe();
+  quizEpoch++;                 // catches a reset while sitting on day 0, which no other coordinate sees
   done = log.done();
   view = 0; renderSession(); renderGrid();
   dataMsg(`Cleared everything for ${p.name}.`);
@@ -1756,6 +2147,7 @@ function importText(text){
   loadProgress();
   const merged = LOG.mergeEvents(log.all(), parsed.events);
   const ok = log.replaceAll(merged.events);
+  quizEpoch++;
   done = log.done();
   view = firstUndone();
   renderAll();
@@ -1774,6 +2166,17 @@ document.addEventListener("keydown", e=>{
    Order matters: migrate before anything writes. Reading legacy progress and
    deriving from an empty log the other way round would mirror an empty Set
    straight back over cfop.done.<name> and take the history with it. */
+/* The browser harness loads the page with ?run=<phase>. Only then does it get a
+   window on the quiz internals, so a test can assert on the actual timer count
+   rather than on a proxy for it. Absent in normal use. */
+if(new URLSearchParams(location.search).has("run"))
+  window.__quiz = { timers: () => timers.length,
+                    day:    () => quiz && quiz.day,
+                    phase:  () => quiz && quiz.phase,
+                    i:      () => quiz && quiz.i,
+                    live:   () => !!(quiz && quiz.live),
+                    epoch:  () => quizEpoch };
+
 applyTheme(currentTheme());
 profiles = LOG.loadProfiles(st).profiles;
 active = LOG.loadActive(st, profiles);
