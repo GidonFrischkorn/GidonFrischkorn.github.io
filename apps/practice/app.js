@@ -984,22 +984,20 @@ const svgOpen = `<svg viewBox="0 0 ${D.size} ${D.size}" role="img" focusable="fa
 const rect = (x,y,w,h,fill,rx) =>
   `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx||1.5}" fill="${fill}"/>`;
 
-/* A quarter-turn of the whole picture: the learner picking the cube up at a
-   different angle. Not the same thing as AUF, which turns the U layer relative
-   to the centres — this turns the viewer, and leaves the cube alone. It has to
-   happen here rather than on the cube, because orient() makes a whole-cube
-   rotation invisible by construction: every y is absorbed, so `Cube.apply("y")`
-   cannot produce a different picture. Defaults to 0, so every existing caller
-   renders byte-identically. */
-const spin = (body, turns) => {
-  const t = (((turns | 0) % 4) + 4) % 4;
-  return t ? `<g transform="rotate(${t*90} ${D.size/2} ${D.size/2})">${body}</g>` : body;
-};
+/* There is deliberately no holding-angle parameter here. Measured across all 16
+   cases: rotating a plan view by a quarter turn produces exactly the picture
+   some AUF already produces, so the two are not separable. The reason is that
+   this view draws the U face and the 12 rim stickers but *not* the side
+   centres — with no centre to be relative to, "the top layer turned" and "I am
+   standing on a different side" are the same image. Turning the cube itself
+   does not help either: orient() absorbs every whole-cube rotation by
+   construction, so Cube.apply("y") cannot change the picture. Holding angle
+   only becomes a real factor in a view that shows more than one face. */
 
 /* OLL: `enc` is 21 chars — 3 back-rim, then (L,u0,u1,u2,R) per row, then 3
    front-rim. For the edge-orientation cases the corners are arbitrary, so we
    draw them dimmed rather than asserting a state that doesn't hold. */
-function renderOLL(enc, edgesOnly, turns){
+function renderOLL(enc, edgesOnly){
   const u=[], rim=[];
   for(let r=0;r<3;r++){
     rim[r===0?11:(r===1?10:9)] = enc[3+r*5];
@@ -1009,7 +1007,7 @@ function renderOLL(enc, edgesOnly, turns){
   for(let i=0;i<3;i++){ rim[i]=enc[i]; rim[8-i]=enc[18+i]; }
   const isCorner = i => i%2===0;                       // u-face corner indices 0,2,6,8
   const rimCorner = i => i%3!==1;                      // rim slots that touch a corner
-  let out = "";
+  let out = svgOpen;
   for(let i=0;i<9;i++){
     if(i===4){ out += rect(...uxy(1,1), D.cell, D.cell, COLOUR.Y); continue; }  // centre is always yellow
     const arbitrary = edgesOnly && isCorner(i);
@@ -1021,13 +1019,13 @@ function renderOLL(enc, edgesOnly, turns){
     const [x,y,w,h] = rimRect(i);
     out += rect(x,y,w,h, arbitrary ? DIM : (rim[i]==="1" ? COLOUR.Y : DULL), 1);
   }
-  return svgOpen + spin(out, turns) + "</svg>";
+  return out + "</svg>";
 }
 
 /* PLL: top face is fully yellow by this stage, so the rim carries the
    recognition and the arrows carry what the algorithm does. */
-function renderPLL(ring, moves, turns){
-  let out = "";
+function renderPLL(ring, moves){
+  let out = svgOpen;
   for(let r=0;r<3;r++) for(let c=0;c<3;c++)
     out += rect(...uxy(r,c), D.cell, D.cell, COLOUR.Y);   // fully oriented by this stage
   for(let i=0;i<12;i++){
@@ -1053,9 +1051,197 @@ function renderPLL(ring, moves, turns){
     out += `<line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="var(--arrow)" stroke-width="1.6" stroke-linecap="round"/>`
          + head(ex,ey,ux,uy) + (swap ? head(sx,sy,-ux,-uy) : "");
   });
-  return svgOpen + spin(out, turns) + "</svg>";
+  return out + "</svg>";
 }
 /*== DIAGRAM:END ==*/
+
+/*== QUIZ:BEGIN ==*/
+/* ---------------- quiz ----------------
+   The retrieval half of the trainer: case table, presentation sampling,
+   scoring and session composition.
+
+   Pure by construction — no DOM, no globals, no clock, no Math.random. The
+   cube engine and the stimulus renderer arrive as a `deps` adapter; time and
+   randomness arrive as arguments. local/quiz_test.mjs slices this region out
+   together with ENGINE, ALGS and DIAGRAM and runs it against the *real*
+   renderer, because the presentation orbit is defined on the rendered picture:
+   a stub renderer would exercise the machinery without exercising the masking
+   rule that makes the answer come out the way it does.                      */
+const QUIZ = (function(){
+
+const AUF = ["", "U", "U2", "U'"];          // apply("") is the identity
+const ID_RE = /^(oll|pll)\.[a-z0-9][a-z0-9-]*$/;
+const SHORT_MAX = 12;
+
+/* Deadlines are per item type, with no shared object to fall through to. One
+   3 s/5 s rule applied to everything would auto-reveal every cross-planning
+   item before anyone could type an algorithm on a phone, and score the lot
+   wrong — which would poison the ledger rather than merely annoy. */
+const DEADLINES = {
+  T1:         { softMs: 3000, revealMs: 5000, onDemand: false, requeueWithin: 3 },
+  T4_execute: { planMs: 0,     softMs: 20000, revealMs: null, onDemand: true },
+  T4_plan:    { planMs: 30000, softMs: 15000, revealMs: null, onDemand: true }
+};
+
+/* Which cases each day introduces, by 0-based day index. The only place
+   curriculum knowledge lives; `introDay` is derived from it rather than
+   authored on the rows, because a row is a fact about the cube and this is a
+   fact about the programme. */
+const INTRO = {
+  7:  ["oll.line","oll.l-shape","oll.dot"],
+  8:  ["oll.sune","oll.antisune"],
+  9:  ["oll.t","oll.bowtie"],
+  10: ["oll.h","oll.pi"],
+  11: ["oll.headlights"],
+  12: ["pll.corners-3cycle","pll.corners-diagonal"],
+  13: ["pll.ua","pll.ub"],
+  14: ["pll.h","pll.z"]
+};
+
+/* What each quiz day prescribes. Days 8–15 get a recognition warm-up that sits
+   *alongside* the physical reps the text asks for — recognition and turning are
+   different skills, which is the page's own argument, so the quiz does not
+   stand in for the drill there. Days 17–20 are the other way round: the text
+   already describes exactly this task, so the quiz is the drill. */
+const PRESCRIPTION = {
+  0:  { kind:"T4", n:10, mode:"execute" },          // "10 crosses only"
+  7:  { kind:"T1", n:8  }, 8:  { kind:"T1", n:8  },
+  9:  { kind:"T1", n:8  }, 10: { kind:"T1", n:10 },  // H vs Pi, the costly confusion
+  11: { kind:"T1", n:8  }, 12: { kind:"T1", n:8  },
+  13: { kind:"T1", n:8  }, 14: { kind:"T1", n:8  },
+  16: { kind:"T1", n:15 }, 17: { kind:"T1", n:15 },  // "name it within three seconds"
+  18: { kind:"T1", n:15 }, 19: { kind:"T1", n:15 },
+  21: { kind:"T4", n:5, mode:"plan" },               // "plan all four cross edges"
+  22: { kind:"T4", n:5, mode:"plan" },
+  23: { kind:"T4", n:5, mode:"plan" }
+};
+
+/* Blocked while a day's own cases are the point; interleaved once there is a
+   set to confuse. Days 0–6 have no INTRO entry at all, so they cannot produce a
+   recognition item — that falls out of the data rather than out of a guard. */
+const BLOCKED_UNTIL = 13;
+const poolModeFor = day => day <= BLOCKED_UNTIL ? "blocked" : "interleaved";
+
+const CROSS_CASE = "cross.plan";   // one stable pseudo-case; the seed goes in extra
+
+/* ---- presentation ----------------------------------------------------------
+   Two factors in the schema, `auf` and `angle`, but in the plan view only one
+   of them exists. Measured over all 16 cases: a quarter turn of the picture
+   reproduces a picture some AUF already gives, because this view draws no side
+   centres and so offers nothing for a rotation to be relative to. Turning the
+   cube instead does not help — orient() absorbs every whole-cube rotation by
+   construction. So `angle` stays in the schema and stays 0, and the day 19–20
+   instruction to rotate is for the cube in the learner's hands.
+
+   The sweep below is written over both factors anyway. The renderer decides
+   whether `angle` does anything: today's picture function ignores it and the
+   orbit comes out AUF-sized, and a future view that shows more than one face
+   would widen the orbit with no change here.                                */
+function stateFor(caseObj, auf, cube){
+  return caseObj.setupState.apply(AUF[((auf | 0) % 4 + 4) % 4]);
+}
+
+/* The distinct views of one case, computed on the rendered picture and never
+   authored. Two cases that differ as cube states can render identically —
+   the renderer dims the corners on the edge-orientation cases — and sampling
+   angle/auf uniformly over 0..3 would then log four values for one identical
+   stimulus, corrupting the very latency analysis the log exists to support. */
+function orbitOf(caseObj, deps){
+  const seen = new Set(), out = [];
+  for(let angle = 0; angle < 4; angle++)
+    for(let auf = 0; auf < 4; auf++){
+      const pic = deps.picture(caseObj, stateFor(caseObj, auf, deps.cube), angle);
+      if(seen.has(pic)) continue;
+      seen.add(pic);
+      out.push({ angle, auf });
+    }
+  return out;
+}
+
+/* Uniform over the orbit — never over 0..3. */
+function presentation(caseObj, rand){
+  return caseObj.orbit[Math.floor(rand() * caseObj.orbit.length) % caseObj.orbit.length];
+}
+
+/* ---- the case table -------------------------------------------------------- */
+function buildCases(algs, deps){
+  const list = [], byId = new Map(), shorts = new Set();
+  for(const stage of ["oll","pll"]){
+    const group = algs[stage];
+    if(!group || !Array.isArray(group.rows)) throw new Error("QUIZ: no " + stage + " rows");
+    for(const row of group.rows){
+      if(!ID_RE.test(String(row.id))) throw new Error("QUIZ: bad case id " + JSON.stringify(row.id));
+      if(byId.has(row.id)) throw new Error("QUIZ: duplicate case id " + row.id);
+      if(!row.short || row.short.length > SHORT_MAX)
+        throw new Error("QUIZ: " + row.id + " needs a short name of at most " + SHORT_MAX + " characters");
+      if(shorts.has(row.short)) throw new Error("QUIZ: duplicate short name " + JSON.stringify(row.short));
+      const setupState = deps.cube.Cube.setup(row.a);
+      if(!setupState) throw new Error("QUIZ: the setup for " + row.id + " does not parse");
+      shorts.add(row.short);
+      const c = { id: row.id, stage, name: row.n, short: row.short, cue: row.s,
+                  alg: row.a, setupState, confusable: [], introDay: null, row };
+      c.orbit = orbitOf(c, deps);
+      list.push(c);
+      byId.set(c.id, c);
+    }
+  }
+  /* Confusions are authored one way and symmetrised here, so "H looks like Pi"
+     cannot drift out of step with "Pi looks like H". */
+  for(const c of list) for(const other of (c.row.confusable || [])){
+    if(other === c.id) throw new Error("QUIZ: " + c.id + " is confusable with itself");
+    if(!byId.has(other)) throw new Error("QUIZ: " + c.id + " is confusable with unknown case " + other);
+    if(c.confusable.indexOf(other) < 0) c.confusable.push(other);
+    const back = byId.get(other);
+    if(back.confusable.indexOf(c.id) < 0) back.confusable.push(c.id);
+  }
+  for(const day of Object.keys(INTRO)) for(const id of INTRO[day]){
+    if(!byId.has(id)) throw new Error("QUIZ: day " + day + " introduces unknown case " + id);
+    if(byId.get(id).introDay !== null) throw new Error("QUIZ: " + id + " is introduced twice");
+    byId.get(id).introDay = Number(day);
+  }
+  const orphan = list.find(c => c.introDay === null);
+  if(orphan) throw new Error("QUIZ: " + orphan.id + " is never introduced by any day");
+  return { list, byId, ids: list.map(c => c.id) };
+}
+
+/* ---- what a day asks for --------------------------------------------------- */
+function plan(dayIndex){
+  const p = PRESCRIPTION[dayIndex];
+  if(!p) return null;
+  return { kind: p.kind, n: p.n, mode: p.mode || null, day: dayIndex,
+           poolMode: poolModeFor(dayIndex), newIds: INTRO[dayIndex] || [] };
+}
+/* True only where withholding the optimum is the point: the cross-planning
+   days. Everywhere else "Skip to F2L" stays exactly what it was. */
+function gatesCross(dayIndex){
+  const p = PRESCRIPTION[dayIndex];
+  return !!(p && p.kind === "T4" && p.mode === "plan");
+}
+
+/* ---- the one place a quiz event is constructed -----------------------------
+   `day` comes from the caller, which captured it when the item was mounted —
+   never from whatever day the page is showing when the answer lands. */
+function eventFor(item, outcome){
+  if(!item || !item.kind) throw new Error("QUIZ: eventFor needs an item");
+  if(!Number.isInteger(outcome.day)) throw new Error("QUIZ: eventFor needs the day the item was mounted on");
+  return {
+    day: outcome.day,
+    type: item.kind === "T1" ? "recog" : "cross",
+    caseId: item.caseId,
+    angle: item.angle | 0,
+    auf: item.auf | 0,
+    correct: !!outcome.correct,
+    latencyMs: Math.max(0, Math.round(outcome.latencyMs || 0)),
+    view: item.view || "plan",
+    extra: Object.assign({}, item.extra || {}, outcome.extra || {})
+  };
+}
+
+return { DEADLINES, INTRO, PRESCRIPTION, CROSS_CASE, AUF,
+         buildCases, orbitOf, presentation, stateFor,
+         plan, gatesCross, poolModeFor, eventFor };
+})();
+/*== QUIZ:END ==*/
 
 /* ---------------- scrambles ----------------
    A seeded random-move scrambler. The same seed always produces the same
@@ -1245,6 +1431,24 @@ function invertAlg(alg){
   const p = CUBE.parseMoves(alg);
   return p.ok ? CUBE.fmtMoves(CUBE.invertMoves(p.moves)) : "";
 }
+
+/* ---------------- case index ----------------
+   The stimulus a quiz item shows. PLL gets no arrow list on purpose: the arrows
+   say what the algorithm does, which is the answer, so a recognition item that
+   drew them would be handing it over. The presentation orbit is computed on
+   exactly this function's output, so the picture the learner sees and the
+   picture the dedupe ran on cannot come apart. */
+const quizPicture = (c, state) =>
+  c.stage === "oll" ? renderOLL(CUBE.ollEnc(state), !!c.row.edges)
+                    : renderPLL(CUBE.pllRing(state), null);
+
+/* buildCases throws on malformed data rather than building a half-table — but
+   that is a message for the test suite, not for somebody trying to read day 12
+   on a phone. If the data is ever bad, the quiz stays off and the rest of the
+   page works. local/quiz_test.mjs is where this is supposed to be loud. */
+let CASES = null;
+try { CASES = QUIZ.buildCases(ALGS, { cube: CUBE, picture: quizPicture }); }
+catch(e){ CASES = null; if(window.console) console.error("quiz disabled:", e.message); }
 
 /* ---------------- state ----------------
    `done` is a projection of the event log, not a stored value. Nothing writes
