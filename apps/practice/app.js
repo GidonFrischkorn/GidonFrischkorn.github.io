@@ -1641,6 +1641,7 @@ function saveProfiles(){ LOG.saveProfiles(st, profiles, active); }
 
 function loadProgress(){
   quizEpoch++;                 // the log underneath the panel is being replaced
+  loadGridPref();              // the answer-mode preference is per solver
   log = LOG.open(st, active);
   done = log.done();
   view = firstUndone();
@@ -1938,7 +1939,17 @@ const fmtClock = ms => Math.max(0, Math.ceil(ms / 1000)) + "s";
 
 /* ---- T1: recognition ---- */
 const GRID_FROM_DAY = 14;        // day 15 onward: name it from all 16, not from 4
-let gridPref = null;             // learner override, per profile
+let gridPref = null;             // learner override: null = follow the day, else true/false
+
+const gridKey = () => "cfop.grid." + active;
+function loadGridPref(){
+  const v = Store.get(gridKey());
+  gridPref = v === "16" ? true : v === "4" ? false : null;
+}
+function setGridPref(v){
+  gridPref = v;
+  if(v === null) Store.del(gridKey()); else Store.set(gridKey(), v ? "16" : "4");
+}
 
 function learnedIds(dayIndex){
   return CASES.list.filter(c => c.introDay != null && c.introDay <= dayIndex).map(c => c.id);
@@ -2279,6 +2290,16 @@ function renderRecogQuiz(){
   $("qStart").textContent = quiz.phase === "done" ? "Run it again" : "Start";
   $("qEnd").hidden = quiz.phase === "idle" || quiz.phase === "done";
 
+  /* Four choices and sixteen are different tasks with different chance levels,
+     so the learner can pick — and `k` is logged on every event, which is what
+     keeps the two separable afterwards rather than silently pooled. */
+  const mode = $("qMode"), learned = learnedIds(quiz.day).length;
+  mode.hidden = learned <= 4;
+  if(!mode.hidden){
+    mode.textContent = k >= 16 ? "Show 4" : "Show all";
+    mode.title = "Takes effect on the next item";
+  }
+
   const stim = $("qstim"), ans = $("qans");
   if(quiz.phase === "idle"){
     stim.textContent = `A last-layer case appears; name it. ${k} choices, ` +
@@ -2361,6 +2382,11 @@ document.addEventListener("keydown", e=>{
   if(!Number.isInteger(n) || n < 1 || n > quiz.item.options.length || quiz.item.options.length > 6) return;
   e.preventDefault();
   answerRecog(quiz.item.options[n - 1]);
+});
+$("qMode").addEventListener("click", ()=>{
+  if(!owns() || quiz.kind !== "T1") return;
+  setGridPref(recogK(quiz.day) < 16);
+  renderQuiz();
 });
 $("qEnd").addEventListener("click", ()=>{
   if(!owns()) return;
