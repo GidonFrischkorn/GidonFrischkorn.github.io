@@ -1218,6 +1218,132 @@ function gatesCross(dayIndex){
   return !!(p && p.kind === "T4" && p.mode === "plan");
 }
 
+/* ---- session composition ---------------------------------------------------- */
+function shuffle(list, rand){
+  const a = list.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(rand() * (i + 1)) % (i + 1);
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+/* A fold over the raw log. Aggregate for display, never on write — the log
+   stays raw so the questions worth asking later stay answerable. */
+function statsFrom(events){
+  const by = {};
+  for(const e of events){
+    if(e.type !== "recog" || e.caseId == null) continue;
+    const s = by[e.caseId] || (by[e.caseId] = { seen:0, correct:0, last10:[], lastSeen:0, latencies:[] });
+    s.seen++;
+    if(e.correct) s.correct++;
+    s.last10.push(e.correct ? 1 : 0);
+    if(s.last10.length > 10) s.last10.shift();
+    if(e.ts > s.lastSeen) s.lastSeen = e.ts;
+    if(e.latencyMs != null) s.latencies.push(e.latencyMs);
+  }
+  return by;
+}
+const accuracyOf = s => (s && s.last10.length) ? s.last10.reduce((a,b)=>a+b,0) / s.last10.length : 0;
+
+/* Weakest first: never seen, then worst recent accuracy, then longest ago. */
+function rankForReview(ids, stats){
+  return ids.slice().sort((a,b)=>{
+    const sa = stats[a], sb = stats[b];
+    if(!sa !== !sb) return sa ? 1 : -1;
+    if(!sa && !sb) return 0;
+    const d = accuracyOf(sa) - accuracyOf(sb);
+    if(d) return d;
+    return sa.lastSeen - sb.lastSeen;
+  });
+}
+
+function composeSession(opts){
+  const dayIndex = opts.dayIndex, cases = opts.cases, stats = opts.stats || {}, rand = opts.rand;
+  const p = plan(dayIndex);
+  if(!p || p.kind !== "T1") return null;
+
+  const learned = cases.list.filter(c => c.introDay != null && c.introDay <= dayIndex).map(c => c.id);
+  const isNew = p.newIds.length > 0;
+  const mainPool = p.poolMode === "blocked" && isNew ? p.newIds.slice() : learned.slice();
+  /* Review draws from what is NOT today's new material. On a day that
+     introduces nothing, everything is reviewable — which is what days 17-20
+     are: the whole session is recall of the full set. */
+  const reviewPool = isNew ? learned.filter(id => p.newIds.indexOf(id) < 0) : learned.slice();
+
+  /* Review ADDS to the day's prescription rather than being carved out of it.
+     Day 17 says fifteen items; taking 30% for review would quietly make it
+     eleven. */
+  const reviewN = Math.min(Math.round(0.3 * p.n), reviewPool.length);
+
+  const main = [];
+  if(mainPool.length){
+    /* Every case introduced today is guaranteed at least one slot, so a day
+       that teaches two cases cannot spend all eight items on one of them. */
+    const guaranteed = isNew ? p.newIds.filter(id => mainPool.indexOf(id) >= 0) : [];
+    for(const id of guaranteed) if(main.length < p.n) main.push(id);
+    let bag = [];
+    while(main.length < p.n){
+      if(!bag.length) bag = shuffle(mainPool, rand);
+      main.push(bag.pop());
+    }
+  }
+  const shortlist = rankForReview(reviewPool, stats).slice(0, Math.max(reviewN * 3, reviewN));
+  const review = shuffle(shortlist, rand).slice(0, reviewN);
+
+  const items = shuffle(
+    main.map(id => ({ id, isReview:false })).concat(review.map(id => ({ id, isReview:true }))),
+    rand);
+  return { day: dayIndex, kind:"T1", n: p.n, reviewN, poolMode: p.poolMode,
+           mainPool, reviewPool, items };
+}
+
+/* ---- recognition items ------------------------------------------------------- */
+function optionsFor(caseObj, k, pool, cases, rand){
+  if(k >= cases.list.length) return shuffle(cases.ids, rand);
+  const picked = [caseObj.id];
+  const add = ids => {
+    for(const id of ids){
+      if(picked.length >= k) return;
+      if(picked.indexOf(id) < 0) picked.push(id);
+    }
+  };
+  /* Confusable cases first — the confusions this programme actually warns
+     about are the distractors worth offering. Random alternatives are rejected
+     on sight and train nothing. */
+  add(shuffle(caseObj.confusable.filter(id => pool.indexOf(id) >= 0), rand));
+  add(shuffle(caseObj.confusable, rand));
+  add(shuffle(pool.filter(id => id !== caseObj.id && cases.byId.get(id).stage === caseObj.stage), rand));
+  add(shuffle(pool.filter(id => id !== caseObj.id), rand));
+  add(shuffle(cases.ids.filter(id => id !== caseObj.id), rand));
+  return shuffle(picked, rand);
+}
+
+function makeRecogItem(caseObj, ctx){
+  const p = presentation(caseObj, ctx.rand);
+  const options = optionsFor(caseObj, ctx.k, ctx.pool, ctx.cases, ctx.rand);
+  return { kind:"T1", caseId: caseObj.id, angle: p.angle, auf: p.auf, view:"plan",
+           options,
+           extra: { k: options.length, options, isReview: !!ctx.isReview,
+                    poolMode: ctx.poolMode } };
+}
+
+function scoreRecog(item, chosenId){
+  if(!item || !item.options) throw new Error("QUIZ: scoreRecog needs an item with options");
+  if(item.options.indexOf(chosenId) < 0)
+    throw new Error("QUIZ: " + chosenId + " was never offered for this item");
+  return { correct: chosenId === item.caseId, chosen: chosenId };
+}
+
+/* A timed-out item comes back, but never with the identical picture: re-showing
+   the same one measures whether they remember the image, not whether they know
+   the case. One requeue per case per session, so a hard case cannot spiral. */
+function requeueAt(index, total, within, rand){
+  const span = Math.min(within, total - index - 1);
+  if(span <= 0) return -1;
+  return index + 1 + (Math.floor(rand() * span) % span);
+}
+
 /* ---- scoring: cross planning ------------------------------------------------
    The optimum is supplied by the caller. This region has no reference to the
    BFS solver at all, and that is deliberate rather than tidy: the solver's
@@ -1285,7 +1411,9 @@ function eventFor(item, outcome){
 return { DEADLINES, INTRO, PRESCRIPTION, CROSS_CASE, AUF,
          buildCases, orbitOf, presentation, stateFor,
          plan, gatesCross, poolModeFor, eventFor,
-         scoreCross, classifyMoves };
+         scoreCross, classifyMoves, scoreRecog,
+         statsFrom, composeSession, optionsFor, makeRecogItem, requeueAt,
+         rankForReview, accuracyOf, shuffle };
 })();
 /*== QUIZ:END ==*/
 
@@ -1700,6 +1828,11 @@ function renderReading(){
 
 function renderAll(){ renderProfiles(); renderSession(); renderGrid(); renderAlgs(); renderReading(); }
 
+/* Keydown targets are not always Elements — a synthetic event dispatched on
+   document has no .matches, and calling it unguarded throws inside the handler
+   and silently kills every later binding on that listener. */
+const typing = e => !!(e.target && e.target.matches && e.target.matches("input,select,textarea"));
+
 /* ---------------- the trainer panel ----------------
    The one genuinely dangerous thing in this file. Nothing inside #card is ever
    destroyed — renderSession only writes textContent into nodes that already
@@ -1777,9 +1910,10 @@ function reconcileQuiz(){
   if(owns()){ renderQuiz(); return; }    // same day, same solver, same log: leave it alone
   unmountQuiz();
   const p = CASES && QUIZ.plan(view);
-  if(!p || p.kind !== "T4"){ $("quiz").hidden = true; return; }   // T1 arrives in a later block
-  quiz = { token: quizToken(), day: view, plan: p, phase: "idle",
-           i: 0, live: false, hits: 0, item: null };
+  if(!p){ $("quiz").hidden = true; return; }
+  quiz = { token: quizToken(), day: view, plan: p, kind: p.kind, phase: "idle",
+           i: 0, live: false, hits: 0, item: null, items: [], session: null,
+           attempt: 0, requeued: {} };
   $("quiz").hidden = false;
   renderQuiz();
 }
@@ -1801,6 +1935,146 @@ function quizScrambleChanged(){
 }
 
 const fmtClock = ms => Math.max(0, Math.ceil(ms / 1000)) + "s";
+
+/* ---- T1: recognition ---- */
+const GRID_FROM_DAY = 14;        // day 15 onward: name it from all 16, not from 4
+let gridPref = null;             // learner override, per profile
+
+function learnedIds(dayIndex){
+  return CASES.list.filter(c => c.introDay != null && c.introDay <= dayIndex).map(c => c.id);
+}
+function recogK(dayIndex){
+  const learned = learnedIds(dayIndex).length;
+  const want = gridPref === null ? (dayIndex >= GRID_FROM_DAY ? 16 : 4) : (gridPref ? 16 : 4);
+  /* Never offer a case the learner has not met. On day 8 only three exist, so
+     the item is a 3-way choice — logged as k:3, which is what keeps the two
+     modes poolable in analysis later. */
+  return Math.max(2, Math.min(want, learned));
+}
+
+function startRecogSession(){
+  if(!owns()) return;
+  quiz.attempt++;
+  const session = QUIZ.composeSession({
+    dayIndex: quiz.day, cases: CASES,
+    stats: QUIZ.statsFrom(log.all()),
+    /* Seeded by day and attempt, so a session is reproducible and a repeat is
+       not the same session over again. */
+    rand: rngFrom("t1-" + quiz.day + "-" + quiz.attempt + "-" + active)
+  });
+  if(!session) return;
+  quiz.session = session;
+  quiz.items = session.items.slice();
+  quiz.i = 0; quiz.hits = 0; quiz.requeued = {};
+  quiz.rand = rngFrom("t1p-" + quiz.day + "-" + quiz.attempt);
+  startRecogItem();
+}
+
+function startRecogItem(){
+  if(!owns()) return;
+  if(quiz.i >= quiz.items.length){ finishSession(); return; }
+  const slot = quiz.items[quiz.i];
+  const caseObj = CASES.byId.get(slot.id);
+  if(!caseObj){ quiz.i++; startRecogItem(); return; }
+  quiz.item = QUIZ.makeRecogItem(caseObj, {
+    k: recogK(quiz.day), pool: learnedIds(quiz.day), cases: CASES,
+    rand: quiz.rand, isReview: slot.isReview, poolMode: quiz.session.poolMode
+  });
+  if(slot.requeue) quiz.item.extra.requeue = 1;
+  quiz.live = true;
+  quiz.phase = "ask";
+  quiz.t0 = Date.now();
+  const rules = QUIZ.DEADLINES.T1;
+  later(()=>{
+    if(!owns() || quiz.phase !== "ask") return;
+    $("qprompt").textContent = "Name it.";
+    $("qprompt").classList.add("urgent");
+  }, rules.softMs);
+  later(()=> revealRecog(), rules.revealMs);
+  renderQuiz();
+}
+
+function answerRecog(chosenId){
+  if(!owns() || quiz.phase !== "ask") return;
+  clearTimers();
+  const r = QUIZ.scoreRecog(quiz.item, chosenId);
+  finishRecogItem(r.correct, { chosen: chosenId });
+}
+
+/* The 5-second rule from day 18, made automatic: look it up, redo it straight
+   away. Logged as a wrong answer rather than as nothing, because "could not
+   name it in five seconds" is exactly the measurement this drill exists for. */
+function revealRecog(){
+  if(!owns() || quiz.phase !== "ask") return;
+  clearTimers();
+  finishRecogItem(false, { timedOut: 1 });
+  const id = quiz.item.caseId;
+  if(!quiz.requeued[id]){
+    const at = QUIZ.requeueAt(quiz.i - 1, quiz.items.length, QUIZ.DEADLINES.T1.requeueWithin, quiz.rand);
+    if(at > 0){
+      quiz.requeued[id] = 1;
+      /* A fresh presentation on the way back: re-showing the identical picture
+         would measure whether they remember the image, not the case. */
+      quiz.items.splice(at, 0, { id, isReview: false, requeue: true });
+    }
+  }
+}
+
+function finishRecogItem(correct, extra){
+  quiz.live = false;
+  quiz.phase = "shown";
+  quiz.i++;
+  if(correct) quiz.hits++;
+  quizCommit(quiz.item, {
+    correct, latencyMs: Date.now() - quiz.t0,
+    extra: Object.assign({ item: quiz.i, of: quiz.items.length,
+                           session: quiz.attempt }, extra)
+  });
+  markOptions(correct ? extra.chosen : null);
+  renderQuiz();
+  later(()=>{ if(owns()){ quiz.phase = "ask"; startRecogItem(); } }, correct ? 550 : 1300);
+}
+
+function markOptions(chosen){
+  const host = $("qans").querySelector(".qopts");
+  if(!host) return;
+  for(const b of host.querySelectorAll(".qopt")){
+    b.disabled = true;
+    if(b.dataset.id === quiz.item.caseId) b.classList.add("right");
+    else if(b.dataset.id === chosen) b.classList.add("wrong");
+  }
+  const c = CASES.byId.get(quiz.item.caseId);
+  $("qprompt").classList.remove("urgent");
+  $("qprompt").textContent = c ? c.name + " — " + c.cue : "";
+}
+
+function finishSession(){
+  quiz.live = false;
+  quiz.phase = "done";
+  clearTimers();
+  renderQuiz();
+}
+
+function renderRecogItem(){
+  const stim = $("qstim"), ans = $("qans");
+  const c = CASES.byId.get(quiz.item.caseId);
+  const state = QUIZ.stateFor(c, quiz.item.auf, CUBE);
+  stim.innerHTML = `<div class="qcase" aria-hidden="true">${quizPicture(c, state)}</div>`;
+  ans.textContent = "";
+  const host = document.createElement("div");
+  host.className = "qopts" + (quiz.item.options.length > 6 ? " wide" : "");
+  quiz.item.options.forEach((id, n)=>{
+    const o = CASES.byId.get(id);
+    const b = document.createElement("button");
+    b.className = "qopt";
+    b.dataset.id = id;
+    b.innerHTML = `<span class="tag">${o.stage.toUpperCase()}</span>${esc(o.short)}`;
+    b.setAttribute("aria-label", o.name + (quiz.item.options.length <= 4 ? ", key " + (n+1) : ""));
+    b.addEventListener("click", ()=> answerRecog(id));
+    host.appendChild(b);
+  });
+  ans.appendChild(host);
+}
 
 function startCrossItem(){
   if(!owns()) return;
@@ -1917,6 +2191,7 @@ const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
 
 function renderQuiz(){
   if(!quiz) return;
+  if(quiz.kind === "T1"){ renderRecogQuiz(); return; }
   const n = quiz.plan.n;
   const planning = quiz.plan.mode === "plan";
   $("qprog").textContent = quiz.phase === "idle"
@@ -1993,6 +2268,35 @@ function renderQuiz(){
   }
 }
 
+function renderRecogQuiz(){
+  const total = quiz.items.length || quiz.plan.n;
+  const k = recogK(quiz.day);
+  $("qprog").textContent = quiz.phase === "idle"
+    ? `name the case · ${quiz.plan.n} items${quiz.plan.n !== total && total ? "" : ""}`
+    : `item ${Math.min(quiz.i + (quiz.live ? 1 : 0), total)} of ${total}` +
+      (quiz.i ? ` · ${quiz.hits}/${quiz.i} named` : "");
+  $("qStart").hidden = quiz.phase !== "idle" && quiz.phase !== "done";
+  $("qStart").textContent = quiz.phase === "done" ? "Run it again" : "Start";
+  $("qEnd").hidden = quiz.phase === "idle" || quiz.phase === "done";
+
+  const stim = $("qstim"), ans = $("qans");
+  if(quiz.phase === "idle"){
+    stim.textContent = `A last-layer case appears; name it. ${k} choices, ` +
+      `three seconds before a nudge and five before the answer — a case you can't name in five ` +
+      `comes back later in the drill.`;
+    ans.textContent = ""; $("qprompt").textContent = "";
+    $("qprompt").classList.remove("urgent");
+    return;
+  }
+  if(quiz.phase === "done"){
+    stim.textContent = `Drill finished — ${quiz.hits} of ${quiz.i} named.`;
+    ans.textContent = ""; $("qprompt").textContent = "";
+    $("qprompt").classList.remove("urgent");
+    return;
+  }
+  if(quiz.phase === "ask") renderRecogItem();
+}
+
 function nextCrossItem(){
   if(!owns()) return;
   if(quiz.i >= quiz.plan.n){ quiz.phase = "done"; $("qfeed").className = "qfeed"; renderQuiz(); return; }
@@ -2045,7 +2349,18 @@ $("qStart").addEventListener("click", ()=>{
   if(!owns()) return;
   quiz.i = 0; quiz.hits = 0;
   $("qfeed").className = "qfeed"; $("qfeed").textContent = "";
-  startCrossItem();
+  if(quiz.kind === "T1") startRecogSession(); else startCrossItem();
+});
+/* Number keys for the small grid — the day-18 drill is meant to be fast, and
+   reaching for a mouse is part of what it is trying to remove. */
+document.addEventListener("keydown", e=>{
+  if(typing(e)) return;
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  if(!owns() || quiz.kind !== "T1" || quiz.phase !== "ask") return;
+  const n = Number(e.key);
+  if(!Number.isInteger(n) || n < 1 || n > quiz.item.options.length || quiz.item.options.length > 6) return;
+  e.preventDefault();
+  answerRecog(quiz.item.options[n - 1]);
 });
 $("qEnd").addEventListener("click", ()=>{
   if(!owns()) return;
@@ -2157,7 +2472,7 @@ function importText(text){
   if(!ok) storageFull();
 }
 document.addEventListener("keydown", e=>{
-  if(e.target.matches("input,select,textarea")) return;
+  if(typing(e)) return;
   if(e.key === "ArrowLeft") $("prev").click();
   if(e.key === "ArrowRight") $("next").click();
 });
@@ -2175,7 +2490,10 @@ if(new URLSearchParams(location.search).has("run"))
                     phase:  () => quiz && quiz.phase,
                     i:      () => quiz && quiz.i,
                     live:   () => !!(quiz && quiz.live),
-                    epoch:  () => quizEpoch };
+                    epoch:  () => quizEpoch,
+                    total:  () => quiz && quiz.items && quiz.items.length,
+                    answerId: () => quiz && quiz.item && quiz.item.caseId,
+                    options:  () => quiz && quiz.item && quiz.item.options };
 
 applyTheme(currentTheme());
 profiles = LOG.loadProfiles(st).profiles;
