@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Notation — 2-Look CFOP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="cube3d.css">
+<script>
+/* Theme before first paint, on Quarto's own key — see index.html. */
+(function(){
+  var v = "default";
+  try { v = localStorage.getItem("quarto-color-scheme") || "default"; } catch(e){}
+  document.documentElement.setAttribute("data-theme", v === "alternate" ? "dark" : "light");
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="home" href="/">&larr; gfrischkorn.org</a>
+
+  <div class="topbar">
+    <div class="brand">
+      <h1>Notation</h1>
+      <span class="sub">every move, shown</span>
+    </div>
+    <div class="who">
+      <nav class="pages" aria-label="Pages">
+        <a href="index.html">Programme</a>
+        <a href="notation.html" aria-current="page">Notation</a>
+        <a href="beginner.html">Beginner</a>
+        <a href="lastlayer.html">Last layer</a>
+      </nav>
+      <button class="btn icon" id="themeToggle" title="Switch between light and dark" aria-label="Switch between light and dark"></button>
+    </div>
+  </div>
+
+  <p class="lede">Every algorithm on these pages is written in the standard notation. A letter names a layer; on its own it means a quarter turn clockwise <em>as you look at that face</em>; a prime means anticlockwise; a 2 a half turn. Press <b>Show</b> on any row to watch the cube do it from solved, then do the same on yours and compare. The letters on the centres name positions, not colours: F is always the face towards you.</p>
+
+  <div class="pgrid">
+    <aside class="panel" id="panel">
+      <div id="cube"></div>
+      <div class="pstat" id="pstat" role="status" aria-live="polite">Solved. Pick a move on the right.</div>
+      <div class="prow">
+        <button class="btn sbtn" id="undo" disabled>Undo</button>
+        <button class="btn sbtn" id="resetCube">Reset</button>
+        <button class="btn sbtn" id="flip" aria-pressed="false">Show from behind</button>
+        <button class="btn sbtn" id="labels" aria-pressed="true">Labels</button>
+      </div>
+    </aside>
+    <main class="groups" id="groups"></main>
+  </div>
+
+  <div class="notice">
+    <b>Two conventions to know.</b> A wide turn is written both ways in the wild: <code>Rw</code> and <code>r</code> mean the same thing, and both are accepted wherever these pages ask you to type moves. Slice directions are the ones the speedcubing community uses (M like L, E like D, S like F); some older books define them the other way round, which is worth knowing if an algorithm from a book refuses to work.
+  </div>
+
+</div>
+
+<script src="engine.js"></script>
+<script src="cube3d.js"></script>
+<script src="common.js"></script>
+<script src="notation.js"></script>
+<script src="page-notation.js"></script>
+</body>
+</html>

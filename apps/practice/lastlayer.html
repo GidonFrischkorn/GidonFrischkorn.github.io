@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Last layer — 2-Look CFOP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="cube3d.css">
+<script>
+/* Theme before first paint, on Quarto's own key — see index.html. */
+(function(){
+  var v = "default";
+  try { v = localStorage.getItem("quarto-color-scheme") || "default"; } catch(e){}
+  document.documentElement.setAttribute("data-theme", v === "alternate" ? "dark" : "light");
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="home" href="/">&larr; gfrischkorn.org</a>
+
+  <div class="topbar">
+    <div class="brand">
+      <h1>Last layer</h1>
+      <span class="sub">step through a case</span>
+    </div>
+    <div class="who">
+      <nav class="pages" aria-label="Pages">
+        <a href="index.html">Programme</a>
+        <a href="notation.html">Notation</a>
+        <a href="beginner.html">Beginner</a>
+        <a href="lastlayer.html" aria-current="page">Last layer</a>
+      </nav>
+      <button class="btn icon" id="themeToggle" title="Switch between light and dark" aria-label="Switch between light and dark"></button>
+    </div>
+  </div>
+
+  <p class="lede">Pick one of the sixteen two-look cases. The cube shows it held the way the diagram means it — green in front, yellow on top — and the algorithm runs one move at a time so you can hold your own cube next to it and see where the two part ways. Turn the cube with <b>y</b> to see what the same case looks like from another side, and whether the algorithm still applies from there.</p>
+
+  <div class="pgrid">
+    <aside class="panel" id="panel">
+      <div id="cube"></div>
+      <div id="stepper"></div>
+      <div class="pstat" id="pstat" role="status" aria-live="polite"></div>
+    </aside>
+    <main>
+      <div id="picker"></div>
+      <section class="casebox" id="casebox"></section>
+    </main>
+  </div>
+
+  <div class="notice">
+    <b>What the check at the end means.</b> The pictures are computed, not drawn, so the final one is always what the algorithm really does to that case from that hold. If your cube ends up somewhere else, step back through the moves and find the first picture yours no longer matches — that move is the one being executed differently, and the <a href="notation.html">notation page</a> shows each one on its own.
+  </div>
+
+</div>
+
+<script src="engine.js"></script>
+<script src="algs.js"></script>
+<script src="diagram.js"></script>
+<script src="cube3d.js"></script>
+<script src="common.js"></script>
+<script src="notation.js"></script>
+<script src="stepper.js"></script>
+<script src="page-lastlayer.js"></script>
+</body>
+</html>

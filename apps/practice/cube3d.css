@@ -1,0 +1,47 @@
+/* cube3d.css — the 3D cube view. Sticker colours are the same tokens app.css
+   defines (--y --r --g --w --o --b); only the plastic and the labels are
+   theme-aware. Sizes are set inline by cube3d.js from the mount option. */
+:root{ --c3-plastic:#1c1c1c; --c3-lab:rgba(0,0,0,.6); --c3-lab-w:rgba(255,255,255,.75); }
+:root[data-theme="dark"]{ --c3-plastic:#0e0e0e; }
+
+.c3{display:inline-flex;flex-direction:column;align-items:center;gap:6px;user-select:none}
+.c3-viewport{
+  position:relative;perspective:900px;perspective-origin:50% 50%;
+}
+.c3-scene{
+  position:absolute;left:50%;top:50%;width:0;height:0;
+  transform-style:preserve-3d;
+  transform:rotateX(-25deg) rotateY(-35deg);
+  transition:transform .35s ease;
+}
+.c3-cubie{position:absolute;transform-style:preserve-3d}
+.c3-f{
+  position:absolute;inset:0;
+  background:var(--c3-plastic);
+  backface-visibility:hidden;
+  border-radius:9%;
+}
+/* Stickers: coloured, inset so the plastic shows between them. */
+.c3-f.c0,.c3-f.c1,.c3-f.c2,.c3-f.c3,.c3-f.c4,.c3-f.c5{
+  box-shadow:inset 0 0 0 2px var(--c3-plastic);
+}
+.c3-f.c0{background:var(--y)}
+.c3-f.c1{background:var(--r)}
+.c3-f.c2{background:var(--g)}
+.c3-f.c3{background:var(--w)}
+.c3-f.c4{background:var(--o)}
+.c3-f.c5{background:var(--b)}
+
+/* Centre-position letters. Off unless the mount asked for them. */
+.c3-lab{
+  position:absolute;inset:0;display:none;place-items:center;
+  font-family:var(--mono,ui-monospace,monospace);font-weight:600;
+  color:var(--c3-lab);pointer-events:none;line-height:1;
+}
+.c3.labels .c3-lab{display:grid}
+.c3-f.c1 .c3-lab,.c3-f.c5 .c3-lab{color:var(--c3-lab-w)}
+
+.c3-cap{
+  font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted,#6c757d);text-align:center;
+}

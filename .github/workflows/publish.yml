@@ -59,32 +59,29 @@ jobs:
         run: |
           set -euo pipefail
 
-          # index.html, app.css and app.js must all ship, byte-identical. The page
-          # is split across three files; a missing sibling gives a blank or
-          # unstyled page rather than an obvious error.
-          for f in index.html app.css app.js; do
-            src="apps/practice/$f"
-            out="_site/apps/practice/$f"
-            if [ ! -f "$src" ]; then
-              echo "::error::$src is missing from the source tree."
-              exit 1
-            fi
-            if [ ! -f "$out" ]; then
-              echo "::error::$out is missing. Is the 'apps/practice/' entry still under project.resources in _quarto.yml?"
-              exit 1
-            fi
-            if ! cmp -s "$src" "$out"; then
-              echo "::error::$out differs from its source. It must be copied verbatim, never rendered by Quarto."
-              exit 1
-            fi
-          done
+          # Every file under apps/practice/ must ship, byte-identical, and
+          # nothing extra may appear. The pages are split across several files
+          # (shared engine, per-page scripts); a missing sibling gives a blank
+          # or unstyled page rather than an obvious error.
+          if [ ! -d _site/apps/practice ]; then
+            echo "::error::_site/apps/practice is missing. Is the 'apps/practice/' entry still under project.resources in _quarto.yml?"
+            exit 1
+          fi
+          if ! diff -rq apps/practice _site/apps/practice; then
+            echo "::error::apps/practice and _site/apps/practice differ. Every file must be copied verbatim, never rendered by Quarto."
+            exit 1
+          fi
+          n_files=$(find apps/practice -type f | wc -l | tr -d ' ')
 
-          # The page is useless if index.html stops referencing its siblings.
-          for ref in 'href="app.css"' 'src="app.js"'; do
-            if ! grep -q "$ref" apps/practice/index.html; then
-              echo "::error::apps/practice/index.html no longer contains $ref"
-              exit 1
-            fi
+          # A page is useless if it stops referencing its siblings: every local
+          # href/src in every HTML file must name a file that exists.
+          for page in apps/practice/*.html; do
+            for ref in $(grep -o -E '(href|src)="[^"/:]+"' "$page" | sed -E 's/^(href|src)="//; s/"$//' | sed 's/[?#].*//'); do
+              if [ ! -f "apps/practice/$ref" ]; then
+                echo "::error::$page references $ref, which does not exist in apps/practice/"
+                exit 1
+              fi
+            done
           done
           for index in sitemap.xml search.json; do
             if [ -f "_site/$index" ] && grep -q "apps/practice" "_site/$index"; then
@@ -92,7 +89,7 @@ jobs:
               exit 1
             fi
           done
-          echo "practice page: all 3 files present, byte-identical to source, cross-referenced, absent from sitemap.xml and search.json"
+          echo "practice pages: all $n_files files present, byte-identical to source, cross-referenced, absent from sitemap.xml and search.json"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

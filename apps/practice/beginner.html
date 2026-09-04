@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Beginner method — 2-Look CFOP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="cube3d.css">
+<script>
+/* Theme before first paint, on Quarto's own key — see index.html. */
+(function(){
+  var v = "default";
+  try { v = localStorage.getItem("quarto-color-scheme") || "default"; } catch(e){}
+  document.documentElement.setAttribute("data-theme", v === "alternate" ? "dark" : "light");
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="home" href="/">&larr; gfrischkorn.org</a>
+
+  <div class="topbar">
+    <div class="brand">
+      <h1>Beginner method</h1>
+      <span class="sub">layer by layer, step by step</span>
+    </div>
+    <div class="who">
+      <nav class="pages" aria-label="Pages">
+        <a href="index.html">Programme</a>
+        <a href="notation.html">Notation</a>
+        <a href="beginner.html" aria-current="page">Beginner</a>
+        <a href="lastlayer.html">Last layer</a>
+      </nav>
+      <button class="btn icon" id="themeToggle" title="Switch between light and dark" aria-label="Switch between light and dark"></button>
+    </div>
+  </div>
+
+  <p class="lede">Seven stages solve any cube: the white cross, the white corners, the middle layer, then the yellow cross, the yellow edges, the yellow corners into place, and the yellow corners turned. Each stage below has a way to recognise what you are looking at and a worked example. Pick an example, hold your own cube the same way, and step through the moves one at a time with <b>→</b>. The letters on the cube name the faces the moves refer to. If you get lost, the <a href="notation.html">notation page</a> shows every move on its own.</p>
+
+  <div class="pgrid">
+    <aside class="panel" id="panel">
+      <div class="pprog" id="pprog"></div>
+      <div id="cube"></div>
+      <div id="stepper"></div>
+      <div class="pstat" id="pstat" role="status" aria-live="polite"></div>
+      <div class="prow">
+        <button class="btn sbtn" id="prevDemo">&larr; Previous example</button>
+        <button class="btn sbtn" id="nextDemo">Next example &rarr;</button>
+      </div>
+    </aside>
+    <main id="stages"></main>
+  </div>
+
+  <div class="notice">
+    <b>Where this comes from.</b> The stages and algorithms follow J Perm's beginner guide at <a href="https://jperm.net/3x3" rel="noopener noreferrer" target="_blank">jperm.net/3x3</a>, which is the one to watch if you want it explained on video. Every example here is computed by the same engine that checks the CFOP programme, so the pictures are what the moves really do.
+    <br><br>
+    <b>Not here yet.</b> The examples are fixed cases, one per situation; the page does not yet take a scramble of your own and walk you through it. That is the natural next step for it.
+  </div>
+
+</div>
+
+<script src="engine.js"></script>
+<script src="cube3d.js"></script>
+<script src="common.js"></script>
+<script src="notation.js"></script>
+<script src="stepper.js"></script>
+<script src="beginner.js"></script>
+<script src="page-beginner.js"></script>
+</body>
+</html>
