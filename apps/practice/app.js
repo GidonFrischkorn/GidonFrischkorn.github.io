@@ -2087,6 +2087,19 @@ if(new URLSearchParams(location.search).has("run"))
                     total:  () => quiz && quiz.items && quiz.items.length,
                     answerId: () => quiz && quiz.item && quiz.item.caseId,
                     options:  () => quiz && quiz.item && quiz.item.options };
+/* ?selftest=1 appends the in-page self-test once the page has loaded (see
+   selftest.js). Same lines as in common.js, which this page does not load. */
+if(new URLSearchParams(location.search).has("selftest")) window.addEventListener("load", () => {
+  const s = document.createElement("script");
+  s.src = "selftest.js";
+  s.onerror = () => {
+    const d = document.createElement("div");
+    d.className = "notice warn show";
+    d.textContent = "selftest.js did not load.";
+    (document.querySelector(".wrap") || document.body).prepend(d);
+  };
+  document.body.appendChild(s);
+});
 
 applyTheme(currentTheme());
 profiles = LOG.loadProfiles(st).profiles;

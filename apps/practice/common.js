@@ -35,5 +35,19 @@ const PAGE = (function(){
   /* Top-level const in a classic script is not a window property, so the
      harness could not otherwise reach the engine inside its iframe. */
   if(testing && typeof CUBE !== "undefined") window.__engine = CUBE;
+  /* ?selftest=1 appends the in-page self-test once the page has loaded (see
+     selftest.js), so a learner never fetches it. app.js carries the same lines
+     for index.html, which does not load this file. */
+  if(params.has("selftest")) window.addEventListener("load", () => {
+    const s = document.createElement("script");
+    s.src = "selftest.js";
+    s.onerror = () => {
+      const d = document.createElement("div");
+      d.className = "notice warn show";
+      d.textContent = "selftest.js did not load.";
+      (document.querySelector(".wrap") || document.body).prepend(d);
+    };
+    document.body.appendChild(s);
+  });
   return { $, params, testing, currentTheme, applyTheme, bindTheme, reduced, esc, ms };
 })();
