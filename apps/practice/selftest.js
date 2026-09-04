@@ -416,7 +416,9 @@ const SELFTEST = (function(){
       T.ok(document.documentElement.scrollWidth <= window.innerWidth, `no horizontal overflow at ${window.innerWidth}px (scrollWidth ${document.documentElement.scrollWidth})`);
       const c3 = document.querySelector(".c3");
       if(c3){
-        const faces = [...c3.querySelectorAll(".c3-f")].map(f => (f.className.match(/\bc([0-5])\b/) || [])[1]).filter(v => v !== undefined);
+        /* A coloured face carries the class "c0".."c5" as a whole token; the
+           element class "c3-f" must not be read as colour 3. */
+        const faces = [...c3.querySelectorAll(".c3-f")].map(f => (f.className.match(/(?:^|\s)c([0-5])(?=\s|$)/) || [])[1]).filter(v => v !== undefined);
         const counts = [0,0,0,0,0,0];
         faces.forEach(v => counts[Number(v)]++);
         T.ok(faces.length === 54 && counts.every(n => n === 9), `the 3D cube shows 54 stickers, nine of each colour (${counts.join(" ")})`);
