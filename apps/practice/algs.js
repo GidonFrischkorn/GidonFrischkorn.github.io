@@ -11,17 +11,17 @@
 const ALGS = {
   cross: { label:"Cross", rows:[] },
   f2l: { label:"F2L", rows:[
-    {n:"Basic insert · right",s:"Corner above the slot, edge on the right",a:"R U R'",
+    {id:"f2l.insert-right",short:"Insert R",n:"Basic insert · right",s:"Corner above the slot, edge on the right",a:"R U R'",
      note:"The atom of F2L. Everything else is a setup that turns your case into this one. Watch what it does: the corner drops in and the edge follows it."},
-    {n:"Basic insert · front",s:"Corner above the slot, edge on the left",a:"y' R' U' R",
+    {id:"f2l.insert-front",short:"Insert F",n:"Basic insert · front",s:"Corner above the slot, edge on the left",a:"y' R' U' R",
      note:"The mirror of the one above. Rotating with y' rather than learning a separate left-hand version keeps you carrying one idea instead of two."},
-    {n:"Pair, then insert · right",s:"Both pieces up top, corner facing front",a:"U R U' R'",
+    {id:"f2l.pair-right",short:"Pair R",n:"Pair, then insert · right",s:"Both pieces up top, corner facing front",a:"U R U' R'",
      note:"Separate, pair, insert — the three-phase idea. The U at the front is the pairing move; the rest is the basic insert."},
-    {n:"Pair, then insert · left",s:"Both pieces up top, mirrored",a:"y' U' R' U R",
+    {id:"f2l.pair-left",short:"Pair L",n:"Pair, then insert · left",s:"Both pieces up top, mirrored",a:"y' U' R' U R",
      note:"Same three phases on the other side. If you find yourself hunting for a third and fourth variant, you're memorising instead of seeing."},
-    {n:"Sexy move",s:"The trigger everything is built from",a:"R U R' U'",
+    {id:"f2l.sexy",short:"Sexy move",n:"Sexy move",s:"The trigger everything is built from",a:"R U R' U'",
      note:"Not an F2L case — a building block worth knowing by name, because tutorials and algorithms below are described in terms of it. Six repetitions on a solved cube return it to solved, which is a good way to feel how it works."},
-    {n:"Sledgehammer",s:"The other common trigger",a:"R' F R F'",
+    {id:"f2l.sledgehammer",short:"Sledge",n:"Sledgehammer",s:"The other common trigger",a:"R' F R F'",
      note:"The second piece of vocabulary. Once you can see sexy moves and sledgehammers inside longer algorithms, the last-layer set stops looking arbitrary."}
   ]},
   oll: { label:"OLL · 10", rows:[

@@ -448,6 +448,10 @@ select{
 .pick:focus-visible{outline:2px solid var(--y);outline-offset:2px}
 .pick svg{display:block;width:48px;height:48px}
 .pick .short{font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+/* F2L picks have no plan-view diagram; the card shows the algorithm at the
+   diagram's height so the grid stays even. */
+.pick .falg{display:flex;align-items:center;justify-content:center;height:48px;padding:0 4px;text-align:center;
+  font:500 10px/1.35 var(--mono);color:var(--alg);overflow-wrap:anywhere}
 .pick[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .casebox{
   margin-top:22px;background:var(--panel);border:1px solid var(--hair);border-radius:12px;padding:20px 22px;

@@ -129,6 +129,9 @@ const SELFTEST = (function(){
       const s = C.Cube.setup(r.a);
       const slots = ["FR","FL","BL","BR"].filter(k => C.f2lSlotSolved(s, k)).length;
       T.ok(s && C.crossSolved(s) && slots === 3, `f2l "${r.n}": one slot open, cross and the other three intact`);
+      T.ok(/^f2l\.[a-z0-9-]+$/.test(r.id) && !ids.has(r.id) && r.short && r.short.length <= 12, `${r.id}: a well-formed F2L id and short name`);
+      ids.add(r.id);
+      T.ok(C.solvesCase(s, r.a, C.f2lDone).ok, `${r.id}: solvesCase accepts the algorithm on the first two layers`);
     }
   }
 
@@ -440,7 +443,7 @@ const SELFTEST = (function(){
         const sel = document.querySelector('.tab[aria-selected="true"]');
         const key = sel && Object.keys(env.ALGS).find(k => env.ALGS[k].label === sel.textContent);
         T.ok(key && document.querySelectorAll("#alist .arow").length === env.ALGS[key].rows.length, `the selected tab lists all its rows (${key})`);
-        const ids = new Set([...env.ALGS.oll.rows, ...env.ALGS.pll.rows].map(r => r.id));
+        const ids = new Set(Object.values(env.ALGS).flatMap(g => g.rows).filter(r => r.id).map(r => r.id));
         const links = [...document.querySelectorAll(".stepl")];
         T.ok(links.length > 0 && links.every(a => { const m = a.getAttribute("href").match(/^lastlayer\.html\?case=(.+)$/); return m && ids.has(m[1]); }), "every step-through link names a known case");
         T.ok(!!$("quiz") && !!$("card") && !!$("scrambleMoves"), "the session card, scramble and trainer areas exist");
@@ -451,11 +454,13 @@ const SELFTEST = (function(){
         T.ok(["undo", "resetCube", "flip", "labels", "pstat", "cube"].every(id => !!$(id)), "the panel controls exist");
       }
       if(page === "lastlayer.html" && env.ALGS && C){
-        const ids = [...env.ALGS.oll.rows, ...env.ALGS.pll.rows].map(r => r.id);
+        const rows = Object.values(env.ALGS).flatMap(g => g.rows).filter(r => r.id);
+        const ids = rows.map(r => r.id);
         const picks = [...document.querySelectorAll(".pick")];
-        T.ok(picks.length === 16 && ids.every(id => picks.some(b => b.dataset.case === id)), "the picker offers all sixteen cases");
+        T.ok(picks.length === ids.length && ids.every(id => picks.some(b => b.dataset.case === id)), `the picker offers every case that carries an id (${ids.length})`);
+        T.ok(document.querySelectorAll(".pick .falg").length === env.ALGS.f2l.rows.length && document.querySelectorAll(".pick svg").length === 16, "sixteen picks show a diagram, the F2L picks show their algorithm");
         const on = picks.filter(b => b.getAttribute("aria-pressed") === "true");
-        const row = on.length === 1 && [...env.ALGS.oll.rows, ...env.ALGS.pll.rows].find(r => r.id === on[0].dataset.case);
+        const row = on.length === 1 && rows.find(r => r.id === on[0].dataset.case);
         T.ok(!!row, "exactly one case is picked");
         if(row){
           const n = C.parseMoves(row.a).moves.length;

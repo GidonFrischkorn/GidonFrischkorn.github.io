@@ -11,10 +11,18 @@
   ALGS.oll.rows.forEach(r => CASES.push({ id:r.id, stage:"oll", row:r,
     group: r.edges ? "OLL, edges — make the yellow cross" : "OLL, corners — finish the yellow face" }));
   ALGS.pll.rows.forEach(r => CASES.push({ id:r.id, stage:"pll", row:r, group:"PLL — move the pieces home" }));
+  /* The F2L rows have no plan-view diagram — a top-down picture cannot show a
+     pair spread over U, F and R with its slot below — which is exactly what
+     the 3D cube is for. Their picker card shows the algorithm instead, and the
+     verdict is on the first two layers. */
+  ALGS.f2l.rows.forEach(r => CASES.push({ id:r.id, stage:"f2l", row:r, group:"F2L — insert a pair, and the two triggers" }));
   const byId = Object.fromEntries(CASES.map(c => [c.id, c]));
-  const goalOf = c => c.row.edges ? "the yellow cross is made" : c.stage === "oll" ? "the top face is all yellow" : "the last layer is solved";
-  const predOf = c => c.row.edges ? CUBE.ollEdgesDone : c.stage === "oll" ? CUBE.ollDone : (x => CUBE.solvedUpToAUF(x) >= 0);
-  const picture = c => c.stage === "oll" ? renderOLL(c.row.e, !!c.row.edges) : renderPLL(c.row.r, c.row.x);
+  const goalOf = c => c.stage === "f2l" ? "the pair is in its slot and the first two layers are solved"
+                    : c.row.edges ? "the yellow cross is made" : c.stage === "oll" ? "the top face is all yellow" : "the last layer is solved";
+  const predOf = c => c.stage === "f2l" ? CUBE.f2lDone
+                    : c.row.edges ? CUBE.ollEdgesDone : c.stage === "oll" ? CUBE.ollDone : (x => CUBE.solvedUpToAUF(x) >= 0);
+  const picture = c => c.stage === "f2l" ? `<span class="falg">${esc(c.row.a)}</span>`
+                     : c.stage === "oll" ? renderOLL(c.row.e, !!c.row.edges) : renderPLL(c.row.r, c.row.x);
   const AUF = ["", "U", "U2", "U'"];
 
   const narrow = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
@@ -51,10 +59,17 @@
   }
   function holdMsg(){
     const w = works(), el = $("holdmsg"), front = cube3d.NAME[held()[22]];
+    /* The hold the algorithm is written for is the raw setup state. For the
+       last-layer cases that is green in front; two F2L algorithms start with a
+       y', so their case is shown with red in front and the first step turns
+       the cube — say so rather than promise green. */
+    const home = cube3d.NAME[state0[22]], rot = "xyz".indexOf(moves[0][0]) >= 0;
     let cls = "ok", text;
     if(w.indexOf(auf) >= 0)
       text = hold === 0 && auf === 0
-        ? "Held as the diagram means it: green in front. The algorithm works as written."
+        ? `Held as the algorithm expects: ${home} in front.` +
+          (rot ? ` Its first move, ${CUBE.fmtMoves([moves[0]])}, turns the whole cube.` : "") +
+          " The algorithm works as written."
         : `From this side (front ${front}) the algorithm works as written.`;
     else if(w.length){
       cls = "warn";
@@ -62,7 +77,7 @@
       text = `From this side (front ${front}) it only works after ${AUF[need]} first: turn the top layer, then run it.`;
     } else {
       cls = "bad";
-      text = `Does not work from this side: the front shows ${front}. Turn the whole cube (y) until green is in front, as in the diagram.`;
+      text = `Does not work from this side: the front shows ${front}. Turn the whole cube (y) until ${home} is in front, as the case is shown.`;
     }
     el.textContent = text;
     el.className = "holdmsg " + cls;
@@ -77,7 +92,7 @@
     $("picker").querySelectorAll(".pick").forEach(b => b.setAttribute("aria-pressed", b.dataset.case === cur.id ? "true" : "false"));
     $("casebox").innerHTML =
       `<div class="casehead">
-         <div class="acase" aria-hidden="true">${picture(cur)}</div>
+         ${cur.stage === "f2l" ? "" : `<div class="acase" aria-hidden="true">${picture(cur)}</div>`}
          <div>
            <h3>${esc(r.n)}</h3>
            <p class="cue">${esc(r.s)}</p>
