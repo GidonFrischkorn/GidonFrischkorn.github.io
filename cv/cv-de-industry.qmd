@@ -67,9 +67,14 @@ render_work(lang, max_entries = 3, details_key = "details_industry")
 ```{=typst}
 #resume-entry(title: [bmm: Bayesianische Messmodelle in R], location: [CRAN], date: [2023 -- heute], description: [Hauptautor und Maintainer])
 #resume-item[
-- Macht hierarchische Bayesianische Messmodelle über eine brms-ähnliche Schnittstelle zugänglich; 8'000+ Downloads, international im Einsatz
-- Vollständiger Software-Lebenszyklus: API-Design, Unit-Tests, CI/CD über GitHub Actions, CRAN-Releases, versionierte Dokumentation und Tutorials
+- Macht Bayesianische Messmodelle zugänglich (brms-ähnliche Schnittstelle); 8'000+ Downloads, weltweit im Einsatz
+- Vollständiger Software-Lebenszyklus: API-Design, Unit-Tests, CI/CD über GitHub Actions, CRAN-Releases, Dokumentation
 - Begutachtetes Tutorial publiziert in _Behavior Research Methods_ (2025)
+]
+
+#resume-entry(title: [rtprep und jatosr: R-Pakete für Forschungsworkflows], location: [CRAN-Einreichung], date: [2026 -- heute], description: [Autor und Maintainer])
+#resume-item[
+- rtprep: Reaktionszeit-Preprocessing in einer Schnittstelle; jatosr: automatisierter Datenabruf für Online-Studien
 ]
 ```
 

@@ -7,3 +7,23 @@
     en: "R package for Easy and Accessible Bayesian Measurement Models Using 'brms'"
     de: "R-Paket für einfache und zugängliche Bayesianische Messmodelle mit 'brms'"
   url: "https://cran.r-project.org/web/packages/bmm/index.html"
+
+- name: "rtprep"
+  type: "R package"
+  role:
+    en: "Author and maintainer"
+    de: "Autor und Maintainer"
+  description:
+    en: "One interface for screening, trimming, and aggregating response time data; submitted to CRAN, available via R-universe"
+    de: "Einheitliche Schnittstelle für Screening, Trimming und Aggregation von Reaktionszeiten; bei CRAN eingereicht, verfügbar über R-universe"
+  url: "https://www.gfrischkorn.org/rtprep/"
+
+- name: "jatosr"
+  type: "R package"
+  role:
+    en: "Author and maintainer"
+    de: "Autor und Maintainer"
+  description:
+    en: "R client for the 'JATOS' REST API: credential handling, incremental downloads, and reading jsPsych data into one table"
+    de: "R-Client für die 'JATOS' REST-API: sichere Zugangsdaten, inkrementelle Downloads und Einlesen von jsPsych-Daten in eine Tabelle"
+  url: "https://www.gfrischkorn.org/jatosr/"
