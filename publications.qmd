@@ -8,7 +8,7 @@ toc-location: right
 
 [Google Scholar](https://scholar.google.com/citations?user=gpol3F4AAAAJ&hl=de)
 
-Total citations (OpenAlex): > 1000 | h-index: 16 | i10-index: 20
+Total citations (OpenAlex): > 1000 | h-index: 16 | i10-index: 19
 
 Peer-reviewed articles: 34 | Preprints: 8
 
