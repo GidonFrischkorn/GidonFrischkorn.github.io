@@ -4,6 +4,8 @@ project:
   render:
     - "*.qmd"          # only the CVs; keeps stray .md files (e.g. font licences)
                        # from being picked up as documents to render
+    - "!cv-de-data.qmd"  # private application variant: never rendered by CI/publish,
+                         # render explicitly with `quarto render cv-de-data.qmd`
 
 # Render from the fonts committed in cv/fonts/ rather than whatever happens to be
 # installed on the machine. Without this, CI (which has neither Roboto nor

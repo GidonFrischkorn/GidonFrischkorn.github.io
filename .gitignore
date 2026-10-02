@@ -16,3 +16,6 @@
 
 
 /.luarc.json
+
+# private application CV variants (rendered next to the source; never publish)
+/cv/cv-de-data.pdf

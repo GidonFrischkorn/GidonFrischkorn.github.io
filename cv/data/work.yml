@@ -21,6 +21,13 @@
       - "Randomisierte Experimente end-to-end: Poweranalyse, Datenerhebung online und im Labor, hierarchische Bayes-Modellierung und Ergebnisaufbereitung für Fach- und Nicht-Fachpublikum"
       - "Entwicklung und Wartung des Open-Source-R-Pakets bmm (CRAN, 8'000+ Downloads): API-Design, automatisierte Tests, CI/CD über GitHub Actions und vollständige Dokumentation"
       - "Reproduzierbare Analysepipelines in R (tidyverse, brms/Stan, Quarto) mit offenen Daten und offenem Code in 10+ begutachteten Studien"
+  # data-management / public-sector framing (German only; used by cv-de-data)
+  details_public:
+    de:
+      - "Leitung eines vierköpfigen Forschungsteams mit voller Budget- und Personalverantwortung; CHF 916'510 an kompetitiven SNF-Mitteln als PI eingeworben (über CHF 1 Mio. inkl. Flexibility Grant)"
+      - "Verantwortung für den gesamten Datenlebenszyklus: Datenmanagementplan nach SNF-Vorgaben, Ethikanträge, Erhebung online und im Labor, Pseudonymisierung und sichere Ablage personenbezogener Daten"
+      - "Standardisierte Datenflüsse: automatisierter Datenabruf über die Schnittstelle der Studienplattform JATOS, regelbasierte Aufbereitung mit Qualitätsprüfungen"
+      - "Archivierung und Veröffentlichung von Daten, Code und Codebooks nach den FAIR-Prinzipien (OSF); Auswertung mit hierarchischen Bayes-Modellen, aufbereitet für Fach- und Nicht-Fachpublikum"
   details:
     en:
       - "Secured and managed CHF 916,510 in competitive SNF funding as PI, leading an independent four-person research group from inception to publication"
@@ -56,6 +63,11 @@
     de:
       - "Alleinige Lehrverantwortung für Statistik I und IV (150+ Studierende): Konzeption, Vorlesung, Übungen und Prüfung"
       - "Entwicklung offener, interaktiver Lehrmaterialien in R und Quarto für reproduzierbare Datenanalyse"
+  details_public:
+    de:
+      - "Alleinige Verantwortung für die Vorlesungen Statistik I und IV (bis zu 160 Studierende): Konzeption, Durchführung, Übungsmaterialien und Prüfungen; Anleitung und Koordination der Übungsleitenden; Modulverantwortung für die Statistik- und Methodenlehre gemeinsam mit einem weiteren Lehrbeauftragten"
+      - "Aufbau eines R-basierten Systems zur Auswertung der Prüfungen und Qualitätsanalyse der Prüfungsfragen; Mitwirkung an der Definition fakultätsweiter Prüfungsprozesse"
+      - "Vermittlung von Datenkompetenz mit offenen, interaktiven Lehrmaterialien in R und Quarto, dokumentiert in versionierten Repositories, die der Fakultät dauerhaft zur Verfügung stehen"
   details:
     en:
       - "Designed and taught Statistics I and Statistics IV (incl. reproducible data analysis in R) for 150+ undergraduates, with interactive R-based exercise materials built for reproducibility"
@@ -87,6 +99,11 @@
       - "Leitung internationaler Multi-Site-Forschungsprojekte in Psychometrie und kognitiver Psychologie mit Beitrag zu 15+ begutachteten Publikationen"
       - "Statistische Beratung einer Forschungsgruppe von 10+ Forschenden: Bayes-Inferenz, gemischte Modelle und reproduzierbare Analyse-Workflows"
       - "Co-Einwerbung von DFG-Netzwerkmitteln (€44.645) und Co-Koordination eines internationalen Forschungsnetzwerks"
+  details_public:
+    de:
+      - "Statistische Beratung einer Forschungsgruppe von 10+ Forschenden zu Bayes-Inferenz, gemischten Modellen und reproduzierbaren Analyse-Workflows"
+      - "Leitung internationaler Multi-Site-Forschungsprojekte in Psychometrie und kognitiver Psychologie mit Beitrag zu 15+ begutachteten Publikationen"
+      - "Co-Einwerbung von DFG-Netzwerkmitteln (EUR 44'645) und Co-Koordination eines internationalen Forschungsnetzwerks"
   details:
     en:
       - "Led international multi-site research projects at the intersection of psychometrics and cognitive psychology, contributing to 15+ peer-reviewed publications"

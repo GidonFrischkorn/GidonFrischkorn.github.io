@@ -1,0 +1,123 @@
+---
+title: "Curriculum Vitae"
+author:
+  firstname: Gidon T.
+  lastname: Frischkorn
+  address: "Leutschenbachstrasse 77 · 8050 Zürich · Schweiz"
+  position: "Datenmanagement · Datenqualität & Messung · Statistische Analyse · Beratung"
+  contacts:
+    - icon: fa envelope
+      text: frischkorn@tutanota.com
+      url: "mailto:frischkorn@tutanota.com"
+    - icon: fa link
+      text: gfrischkorn.org
+      url: "https://www.gfrischkorn.org"
+    - icon: fa brands github
+      text: GidonFrischkorn
+      url: "https://github.com/GidonFrischkorn"
+    - icon: fa brands linkedin
+      text: LinkedIn
+      url: "https://www.linkedin.com/in/gidon-frischkorn-4913431b1/"
+date: 2026-09-28
+date-format: "D. MMMM YYYY"
+lang: de
+format:
+  awesomecv-typst:
+    keep-typ: false
+knitr:
+  opts_chunk:
+    dev: png
+    fig.show: hide
+execute:
+  echo: false
+  output: asis
+---
+
+<!--
+German CV for data-management / public-sector roles (first use: Data Officer, Bildungsdirektion
+Kanton Zürich, 2026). Private variant: excluded from the website render in cv/_quarto.yml, so CI
+never publishes it. Render explicitly: quarto render cv-de-data.qmd
+-->
+
+```{r}
+#| label: setup
+#| include: false
+source("helpers.R")
+lang <- "de"
+```
+
+# Berufliches Profil
+
+```{=typst}
+#resume-item[
+Quantitativer Psychologe mit über 10 Jahren Verantwortung für empirische Daten über ihren gesamten Lebenszyklus: von der Erhebung über Aufbereitung, Qualitätssicherung und Analyse bis zur Veröffentlichung und Archivierung. Erfahrung mit sensiblen Personendaten unter ethischen und datenschutzrechtlichen Vorgaben. Leitet als PI ein vierköpfiges Forschungsteam mit voller Budget- und Personalverantwortung, finanziert durch kompetitiv eingeworbene SNF-Mittel von CHF 916'510. Kernstärke: prüfen, was Daten tatsächlich messen, und daraus belastbare Entscheidungsgrundlagen machen, verständlich aufbereitet für Fach- und Nicht-Fachpublikum.
+]
+```
+
+# Kernkompetenzen
+
+```{=typst}
+#resume-item[
+- *Datenmanagement & Datenschutz:* Datenmanagementpläne nach SNF-Vorgaben, Ethikanträge, Pseudonymisierung und Anonymisierung, sichere Ablage personenbezogener Daten, FAIR-konforme Archivierung mit Codebooks und Metadaten (OSF)
+- *Datenqualität & Messung:* Psychometrie (Reliabilität, Validität, Messinvarianz), standardisierte Datenaufbereitung, Qualitätsprüfungen, Dokumentation
+- *Statistische Analyse:* hierarchische Bayes-Modelle (brms/Stan), Strukturgleichungsmodelle, gemischte Modelle, Unsicherheitsquantifizierung, Studien- und Erhebungsdesign
+- *Werkzeuge:* R (Experte: Paketentwicklung, tidyverse, automatisierte Tests), Python (Grundkenntnisse), Git/GitHub, Quarto für reproduzierbare Berichte
+- *Beratung & Vermittlung:* statistische Beratung für Nicht-Fachleute, Statistik-Lehre für bis zu 160 Studierende, Datenvisualisierung
+]
+```
+
+# Berufserfahrung
+
+```{r}
+render_work(lang, max_entries = 3, details_key = "details_public")
+```
+
+# Software & Dateninfrastruktur
+
+```{=typst}
+#resume-entry(title: [bmm: Bayesianische Messmodelle in R], location: [CRAN], date: [2023 -- heute], description: [Hauptautor und Maintainer])
+#resume-item[
+- Open-Source-Werkzeug für Bayesianische Messmodelle; 8'000+ Downloads; dokumentiert, getestet, versioniert (CI/CD über GitHub Actions)
+]
+
+#resume-entry(title: [rtprep und jatosr: R-Pakete für Datenflüsse in der Forschung], location: [CRAN-Einreichung], date: [2026 -- heute], description: [Autor und Maintainer])
+#resume-item[
+- jatosr: automatisierter Datenabruf über die Schnittstelle der Studienplattform JATOS; rtprep: einheitliche, regelbasierte Aufbereitung von Reaktionszeitdaten
+]
+```
+
+# Gremien & Qualitätssicherung
+
+```{r}
+render_self_governance(lang)
+```
+
+```{=typst}
+#resume-item[
+- Herausgebertätigkeit (Begutachtung und Qualitätssicherung wissenschaftlicher Publikationen): Associate Editor, _Journal of Cognition_; Consulting Editor, _Behavior Research Methods_; Mitglied des Editorial Board, _Psychological Science_
+- Gutachter für den Schweizerischen Nationalfonds (SNF)
+]
+```
+
+# Ausbildung
+
+```{r}
+render_education(lang, compact = TRUE)
+```
+
+# Sprachkenntnisse
+
+```{r}
+render_languages(lang)
+```
+
+# Wissenschaftliche Bilanz
+
+```{r}
+data <- yaml::read_yaml("data/publications.yml")
+stats <- data$citation_stats
+typst_block(sprintf(
+  "#resume-item[\n- %s begutachtete Fachartikel und %s Preprints; h-Index %s, Zitationen: %s\n]\n",
+  stats$total_articles, stats$total_preprints, stats$h_index, stats$total_citations
+))
+```
