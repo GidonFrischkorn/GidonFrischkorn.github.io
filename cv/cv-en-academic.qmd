@@ -16,8 +16,8 @@ author:
       text: GidonFrischkorn
       url: "https://github.com/GidonFrischkorn"
     - icon: fa brands orcid
-      text: 0000-0002-7340-3409
-      url: "https://orcid.org/0000-0002-7340-3409"
+      text: 0000-0002-5055-9764
+      url: "https://orcid.org/0000-0002-5055-9764"
 format:
   awesomecv-typst:
     keep-typ: false
