@@ -237,9 +237,9 @@ software:
 - text: 'bmm (R package). Lead author. R package for Easy and Accessible Bayesian
     Measurement Models Using ''brms''. Available at: https://cran.r-project.org/web/packages/bmm/index.html'
 citation_stats:
-  total_citations: '> 1000 (OpenAlex)'
-  h_index: 16
-  i10_index: 19
+  total_citations: 955 (OpenAlex)
+  h_index: 15
+  i10_index: 20
   total_articles: 34
   total_preprints: 9
 selected_for_industry:
