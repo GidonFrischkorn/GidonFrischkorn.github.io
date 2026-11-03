@@ -25,7 +25,7 @@ I address both problems directly, with three goals:
 2. Test whether binding ability explains why working memory capacity is limited.
 3. Test whether binding ability explains why working memory capacity predicts intelligence, processing speed, and learning.
 
-That is the test the binding hypothesis has been waiting for. The project runs from 2023 to 2026 at the University of Zurich, funded by an Ambizione grant from the Swiss National Science Foundation (grant PZ00P1_208828).
+That is the test the binding hypothesis has been waiting for. The project ran from 2023 to 2026 at the University of Zurich, funded by an Ambizione grant from the Swiss National Science Foundation (grant PZ00P1_208828).
 
 ## What we have found so far
 

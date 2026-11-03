@@ -29,13 +29,13 @@ Together with [Ven Popov](https://venpopov.com), I co-develop the R package [bmm
 
 - [Memory Measurement Model (M3)](https://doi.org/10.1037/rev0000159) (Oberauer & Lewandowsky, 2019), with ready-made versions for simple and complex span tasks and a custom version for other categorical decision tasks
 
-**Speeded decision-making (new in the upcoming release, already available in the [development version](https://venpopov.com/bmm/dev/)):**
+**Speeded decision-making (since bmm 1.4, on CRAN):**
 
 - [Diffusion Decision Model](https://doi.org/10.1037/0033-295X.85.2.59) (Ratcliff, 1978)
 - [EZ-diffusion model](https://doi.org/10.3758/BF03194023) (Wagenmakers et al., 2007), estimated hierarchically following [Chávez De la Peña & Vandekerckhove (2025)](https://doi.org/10.3758/s13423-025-02729-y)
 - [Censored Shifted Wald model](https://doi.org/10.1177/0146621617710465) (Miller et al., 2017), with a censoring version for high-accuracy tasks and a competing-risks version for tasks with balanced accuracy
 
-Each model ships with documentation, default priors, a worked-example [vignette](https://venpopov.com/bmm/articles/index.html), and density and random generation functions for exploring what the model predicts before fitting it.
+Each model ships with documentation, default priors, a worked-example [vignette](https://venpopov.com/bmm/articles/index.html), and density and random generation functions for exploring what the model predicts before fitting it. Two companions grew out of the package: the [bmm model explorer](https://www.gfrischkorn.org/bmm-explorer/), an in-browser page per model with sliders for its parameters and a plot of what it predicts, and [bmmtools](https://www.gfrischkorn.org/bmmtools/), which runs parameter recovery, prior predictive checks, and simulation-based calibration on fitted bmm models.
 
 ## Teaching these models to PhD students
 
