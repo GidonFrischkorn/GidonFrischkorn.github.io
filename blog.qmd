@@ -1,6 +1,7 @@
 ---
 title: "Blog"
-description: "Probability distributions for psychological data analysis"
+subtitle: "On psychological measurement, cognitive modelling, Bayesian statistics, and reproducible research in R"
+description: "Blog by Gidon Frischkorn on psychological measurement, cognitive modelling, Bayesian statistics, and reproducible research in R."
 listing:
   id: posts
   contents: posts
@@ -14,4 +15,3 @@ listing:
 page-layout: full
 ---
 
-Posts on probability distributions as claims about psychological processes: what choosing a distribution says about the mechanism that generated the data, and what it leaves open. The first series covers the workhorse distributions (normal, binomial, response-time families), the second the distributions behind common psychological data types, and the third the step from distributions to cognitive measurement models. Posts carry reproducible R code. Subscribe via the [RSS feed](blog.xml).
