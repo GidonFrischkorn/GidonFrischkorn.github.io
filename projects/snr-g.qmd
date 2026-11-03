@@ -1,0 +1,26 @@
+---
+title: "The Signal-to-Noise Ratio Hypothesis"
+subtitle: "A single parameter behind the positive manifold?"
+description: "Testing whether the signal-to-noise ratio of cognitive processing, a parameter shared by models of very different tasks, explains why almost all cognitive abilities correlate."
+date: 2025-01-01
+date-modified: 2026-11-03
+image: /images/card-snr.png
+---
+
+> If there is a common cause behind general intelligence, it should be a property of the cognitive system that affects performance regardless of what is processed and for what purpose.
+
+Scores on almost every cognitive task correlate positively. The usual candidates for a common cause, working memory capacity or processing speed, are themselves task performances in need of explanation. The signal-to-noise ratio (SNR) hypothesis proposes a different kind of candidate: the fidelity with which the cognitive system processes information.
+
+## Why the SNR
+
+In computational models of cognition, individual differences in performance are differences in model parameters. A general property of the system should therefore show up as a parameter that models of very different activities share. Models of simple decisions, sensory discrimination, categorization, decision making, learning, and working memory have little in common, except that each contains a parameter for the signal-to-noise ratio of processing. For evidence accumulation models of simple decisions and for models of working memory, this parameter is substantially correlated with fluid intelligence.
+
+## A test without memory
+
+If the SNR is what links working memory to intelligence, a task that needs no memory but depends on the quality of the perceptual signal should carry part of that link. In two studies with 346 and 267 participants, perceptual matching tasks for colour, orientation, and luminance did exactly that: they accounted for a large part of the correlation between working memory capacity and fluid intelligence. The manuscript is submitted; data, code, and the Bayesian SEM pipeline are on GitHub.
+
+## Publications & preprints
+
+- Oberauer, K., Schubert, A.-L., **Frischkorn, G. T.**, Nunez, M. D., & Fiebach, C. J. (under review at Perspectives on Psychological Science). The signal-to-noise ratio hypothesis of intelligence. <https://osf.io/nkms3_v2>
+- **Frischkorn, G. T.**, Oberauer, K., & Souza, A. S. (submitted). No memory needed? Perceptual matching accounts for a large part of the working memory-intelligence link. [Code and data](https://github.com/GidonFrischkorn/SensoryDiscriminationVWM)
+- **Frischkorn, G. T.**, Schubert, A.-L., & Hagemann, D. (2019). Processing speed, working memory, and executive functions: Independent or inter-related predictors of general intelligence. *Intelligence*, *75*, 95–110. <https://doi.org/10/gf3sxs>

@@ -1,6 +1,6 @@
 ---
 title: Curriculum Vitae
-date: 2026-02-21
+description: "Academic and industry CVs of Gidon Frischkorn (PDF, English and German)."
 title-block-banner: true
 ---
 

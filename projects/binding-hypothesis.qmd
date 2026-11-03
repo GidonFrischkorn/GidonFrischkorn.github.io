@@ -4,7 +4,7 @@ subtitle: "A unified account of cognitive individual differences?"
 description: "Testing whether the ability to form and maintain bindings in working memory explains why working memory capacity is limited and why it predicts intelligence."
 date: 2023-01-01
 date-modified: 2026-07-08
-image: /images/Banner.png
+image: /images/card-binding.png
 ---
 
 Almost all cognitive processing requires the temporary storage of information. When solving (3 + 6) * 2, you have to hold the intermediate result in mind while completing the calculation. The system responsible for this is working memory (WM). Working memory capacity — how much information a person can hold active at once — predicts a surprisingly broad range of other abilities, including fluid intelligence, processing speed, and learning. What limits that capacity, though, is still not well understood.
@@ -25,7 +25,7 @@ I address both problems directly, with three goals:
 2. Test whether binding ability explains why working memory capacity is limited.
 3. Test whether binding ability explains why working memory capacity predicts intelligence, processing speed, and learning.
 
-That is the test the binding hypothesis has been waiting for. The project runs from 2023 to 2026 at the University of Zurich, funded by an Ambizione grant from the Swiss National Science Foundation (grant PZ00P1_208828).
+That is the test the binding hypothesis has been waiting for. The project ran from 2023 to 2026 at the University of Zurich, funded by an Ambizione grant from the Swiss National Science Foundation (grant PZ00P1_208828).
 
 ## What we have found so far
 

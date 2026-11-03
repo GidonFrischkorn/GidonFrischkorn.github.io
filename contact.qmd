@@ -1,4 +1,5 @@
 ---
+description: "Contact Gidon Frischkorn, Cognitive Psychology Lab, University of Zurich."
 title: Get in Touch
 subtitle: Feel free to reach out by email.
 title-block-banner: true

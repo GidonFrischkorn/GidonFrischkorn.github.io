@@ -1,0 +1,17 @@
+---
+title: "Blog"
+subtitle: "On psychological measurement, cognitive modelling, Bayesian statistics, and reproducible research in R"
+description: "Blog by Gidon Frischkorn on psychological measurement, cognitive modelling, Bayesian statistics, and reproducible research in R."
+listing:
+  id: posts
+  contents: posts
+  type: default
+  sort: "date desc"
+  categories: true
+  sort-ui: false
+  filter-ui: false
+  fields: [image, date, title, description, categories, reading-time]
+  feed: true
+page-layout: full
+---
+
