@@ -5,7 +5,7 @@ date: 2026-07-06
 categories: [statistics, distributions, workhorse-distributions]
 image: clt-fallback.png
 bibliography: references.bib
-draft: false
+draft: true
 ---
 
 ```{=html}

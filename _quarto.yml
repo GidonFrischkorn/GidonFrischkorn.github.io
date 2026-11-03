@@ -58,8 +58,12 @@ website:
       - icon: linkedin
         href: https://www.linkedin.com/in/gidon-frischkorn-4913431b1/
         aria-label: LinkedIn
+      - icon: rss
+        href: blog.xml
+        aria-label: RSS feed
   page-footer:
     center: "© 2026 Gidon Frischkorn"
+    right: "[RSS](blog.xml)"
   back-to-top-navigation: false
 
 format:

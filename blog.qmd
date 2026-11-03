@@ -13,3 +13,5 @@ listing:
   feed: true
 page-layout: full
 ---
+
+Posts on probability distributions as claims about psychological processes: what choosing a distribution says about the mechanism that generated the data, and what it leaves open. The first series covers the workhorse distributions (normal, binomial, response-time families), the second the distributions behind common psychological data types, and the third the step from distributions to cognitive measurement models. Posts carry reproducible R code. Subscribe via the [RSS feed](blog.xml).
