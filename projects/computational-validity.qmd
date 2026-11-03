@@ -1,0 +1,38 @@
+---
+title: "Validity as a Theoretical Problem"
+subtitle: "A computational psychometrics perspective on how to measure cognition"
+description: "Using generative cognitive models to test, by simulation, which behavioral indicators track which cognitive process, independently of cross-task correlations."
+date: 2025-06-01
+date-modified: 2026-11-03
+image: /images/card-validity.png
+---
+
+> Psychometric methods alone cannot determine what cognitive tasks measure.
+
+Validity asks whether a behavioral indicator reflects the cognitive process it is meant to measure. The usual answer comes from convergent and discriminant correlations. That answer is circular whenever the construct itself is defined by the same correlational pattern used to validate it, which is the normal case for attention control, working memory capacity, and processing speed.
+
+## The approach
+
+A computational model of a task specifies how cognitive processes generate behavior. Once that is written down, validity can be assessed for each indicator on its own: simulate participants who differ in one process parameter, compute the indicators a researcher would compute, and see which of them move. No second task is needed.
+
+We did this for two models of conflict processing, the Diffusion Model for Conflict and the Shrinking Spotlight model, applied to the tasks commonly used to measure attention control. Four phenomena emerged from both models despite their different processing assumptions:
+
+1. **Process impurity.** Many indicators conflate several processes.
+2. **Differential validity.** Response-time difference scores uniquely reflect attention-control parameters under both models.
+3. **Reliability-validity dissociations.** Highly reliable mean scores show weaker validity for attention control than less reliable difference scores.
+4. **Correlation transfer failure.** Process-level correlations across tasks transfer to indicator-level correlations only to the extent that the indicators validly reflect the correlated parameters.
+
+The conclusion is that advancing validity requires explicit theories of how cognition generates behavior, not more sophisticated psychometric methods.
+
+## Same, same, but different?
+
+A companion theoretical note applies the same logic to memory: multinomial processing tree (MPT) models and the Memory Measurement Model (M3) are often treated as competing accounts of discrete versus continuous memory representations. For categorical response frequencies, the two frameworks are in many cases equivalent, either with a one-to-one parameter map or in the distributions they can reach, and only in specific designs genuinely distinct. The note works out when a comparison between them can adjudicate between the theories at all. It is in preparation for *Psychological Review*.
+
+## Materials
+
+- [ComputationalValidity](https://github.com/GidonFrischkorn/ComputationalValidity): the R package with the simulation framework, the manuscript's analyses and figures, and an extension of the framework to the M3 for complex span tasks.
+
+## Publications & preprints
+
+- **Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (under review at Psychological Review). Validity is a theoretical problem: A computational psychometrics perspective on how to measure cognition. <https://osf.io/pczua_v3>
+- **Frischkorn, G. T.**, & Oberauer, K. (2025). Is the antisaccade task a valid measure of inhibition? *Journal of Experimental Psychology: General*. <https://doi.org/10.1037/xge0001808>

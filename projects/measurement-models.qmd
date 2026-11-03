@@ -3,7 +3,7 @@ title: "Accessible Cognitive Measurement Models"
 subtitle: "Easing the application and use of formal models"
 description: "Implementing commonly used cognitive measurement models in accessible R packages so more researchers can use them in their work."
 date: 2022-12-02
-image: /images/Banner.png
+image: /images/card-measurement.png
 ---
 
 > Cognitive measurement models provide a mathematical formalization of the cognitive processes underlying observed behavior.
@@ -28,6 +28,10 @@ Together with [Ven Popov](https://venpopov.com), I co-develop the R package [bmm
 **Working memory tasks with categorical responses:**
 
 - [Memory Measurement Model (M3)](https://doi.org/10.1037/rev0000159) (Oberauer & Lewandowsky, 2019), with ready-made versions for simple and complex span tasks and a custom version for other categorical decision tasks
+
+**Signal detection (since bmm 1.4, on CRAN):**
+
+- Yes/no, m-alternative forced choice, and rating-scale signal detection models
 
 **Speeded decision-making (since bmm 1.4, on CRAN):**
 

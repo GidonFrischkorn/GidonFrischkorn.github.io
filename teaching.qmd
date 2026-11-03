@@ -15,15 +15,26 @@ I run workshops on statistics and computational modelling in psychology, current
 
 If you are interested in including one of my workshops in your PhD or graduate program, please get in touch.
 
+### Recent and upcoming
+
+- **November 2026**: [Analyzing behavioral data at the cognitive process level with bmm in R](https://github.com/GidonFrischkorn/ShortWS_CognitiveModelling_bmm), 90-minute lunchtime workshop, Psychonomic Society Annual Meeting, San Diego
+- **September 2025**: Analyzing data on the level of cognitive processes, two-day workshop, 24th Conference of the European Society of Cognitive Psychology, Sheffield
+- **June 2025**: Introduction to structural equation modeling in R, two-day course, Graduate School of the Faculty of Arts and Social Sciences, University of Zurich
+- **April 2024**: Bayesian modelling for observational data, R group, Institute of Psychology, University of Zurich
+- **September 2023**: Improving inference about cognitive processes using mixture models, 23rd Conference of the European Society of Cognitive Psychology, Porto
+
 ## Lectures & Seminars
 
-I have also taught courses in undergraduate and graduate programs at Heidelberg University, the University of Zurich, and the University of Lucerne, covering:
+Courses I have taught in undergraduate and graduate programs, most recently:
 
-- Introduction to Statistics
-- Introduction to Psychometrics
-- Current topics in Cognitive Psychology
+- **Statistics I** (B.Sc. Psychology, University of Lucerne, autumn 2025), with open [exercise materials](https://unilu-vpf-statistik.github.io/uebung_statistik1/)
+- **Statistics IV: Reproducible data analysis in R** (B.Sc. Psychology, University of Lucerne, spring 2026), with interactive [Quarto/webR exercises](https://unilu-vpf-statistik.github.io/uebung_statistik4/)
+- **Introduction to Bayesian Statistics** (M.Sc. Psychology, University of Zurich, spring 2024)
+- **Using simulations to challenge your intuitions about statistics and cognitive theories** (M.Sc. Psychology, University of Zurich, spring 2022 and 2023)
+- **Cutting edge research in human cognition** (M.Sc. Psychology, University of Zurich, autumn 2021)
+- **Cognitive Psychology I** (B.Sc. Psychology, University of Zurich, spring 2021, co-taught)
 
-These are typically weekly 2-hour sessions with work to be completed between meetings.
+Earlier courses at Heidelberg University covered introductory statistics, psychometrics, and current topics in cognitive psychology. All are weekly sessions with work to be completed between meetings.
 
 ## Teaching philosophy
 

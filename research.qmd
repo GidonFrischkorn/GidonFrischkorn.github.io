@@ -1,0 +1,61 @@
+---
+title: Research
+description: "Research programme of Gidon Frischkorn: what limits working memory and why it predicts reasoning; Bayesian hierarchical measurement models (bmm); validity as a theoretical problem; the signal-to-noise ratio hypothesis of intelligence."
+title-block-banner: true
+toc: true
+toc-location: right
+listing:
+  - id: projects
+    contents: projects/*.qmd
+    type: grid
+    grid-columns: 2
+    fields: [image, title, subtitle, description]
+    sort: "date desc"
+    sort-ui: false
+    filter-ui: false
+---
+
+I work on measurement, on whether the things we measure in psychology track the cognitive processes they are supposed to. My research uses formal mathematical models to connect observable data (response times, accuracy, choices) to the processes that produced them. Most of my empirical work is in working memory, processing speed, and attention, but the question running through all of it is the same: are we measuring what we think we are?
+
+For me, a statistical model is a formal statement about how a cognitive process works. Fitting it to data is a way of asking whether a theoretical idea is coherent. That is why my work pairs formal models with targeted experimental designs, so both the theory and the data are on the hook for which conclusions are defensible.
+
+In one line: psychological measurement and cognitive psychometrics · Bayesian and simulation-based modelling · validation of measurement procedures · individual differences in cognitive performance.
+
+## What limits working memory, and why does it predict reasoning?
+
+Working memory holds the few representations that thought can operate on at any moment, and individual differences in its capacity are among the strongest predictors of reasoning. My Ambizione project tested the binding hypothesis: that capacity is limited by the number and strength of bindings a person can form and maintain, and that binding ability explains the link to intelligence. The findings so far say that updating and forgetting work on bindings rather than on items, that a classic inhibition task measures binding strength more than inhibition, and that one prediction of the hypothesis failed. [Project page](projects/binding-hypothesis.qmd).
+
+- Frischkorn, G. T., & Oberauer, K. (2025). Is the antisaccade task a valid measure of inhibition? *Journal of Experimental Psychology: General*. <https://doi.org/10.1037/xge0001808>
+- Li, C., Frischkorn, G. T., & Oberauer, K. (2025). Updating of information in working memory: Time course and consequences. *Cognitive Psychology*, *156*, 101702. <https://doi.org/10.1016/j.cogpsych.2024.101702>
+- Frischkorn, G. T., Courage, I., Dames, H., Dignath, D., Pfeuffer, C. U., Schiltenwolf, M., Kiesel, A., & Oberauer, K. (2026). Bindings for action. *Journal of Cognition*, *9*(1), 16. <https://doi.org/10.5334/joc.488>
+
+## Measuring cognitive processes in individuals
+
+Task scores mix the process of interest with strategy, speed-accuracy trade-offs, and motor time. Cognitive measurement models separate them, but only if researchers can fit them. With Ven Popov I develop the R package [bmm](https://venpopov.com/bmm/), which estimates mixture, interference, memory measurement, signal detection, and diffusion models in a hierarchical Bayesian framework with the brms formula syntax. Around it sit the [bmm model explorer](https://www.gfrischkorn.org/bmm-explorer/), [bmmtools](https://www.gfrischkorn.org/bmmtools/) for recovery and calibration checks, and tutorial papers written as self-study material. [Project page](projects/measurement-models.qmd).
+
+- Frischkorn, G. T., & Popov, V. (2025). A tutorial for estimating Bayesian hierarchical mixture models for visual working memory tasks: Introducing the Bayesian Measurement Modeling (bmm) package for R. *Behavior Research Methods*, *57*(5), 144. <https://doi.org/10.3758/s13428-025-02643-0>
+- Li, C., Frischkorn, G. T., & Oberauer, K. (under review). Measuring individual differences with Bayesian hierarchical cognitive models. <https://osf.io/24w3z_v1>
+- Nunez, M. D., Schubert, A.-L., Frischkorn, G. T., & Oberauer, K. (2025). Cognitive models of decision-making with identifiable parameters: Diffusion decision models with within-trial noise. *Journal of Mathematical Psychology*, *125*, 102917. <https://doi.org/10.1016/j.jmp.2025.102917>
+
+## Validity as a theoretical problem
+
+Correlations between tasks cannot tell us what a task measures when the constructs are defined through those same correlations. A generative model of the task can: simulate from it, and check which behavioral indicator tracks which process parameter. With two models of conflict processing we found indicators that conflate several processes, difference scores that are less reliable but more valid than mean scores, and process correlations that do not transfer to indicator correlations. A companion note asks when discrete-state and continuous-activation models of categorical memory data can be told apart at all. [Project page](projects/computational-validity.qmd).
+
+- Frischkorn, G. T., Rebmann, R., & Oberauer, K. (under review). Validity is a theoretical problem: A computational psychometrics perspective on how to measure cognition. <https://osf.io/pczua_v3>
+- [ComputationalValidity](https://github.com/GidonFrischkorn/ComputationalValidity): R package with the simulation framework and the manuscript's analyses.
+
+## The signal-to-noise ratio hypothesis of intelligence
+
+If one property of the cognitive system drives the positive manifold, it should appear as a parameter shared by models of very different tasks. Models of simple decisions, sensory discrimination, categorization, learning, and working memory share exactly one such parameter: the signal-to-noise ratio of processing. In evidence accumulation and working memory models this parameter correlates with fluid intelligence, and a perceptual matching task without any memory demand accounts for a large part of the working memory-intelligence link. [Project page](projects/snr-g.qmd).
+
+- Oberauer, K., Schubert, A.-L., Frischkorn, G. T., Nunez, M. D., & Fiebach, C. J. (under review). The signal-to-noise ratio hypothesis of intelligence. <https://osf.io/nkms3_v2>
+- Frischkorn, G. T., Oberauer, K., & Souza, A. S. (submitted). No memory needed? Perceptual matching accounts for a large part of the working memory-intelligence link.
+
+## Tools
+
+The packages that came out of this work, for model fitting, response-time preparation, and data collection on JATOS and Prolific, are on the [software page](software.qmd).
+
+## Project pages
+
+::: {#projects}
+:::

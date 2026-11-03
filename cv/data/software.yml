@@ -14,8 +14,8 @@
     en: "Author and maintainer"
     de: "Autor und Maintainer"
   description:
-    en: "One interface for screening, trimming, and aggregating response time data; submitted to CRAN, available via R-universe"
-    de: "Einheitliche Schnittstelle für Screening, Trimming und Aggregation von Reaktionszeiten; bei CRAN eingereicht, verfügbar über R-universe"
+    en: "One interface for screening, trimming, and aggregating response time data; on CRAN since October 2026"
+    de: "Einheitliche Schnittstelle für Screening, Trimming und Aggregation von Reaktionszeiten; seit Oktober 2026 auf CRAN"
   url: "https://www.gfrischkorn.org/rtprep/"
 
 - name: "jatosr"
@@ -27,3 +27,23 @@
     en: "R client for the 'JATOS' REST API: credential handling, incremental downloads, and reading jsPsych data into one table"
     de: "R-Client für die 'JATOS' REST-API: sichere Zugangsdaten, inkrementelle Downloads und Einlesen von jsPsych-Daten in eine Tabelle"
   url: "https://www.gfrischkorn.org/jatosr/"
+
+- name: "bmmtools"
+  type: "R package"
+  role:
+    en: "Author and maintainer"
+    de: "Autor und Maintainer"
+  description:
+    en: "Validation companion to 'bmm': parameter recovery, prior predictive checks, recovery of correlations, and simulation-based calibration"
+    de: "Validierungsbegleiter zu 'bmm': Parameter-Recovery, Prior-Predictive-Checks, Recovery von Korrelationen und simulationsbasierte Kalibrierung"
+  url: "https://www.gfrischkorn.org/bmmtools/"
+
+- name: "apabayes"
+  type: "R package"
+  role:
+    en: "Author and maintainer"
+    de: "Autor und Maintainer"
+  description:
+    en: "APA 7 inline statistics and tables for 'brms', 'bmm', 'lavaan' and 'blavaan' models in apaquarto documents"
+    de: "APA-7-Inline-Statistiken und Tabellen für 'brms'-, 'bmm'-, 'lavaan'- und 'blavaan'-Modelle in apaquarto-Dokumenten"
+  url: "https://www.gfrischkorn.org/apabayes/"
