@@ -2,6 +2,15 @@ overview:
   en: "4 lecture courses; more than 10 seminars; 6 workshops"
   de: "4 Vorlesungen; mehr als 10 Seminare; 6 Workshops"
 
+# Hours per semester (Luzern guideline: "in Stunden/Semester") are computed in
+# helpers.R as sws x weeks x share; share = own fraction of sessions when co-taught.
+# 14 teaching weeks confirmed by Gidon (2026-11-03).
+hours_rule:
+  weeks: 14
+  note:
+    en: "Hours/semester = contact hours/week × %s teaching weeks; for co-taught courses, own share only"
+    de: "Std./Semester = SWS × %s Semesterwochen; bei Ko-Lehre nur der eigene Anteil"
+
 lectures:
   - title:
       en: "Statistics I"
@@ -13,16 +22,15 @@ lectures:
       en: "University of Lucerne"
       de: "Universität Luzern"
     date: "HS 2025"
-    details:
-      en: "3 contact hours/week; 5 ECTS"
-      de: "3 SWS; 5 ECTS"
+    sws: 3
+    ects: 5
     evaluation:
       en: "Overall course rating: 3.0; Instructor: 3.4 (first delivery; large mandatory introductory cohort)"
       de: "Gesamtbewertung: 3.0; Dozent: 3.4 (erstmalige Durchführung; grosse Pflicht-Einführungskohorte)"
 
   - title:
       en: "Statistics IV (Reproducible Data Analysis in R)"
-      de: "Statistik IV (Reproduzible Datenanalyse in R)"
+      de: "Statistik IV (Reproduzierbare Datenanalyse in R)"
     program:
       en: "B.Sc. Psychology, approx. 80 students"
       de: "B.Sc. Psychologie, ca. 80 Studierende"
@@ -30,13 +38,17 @@ lectures:
       en: "University of Lucerne"
       de: "Universität Luzern"
     date: "FS 2026"
+    sws: 2   # per Gidon 2026-11-03; ECTS still unknown, so not shown
     details:
       en: "Reproducible data analysis in R with interactive Quarto/webR exercise materials"
-      de: "Reproduzible Datenanalyse in R mit interaktiven Quarto/webR-Übungsmaterialien"
-    # TODO: SWS/ECTS und genaue Lehrrolle (Vorlesung vs. Übung) bestätigen; ggf. offizielle Gesamtbewertung/Dozent-Werte wie bei Statistik I einsetzen
+      de: "Reproduzierbare Datenanalyse in R mit interaktiven Quarto/webR-Übungsmaterialien"
+    # TODO: ECTS und genaue Lehrrolle (Vorlesung vs. Übung) bestätigen
+    # Evaluation: same two items as Statistik I (evasys Luzern, 1-6 scale, means):
+    # 5.6 "Lehrveranstaltung insgesamt" mw=4.72, 5.4 "Beitrag des/der Dozierenden" mw=4.92,
+    # n=25 (report "Statistik 4 (Vorlesung)", 12.05.2026). Statistik I (HS 2025): 3.03 / 3.44, n=66.
     evaluation:
-      en: "Clearly positive evaluation (1–6 scale; item medians 5–6): e.g., learning climate 5.2, instructor contact 5.7"
-      de: "Klar positive Evaluation (6er-Skala; Item-Mediane 5–6): u.a. Lernklima 5.2, Betreuung 5.7"
+      en: "Overall course rating: 4.7; Instructor: 4.9"
+      de: "Gesamtbewertung: 4.7; Dozent: 4.9"
 
   - title:
       en: "Cognitive Psychology I"
@@ -48,9 +60,12 @@ lectures:
       en: "University of Zurich"
       de: "Universität Zürich"
     date: "FS 2021"
+    sws: 2
+    ects: 3
+    share: 0.5
     details:
-      en: "2 contact hours/week; 3 ECTS; co-taught with Dr. Lea Bartsch; fully responsible for 6 of 12 lectures and 50% of the exam"
-      de: "2 SWS; 3 ECTS; Ko-Lehre mit Dr. Lea Bartsch; vollständig verantwortlich für 6 von 12 Vorlesungen und 50% der Prüfung"
+      en: "Co-taught with Dr. Lea Bartsch; fully responsible for 6 of 12 lectures and 50% of the exam"
+      de: "Ko-Lehre mit Dr. Lea Bartsch; vollständig verantwortlich für 6 von 12 Vorlesungen und 50% der Prüfung"
 
 seminars:
   - title:
@@ -63,9 +78,12 @@ seminars:
       en: "University of Zurich"
       de: "Universität Zürich"
     date: "FS 2024"
+    sws: 2
+    ects: 4
+    share: 0.5
     details:
-      en: "2 SWS; 4 ECTS; co-taught with Philipp Musfeld; fully responsible for 6 of 12 sessions and 50% of the exam"
-      de: "2 SWS; 4 ECTS; Ko-Lehre mit Philipp Musfeld; vollständig verantwortlich für 6 von 12 Sitzungen und 50% der Prüfung"
+      en: "Co-taught with Philipp Musfeld; fully responsible for 6 of 12 sessions and 50% of the exam"
+      de: "Ko-Lehre mit Philipp Musfeld; vollständig verantwortlich für 6 von 12 Sitzungen und 50% der Prüfung"
 
   - title:
       en: "Using simulations to challenge your intuitions about cognitive theories"
@@ -77,9 +95,8 @@ seminars:
       en: "University of Zurich"
       de: "Universität Zürich"
     date: "FS 2023"
-    details:
-      en: "2 SWS; 4 ECTS"
-      de: "2 SWS; 4 ECTS"
+    sws: 2
+    ects: 4
     evaluation:
       en: "Overall course rating: 4.9; Instructor: 5.7"
       de: "Gesamtbewertung: 4.9; Dozent: 5.7"
@@ -94,9 +111,8 @@ seminars:
       en: "University of Zurich"
       de: "Universität Zürich"
     date: "FS 2022"
-    details:
-      en: "2 SWS; 4 ECTS"
-      de: "2 SWS; 4 ECTS"
+    sws: 2
+    ects: 4
 
   - title:
       en: "Cutting Edge Research in Human Cognition"
@@ -108,9 +124,12 @@ seminars:
       en: "University of Zurich"
       de: "Universität Zürich"
     date: "HS 2021"
+    sws: 2
+    ects: 4
+    share: 0.5
     details:
-      en: "2 SWS; 4 ECTS; co-taught with Dr. Lea Bartsch; fully responsible for 6 of 12 sessions and 50% of the exam"
-      de: "2 SWS; 4 ECTS; Ko-Lehre mit Dr. Lea Bartsch; vollständig verantwortlich für 6 von 12 Sitzungen und 50% der Prüfung"
+      en: "Co-taught with Dr. Lea Bartsch; fully responsible for 6 of 12 sessions and 50% of the exam"
+      de: "Ko-Lehre mit Dr. Lea Bartsch; vollständig verantwortlich für 6 von 12 Sitzungen und 50% der Prüfung"
     evaluation:
       en: "Overall course rating: 5.6; Instructor: 5.7"
       de: "Gesamtbewertung: 5.6; Dozent: 5.7"

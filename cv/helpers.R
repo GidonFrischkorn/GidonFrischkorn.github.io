@@ -101,14 +101,30 @@ render_work <- function(lang = "en", max_entries = NULL, max_details = NULL,
 }
 
 # Render publication list (preprints or articles)
-render_publications <- function(type = "articles", lang = "en", max_entries = NULL) {
+# kind = NULL lists every entry with its stored number (unchanged behaviour).
+# kind = "article" / "review" keeps only entries of that kind (entries without a
+# `kind` field count as "article") and numbers the filtered list from n down to 1,
+# so separately listed sections have no gaps.
+render_publications <- function(type = "articles", lang = "en", max_entries = NULL,
+                                kind = NULL) {
   data <- yaml::read_yaml("data/publications.yml")
   pubs <- data[[type]]
+  if (!is.null(kind)) {
+    pub_kind <- vapply(pubs, function(pub) {
+      if (is.null(pub$kind)) "article" else pub$kind
+    }, character(1))
+    pubs <- pubs[pub_kind == kind]
+  }
   if (!is.null(max_entries)) {
     pubs <- pubs[seq_len(min(max_entries, length(pubs)))]
   }
-  entries <- vapply(pubs, function(pub) {
-    paste0(pub$number, ". ", md_to_typst(pub$text), "\n\n")
+  numbers <- if (is.null(kind)) {
+    vapply(pubs, function(pub) as.character(pub$number), character(1))
+  } else {
+    as.character(rev(seq_along(pubs)))
+  }
+  entries <- vapply(seq_along(pubs), function(i) {
+    paste0(numbers[i], ". ", md_to_typst(pubs[[i]]$text), "\n\n")
   }, character(1))
   typst_block(entries)
 }
@@ -178,8 +194,8 @@ render_funding <- function(lang = "en", include_summaries = TRUE, max_entries = 
     }
     typst_entry(
       title = get_lang(grant$title, lang),
-      location = sprintf("%s (%s)", grant$agency, grant$amount),
-      date = grant$duration,
+      location = sprintf("%s (%s)", grant$agency, get_lang(grant$amount, lang)),
+      date = get_lang(grant$duration, lang),
       description = sprintf("%s | %s", grant$role, get_lang(grant$type, lang)),
       details = details
     )
@@ -207,50 +223,100 @@ render_travel_awards <- function(lang = "en") {
   typst_block(entries)
 }
 
-# Render teaching - lectures
-render_lectures <- function(lang = "en") {
+# Teaching load of one course: "3 SWS; 5 ECTS; 42 Std./Semester".
+# Hours/semester = sws x weeks x share (share = own fraction when co-taught).
+# A course without `sws` gets a [VERIFY] marker instead of a guessed number.
+teaching_load <- function(entry, lang = "en", weeks) {
+  sws_label <- if (lang == "de") "SWS" else "contact hours/week"
+  hours_label <- if (lang == "de") "Std./Semester" else "h/semester"
+  if (is.null(entry$sws)) {
+    parts <- if (lang == "de") {
+      "[VERIFY: SWS und Std./Semester]"
+    } else {
+      "[VERIFY: contact hours/week and h/semester]"
+    }
+  } else {
+    share <- if (is.null(entry$share)) 1 else entry$share
+    hours <- entry$sws * weeks * share
+    parts <- sprintf("%s %s", format(entry$sws), sws_label)
+    if (!is.null(entry$ects)) parts <- c(parts, sprintf("%s ECTS", format(entry$ects)))
+    parts <- c(parts, sprintf("%s %s", format(round(hours, 1)), hours_label))
+  }
+  paste(parts, collapse = "; ")
+}
+
+# The hours rule, stated once in the head of the teaching section
+teaching_hours_rule <- function(lang = "en") {
   data <- yaml::read_yaml("data/teaching.yml")
-  entries <- vapply(data$lectures, function(entry) {
+  sprintf(get_lang(data$hours_rule$note, lang), format(data$hours_rule$weeks))
+}
+
+# Render teaching courses (lectures or seminars)
+render_courses <- function(type, lang = "en") {
+  data <- yaml::read_yaml("data/teaching.yml")
+  weeks <- data$hours_rule$weeks
+  entries <- vapply(data[[type]], function(entry) {
+    first_line <- c(teaching_load(entry, lang, weeks), get_lang(entry$details, lang))
     details_parts <- c(
-      get_lang(entry$details, lang),
+      paste(first_line[nzchar(first_line)], collapse = "; "),
       get_lang(entry$program, lang)
     )
     if (!is.null(entry$evaluation)) {
-      eval_label <- if (lang == "de") "Evaluation" else "Evaluation"
       details_parts <- c(details_parts,
-        sprintf("%s: %s", eval_label, get_lang(entry$evaluation, lang)))
+        sprintf("Evaluation: %s", get_lang(entry$evaluation, lang)))
     }
     typst_entry(
       title = get_lang(entry$title, lang),
       location = get_lang(entry$institution, lang),
       date = entry$date,
       description = "",
-      details = details_parts
+      details = details_parts[nzchar(details_parts)]
     )
   }, character(1))
   typst_block(entries)
 }
 
+# Render teaching - lectures
+render_lectures <- function(lang = "en") render_courses("lectures", lang)
+
 # Render teaching - seminars
-render_seminars <- function(lang = "en") {
-  data <- yaml::read_yaml("data/teaching.yml")
-  entries <- vapply(data$seminars, function(entry) {
-    details_parts <- c(
-      get_lang(entry$details, lang),
-      get_lang(entry$program, lang)
-    )
-    if (!is.null(entry$evaluation)) {
-      eval_label <- if (lang == "de") "Evaluation" else "Evaluation"
-      details_parts <- c(details_parts,
-        sprintf("%s: %s", eval_label, get_lang(entry$evaluation, lang)))
-    }
+render_seminars <- function(lang = "en") render_courses("seminars", lang)
+
+# Render supervision - doctoral students
+render_supervision_doctoral <- function(lang = "en") {
+  data <- yaml::read_yaml("data/supervision.yml")
+  entries <- vapply(data$doctoral, function(entry) {
     typst_entry(
-      title = get_lang(entry$title, lang),
-      location = get_lang(entry$institution, lang),
-      date = entry$date,
-      description = "",
-      details = details_parts
+      title = entry$name,
+      location = get_lang(entry$university, lang),
+      date = get_lang(entry$years, lang),
+      description = get_lang(entry$role, lang),
+      details = Filter(nzchar, get_lang(entry$status, lang))
     )
+  }, character(1))
+  typst_block(entries)
+}
+
+# Render supervision - master's and bachelor's theses: one line per level with
+# the count (e.g. "mehr als 5") and the universities where they were supervised.
+# A missing count is shown as [VERIFY].
+render_supervision_theses <- function(lang = "en") {
+  data <- yaml::read_yaml("data/supervision.yml")
+  levels <- list(
+    master = if (lang == "de") "Masterarbeiten" else "Master's theses",
+    bachelor = if (lang == "de") "Bachelorarbeiten" else "Bachelor's theses"
+  )
+  joiner <- if (lang == "de") " und " else " and "
+  entries <- vapply(names(levels), function(level) {
+    entry <- data[[level]]
+    count <- get_lang(entry$count, lang)
+    if (!nzchar(count)) count <- "[VERIFY]"
+    unis <- vapply(entry$universities, get_lang, character(1), lang = lang)
+    # keep title and description of an entry on the same page
+    sprintf("#block(breakable: false)[\n%s]\n", typst_entry(
+      title = sprintf("%s: %s", levels[[level]], count),
+      description = paste(unis, collapse = joiner)
+    ))
   }, character(1))
   typst_block(entries)
 }

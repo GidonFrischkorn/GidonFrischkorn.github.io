@@ -83,16 +83,22 @@ render_funding(lang, include_summaries = TRUE)
 render_travel_awards(lang)
 ```
 
-# Publikationen und Forschungsbeitraege
+# Publikationen und Forschungsbeiträge
 
 ```{r}
 render_citation_stats(lang)
 ```
 
-## Software
+## Begutachtete Zeitschriftenartikel
 
 ```{r}
-render_software(lang)
+render_publications("articles", lang, kind = "article")
+```
+
+## Übersichtsarbeiten
+
+```{r}
+render_publications("articles", lang, kind = "review")
 ```
 
 ## Preprints
@@ -101,13 +107,13 @@ render_software(lang)
 render_publications("preprints", lang)
 ```
 
-## Begutachtete Zeitschriftenartikel
+## Andere Forschungsleistungen
 
 ```{r}
-render_publications("articles", lang)
+render_software(lang)
 ```
 
-# Vortraege und Praesentationen
+# Vorträge und Präsentationen
 
 ## Vortragsreihe
 
@@ -121,13 +127,13 @@ typst_block(typst_entry(
 ))
 ```
 
-## Eingeladene Vortraege
+## Eingeladene Vorträge
 
 ```{r}
 render_invited_talks(lang)
 ```
 
-## Konferenzbeitraege
+## Konferenzbeiträge
 
 ```{r}
 render_conference_summary(lang)
@@ -137,7 +143,8 @@ render_conference_summary(lang)
 
 ```{r}
 data <- yaml::read_yaml("data/teaching.yml")
-typst_block(sprintf("Lehrueberblick (seit 2015, zusammengefasst): %s\n", get_lang(data$overview, lang)))
+typst_block(sprintf("Lehrüberblick (seit 2015, zusammengefasst): %s\\\n(%s)\n",
+                    get_lang(data$overview, lang), teaching_hours_rule(lang)))
 ```
 
 ## Vorlesungen
@@ -150,10 +157,6 @@ render_lectures(lang)
 
 ```{r}
 render_seminars(lang)
-```
-
-```{=typst}
-#pagebreak()
 ```
 
 ## Workshops
@@ -185,15 +188,29 @@ bullets <- paste0("- ", breadth, collapse = "\n")
 typst_block(bullets)
 ```
 
+# Betreuung
+
+## Promotionen
+
+```{r}
+render_supervision_doctoral(lang)
+```
+
+## Master- und Bachelorarbeiten
+
+```{r}
+render_supervision_theses(lang)
+```
+
 # Engagement in der Wissenschaft
 
-## Herausgebertaetigkeiten
+## Herausgebertätigkeiten
 
 ```{r}
 render_editorial(lang)
 ```
 
-## Gutachtertaetigkeiten
+## Gutachtertätigkeiten
 
 ```{r}
 render_reviewing(lang)

@@ -1,0 +1,54 @@
+# Supervision (Nachwuchsförderung), rendered as section "Betreuung" / "Supervision"
+# by render_supervision_doctoral() and render_supervision_theses() in helpers.R.
+# Luzern guideline: "Betreuung von Promotionen / Masterarbeiten / Bachelorarbeiten".
+# Anything not yet confirmed carries [VERIFY].
+
+doctoral:
+  - name: "Chenyu Li"
+    university:
+      en: "University of Zurich"
+      de: "Universität Zürich"
+    role:
+      en: "Co-supervisor together with Klaus Oberauer"
+      de: "Co-Supervisor gemeinsam mit Klaus Oberauer"
+    status:
+      en: "Doctorate completed (defence August 2025), summa cum laude"
+      de: "Promotion abgeschlossen (Verteidigung August 2025), summa cum laude"
+    years: "09/2021 -- 08/2025"
+
+  - name: "Isabel Courage"
+    university:
+      en: "University of Zurich"
+      de: "Universität Zürich"
+    role:
+      en: "Supervision within my SNSF Ambizione project"
+      de: "Betreuung im eigenen SNF-Ambizione-Projekt"
+    status:
+      en: "Completing the dissertation, submission planned for end of 2026: one paper accepted, two submitted, a fourth being finalized for submission"
+      de: "Abschluss der Dissertation, Einreichung Ende 2026 geplant: ein Artikel angenommen, zwei eingereicht, ein vierter vor der Einreichung"
+    years:
+      en: "01/2023 -- present"
+      de: "01/2023 -- heute"
+
+# Theses: lower bounds per level (Gidon, 2026-11-03: exact Heidelberg counts would
+# need the old records). Periods follow the appointments in work.yml
+# (Heidelberg: Ph.D. position 09/2015 -- 12/2018; UZH: since 01/2019).
+master:
+  count:
+    en: "more than 5"
+    de: "mehr als 5"
+  universities:
+    - en: "University of Zurich (since 2019)"
+      de: "Universität Zürich (seit 2019)"
+    - en: "Heidelberg University (2015--2018)"
+      de: "Universität Heidelberg (2015--2018)"
+
+bachelor:
+  count:
+    en: "more than 10"
+    de: "mehr als 10"
+  universities:
+    - en: "University of Zurich (since 2019)"
+      de: "Universität Zürich (seit 2019)"
+    - en: "Heidelberg University (2015--2018)"
+      de: "Universität Heidelberg (2015--2018)"

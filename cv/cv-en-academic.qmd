@@ -89,10 +89,16 @@ render_travel_awards(lang)
 render_citation_stats(lang)
 ```
 
-## Software
+## Peer-Reviewed Journal Articles
 
 ```{r}
-render_software(lang)
+render_publications("articles", lang, kind = "article")
+```
+
+## Review Articles
+
+```{r}
+render_publications("articles", lang, kind = "review")
 ```
 
 ## Preprints
@@ -101,10 +107,10 @@ render_software(lang)
 render_publications("preprints", lang)
 ```
 
-## Peer-Reviewed Journal Articles
+## Other Research Contributions
 
 ```{r}
-render_publications("articles", lang)
+render_software(lang)
 ```
 
 # Presentations
@@ -141,7 +147,8 @@ render_conference_summary(lang)
 
 ```{r}
 data <- yaml::read_yaml("data/teaching.yml")
-typst_block(sprintf("Overview of teaching (since 2015, summarized): %s\n", get_lang(data$overview, lang)))
+typst_block(sprintf("Overview of teaching (since 2015, summarized): %s\\\n(%s)\n",
+                    get_lang(data$overview, lang), teaching_hours_rule(lang)))
 ```
 
 ## Lectures
@@ -183,6 +190,20 @@ data <- yaml::read_yaml("data/teaching.yml")
 breadth <- get_lang(data$breadth, lang)
 bullets <- paste0("- ", breadth, collapse = "\n")
 typst_block(bullets)
+```
+
+# Supervision
+
+## Doctoral Students
+
+```{r}
+render_supervision_doctoral(lang)
+```
+
+## Master's and Bachelor's Theses
+
+```{r}
+render_supervision_theses(lang)
 ```
 
 # Engagement in the Scientific Community

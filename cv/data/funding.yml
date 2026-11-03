@@ -1,3 +1,4 @@
+# SNSF Starting Grant BASIC is requested, not acquired: never add it to this total.
 total:
   en: "Total third-party funding acquired (PI share): > CHF 1,000,000"
   de: "Total eingeworbene Drittmittel (PI-Anteil): > CHF 1'000'000"
@@ -42,14 +43,21 @@ grants:
       de: "SNSF Starting Grant 2026 — BASIC"
     agency: "SNF"
     type:
-      en: "competitive — submitted, decision pending"
-      de: "kompetitiv — eingereicht, Entscheid ausstehend"
+      en: "competitive — submitted; first evaluation stage passed"
+      de: "kompetitiv — eingereicht; erste Evaluationsphase bestanden"
     role: "PI"
-    duration: "ab 2027 (geplant)"
-    amount: "ca. CHF 1.8 Mio. (beantragt)"
+    duration:
+      en: "from 2027 (planned)"
+      de: "ab 2027 (geplant)"
+    # Requested, not awarded: keep "(requested)/(beantragt)" and keep it out of the total.
+    # Exact sum depends on the social-security costs of the assistant professorship
+    # (Gidon, 2026-11-03), hence "approx."
+    amount:
+      en: "approx. CHF 1.85 million (requested)"
+      de: "ca. CHF 1.85 Mio. (beantragt)"
     summary:
-      en: "Submitted to the SNSF on 2026-05-01, decision pending. Project on process-oriented, bias-reduced assessment of individual differences using cognitive measurement models."
-      de: "Eingereicht beim SNF am 01.05.2026, Entscheid ausstehend. Projekt zur prozessorientierten, verzerrungsarmen Erfassung individueller Unterschiede mit kognitiven Messmodellen."
+      en: "Submitted to the SNSF on 1 May 2026; passed the first evaluation stage; presentation to the evaluation panel on 28/29 January 2027. Project on process-oriented, bias-reduced assessment of individual differences using cognitive measurement models."
+      de: "Eingereicht beim SNF am 1. Mai 2026; erste Evaluationsphase bestanden; Präsentation vor dem Evaluationsgremium am 28./29. Januar 2027. Projekt zur prozessorientierten, verzerrungsarmen Erfassung individueller Unterschiede mit kognitiven Messmodellen."
 
   - number: 4
     title:
@@ -61,7 +69,9 @@ grants:
       de: "kompetitiv"
     role: "Co-PI"
     duration: "2022--2026"
-    amount: "€ 44,645"
+    amount:
+      en: "€ 44,645, network total"
+      de: "€ 44'645, Gesamtsumme Netzwerk"
     summary:
       en: "An international scientific network to foster exchange between psychometrics, cognitive psychology, and neurocognition. My role involved co-coordinating the network and shaping its conceptual direction and grant applications."
       de: "Ein internationales wissenschaftliches Netzwerk zur Förderung des Austauschs zwischen Psychometrie, kognitiver Psychologie und Neurokognition. Meine Rolle umfasste die Co-Koordination des Netzwerks sowie die Mitgestaltung seiner konzeptuellen Ausrichtung und Antragsstellung."

@@ -43,6 +43,7 @@ preprints:
 articles:
 - number: 34
   year: '2026'
+  kind: review
   text: '**Frischkorn, G. T.**, Courage, I., Dames, H., Dignath, D., Pfeuffer, C.
     U., Schiltenwolf, M., Kiesel, A., & Oberauer, K. (2026). Bindings for Action:
     Bridging the Gap Between Theories of Procedural Working Memory and Action Control
@@ -61,7 +62,8 @@ articles:
 - number: 31
   year: '2025'
   text: '**Frischkorn, G. T.**, & Oberauer, K. (2025). Is the antisaccade task a valid
-    measure of inhibition? *Journal of Experimental Psychology: General*. https://doi.org/10.1037/xge0001808'
+    measure of inhibition? *Journal of Experimental Psychology: General*, *154*(9),
+    2456--2481. https://doi.org/10.1037/xge0001808'
   industry_annotation:
     en: Rigorous quantitative validation of a widely-used psychological measure —
       directly applicable to psychometric tool evaluation and test validity assessment.
@@ -136,9 +138,10 @@ articles:
     13(1). https://doi.org/10.1038/s41598-023-44080-z
 - number: 18
   year: '2022'
+  kind: review
   text: '**Frischkorn, G. T.**, Wilhelm, O., & Oberauer, K. (2022). Process-oriented
     intelligence research: A review from the cognitive perspective. *Intelligence*,
-    94, 101--681. https://doi.org/10.1016/j.intell.2022.101681'
+    94, 101681. https://doi.org/10.1016/j.intell.2022.101681'
 - number: 17
   year: '2022'
   text: '**Frischkorn, G. T.**, Hilger, K., Kretzschmar, A., & Schubert, A.-L. (2022).
@@ -204,6 +207,7 @@ articles:
     mental speed and mental abilities. *Intelligence*, 71, 66--75. https://doi.org/10/gffjb9'
 - number: 6
   year: '2018'
+  kind: review
   text: '**Frischkorn, G. T.*** , & Schubert, A.-L.* (2018). Cognitive Models in Intelligence
     Research: Advantages and Recommendations for Their Application. *Journal of Intelligence*,
     6(3), 34. https://doi.org/10/gd3vqn'
