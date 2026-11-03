@@ -15,9 +15,16 @@ project:
 
 website:
   title: "Gidon Frischkorn"
-  description: "Psychological Methods - Psychometrics - Cognitive Psychology"
+  description: "Cognitive psychologist at the University of Zurich working on psychological measurement: Bayesian hierarchical measurement models (bmm), the validity of cognitive measures, and individual differences in working memory and attention."
+  image: images/social-card.jpg
+  image-alt: "Gidon Frischkorn, cognitive psychology and psychometrics, University of Zurich"
   favicon: images/favicon.png
   site-url: https://www.gfrischkorn.org
+  open-graph:
+    locale: en_US
+    site-name: "Gidon Frischkorn"
+  twitter-card:
+    card-style: summary_large_image
   navbar:
     left:
       - href: index.qmd
@@ -36,6 +43,16 @@ website:
       - icon: github
         href: https://github.com/GidonFrischkorn
         aria-label: GitHub
+      - icon: orcid
+        href: https://orcid.org/0000-0002-5055-9764
+        aria-label: ORCID
+      - icon: google-scholar
+        href: "https://scholar.google.com/citations?user=gpol3F4AAAAJ&hl=en"
+        aria-label: Google Scholar
+      - icon: bluesky
+        href: https://bsky.app/profile/gidon-frischkorn.bsky.social
+        aria-label: Bluesky
+        rel: me
       - icon: linkedin
         href: https://www.linkedin.com/in/gidon-frischkorn-4913431b1/
         aria-label: LinkedIn
@@ -52,6 +69,41 @@ format:
     include-in-header:
       - text: |
           <link rel="stylesheet" href="/images/academicons-1.9.4/css/academicons.min.css">
+      - text: |
+          <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "@id": "https://www.gfrischkorn.org/#person",
+            "name": "Gidon T. Frischkorn",
+            "givenName": "Gidon",
+            "familyName": "Frischkorn",
+            "honorificPrefix": "Dr.",
+            "jobTitle": "SNF Ambizione Fellow",
+            "url": "https://www.gfrischkorn.org/",
+            "image": "https://www.gfrischkorn.org/images/Frischkorn_Gidon_small.jpg",
+            "email": "mailto:gidon.frischkorn@psychologie.uzh.ch",
+            "affiliation": {
+              "@type": "Organization",
+              "name": "University of Zurich",
+              "department": "Department of Psychology, Cognitive Psychology Lab",
+              "url": "https://www.psychology.uzh.ch/en/areas/nec/allgpsy.html"
+            },
+            "alumniOf": { "@type": "CollegeOrUniversity", "name": "Heidelberg University" },
+            "knowsAbout": [
+              "Psychological measurement", "Cognitive psychometrics",
+              "Bayesian hierarchical measurement models", "Working memory",
+              "Individual differences in cognition", "Computational modeling"
+            ],
+            "sameAs": [
+              "https://orcid.org/0000-0002-5055-9764",
+              "https://scholar.google.com/citations?user=gpol3F4AAAAJ",
+              "https://github.com/GidonFrischkorn",
+              "https://bsky.app/profile/gidon-frischkorn.bsky.social",
+              "https://www.linkedin.com/in/gidon-frischkorn-4913431b1/"
+            ]
+          }
+          </script>
     toc: false
     link-external-icon: false
     link-external-newwindow: true

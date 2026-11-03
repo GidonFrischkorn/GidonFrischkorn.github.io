@@ -1,5 +1,6 @@
 ---
 title: Publications
+description: "Peer-reviewed articles, preprints, and talks by Gidon Frischkorn on working memory, cognitive measurement models, and psychometrics."
 title-block-banner: true
 toc: true
 toc-depth: 2

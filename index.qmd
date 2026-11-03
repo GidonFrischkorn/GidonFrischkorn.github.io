@@ -1,5 +1,7 @@
 ---
 title: "Gidon Frischkorn, Ph.D."
+pagetitle: "Gidon Frischkorn | Cognitive Psychology & Psychometrics, University of Zurich"
+description: "Gidon Frischkorn, SNF Ambizione Fellow at the University of Zurich. Cognitive psychologist working on measurement, computational modeling, and individual differences."
 subtitle: "Psychological Methods · Cognitive Psychology · Psychometrics"
 about:
   template: trestles
@@ -32,6 +34,11 @@ listing:
     sort-ui: false
     filter-ui: false
 ---
+
+```{=html}
+<!-- description: stays in <meta> and link previews; hidden here because the bio below says it -->
+<style>#title-block-header .description { display: none; }</style>
+```
 
 I am Gidon Frischkorn, an SNF Ambizione Fellow at the [Cognitive Psychology Lab](https://www.psychology.uzh.ch/en/areas/nec/allgpsy.html) at the [University of Zurich](https://www.uzh.ch/en.html). I did my PhD at [Heidelberg University](https://www.psychologie.uni-heidelberg.de/arbeitseinheit/persoenlichkeit-und-diagnostik) under Dirk Hagemann, and was elected Fellow of the Psychonomic Society in 2024.
 

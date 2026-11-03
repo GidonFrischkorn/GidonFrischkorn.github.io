@@ -1,5 +1,6 @@
 ---
 title: Curriculum Vitae
+description: "Academic and industry CVs of Gidon Frischkorn (PDF, English and German)."
 title-block-banner: true
 ---
 

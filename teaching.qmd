@@ -1,4 +1,5 @@
 ---
+description: "Workshops on Bayesian statistics with brms, cognitive measurement models with bmm, and structural equation modelling; lectures in statistics and psychometrics."
 title: Teaching & Workshops
 title-block-banner: true
 ---

@@ -1,4 +1,5 @@
 ---
+description: "R packages and tools by Gidon Frischkorn: bmm, bmm-explorer, bmmtools, apabayes, rtprep, jatosr, prolificr."
 title: Software
 subtitle: R packages for cognitive modeling and research workflows
 title-block-banner: true
