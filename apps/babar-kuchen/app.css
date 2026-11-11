@@ -1,0 +1,170 @@
+/* Kuchenverkauf – mobil zuerst.
+   Farben aus theme-light.scss / theme-dark.scss der Website (wie apps/practice/app.css),
+   Schrift = System-Schriften wie auf der Website; keine externen Fonts.
+   Die Hauptfarbe für Text auf Buttons ist gegenüber #2780e3 leicht abgedunkelt,
+   damit weisse Schrift den AA-Kontrast (4.5:1) erreicht. */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica,
+          Roboto, Arial, system-ui, "Noto Sans Ethiopic", "Kefa", "Abyssinica SIL", sans-serif;
+  --bg: #ffffff;
+  --panel: #f7f7f8;
+  --track: #e4e7ea;
+  --hair: #d9dce0;
+  --ink: #212529;
+  --muted: #5f676f;
+  --link: #2780e3;
+  --primary: #1a66c2;
+  --on-primary: #ffffff;
+  --fill: #2780e3;
+  --fill-many: #c77700;
+  --focus: #1a66c2;
+  --error: #b02a37;
+  --error-bg: #fbeaec;
+  --warn-line: #d9b45f;
+  --warn-bg: #fff8e6;
+  --warn-fg: #6b4a12;
+  --ok-bg: #e8f5ec;
+  --ok-line: #6fbf8a;
+}
+/* Dunkel: auf ausdrücklichen Wunsch (data-theme) oder nach Geräteeinstellung. */
+:root[data-theme="dark"] {
+  --bg: #1f1f1f; --panel: #272727; --track: #3a3a3a; --hair: #3a3a3a;
+  --ink: #d8d8d8; --muted: #a8a8a8; --link: #75aadb; --primary: #75aadb;
+  --on-primary: #1f1f1f; --fill: #75aadb; --fill-many: #e0a84a; --focus: #9cc4ea;
+  --error: #f1a7ae; --error-bg: #3a2124; --warn-line: #6b4a12; --warn-bg: #241c0c;
+  --warn-fg: #d8c08a; --ok-bg: #1c2d22; --ok-line: #3f7d55;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1f1f1f; --panel: #272727; --track: #3a3a3a; --hair: #3a3a3a;
+    --ink: #d8d8d8; --muted: #a8a8a8; --link: #75aadb; --primary: #75aadb;
+    --on-primary: #1f1f1f; --fill: #75aadb; --fill-many: #e0a84a; --focus: #9cc4ea;
+    --error: #f1a7ae; --error-bg: #3a2124; --warn-line: #6b4a12; --warn-bg: #241c0c;
+    --warn-fg: #d8c08a; --ok-bg: #1c2d22; --ok-line: #3f7d55;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 640px; margin: 0 auto; padding: 12px 16px 48px; }
+
+h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.2rem; }
+h3 { font-size: 1.1rem; }
+p { margin: 0 0 .75em; }
+
+.sr-only {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* Sprachwahl */
+/* Handy: Sprachen füllen die Breite; auf sehr schmalen Geräten zwei Zeilen statt abgeschnitten. */
+.langs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.lang-btn {
+  flex: 1 1 auto; white-space: nowrap;
+  font: inherit; font-size: .82rem; min-height: 44px; padding: 6px 4px;
+  border: 1px solid var(--hair); border-radius: 999px; background: var(--bg); color: var(--ink);
+  cursor: pointer;
+}
+.lang-btn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); font-weight: 600; }
+
+/* Kopf */
+.head { margin: 8px 0 20px; }
+.org { color: var(--muted); font-weight: 600; letter-spacing: .02em; margin-bottom: .2em; }
+.date { font-size: 1.1rem; font-weight: 600; }
+.intro { color: var(--ink); }
+
+/* Karten */
+.card {
+  background: var(--panel); border: 1px solid var(--hair); border-radius: 12px;
+  padding: 16px; margin-bottom: 16px;
+}
+
+/* Übersicht */
+.bars { list-style: none; margin: 0; padding: 0; }
+.bars li { margin: 0 0 10px; }
+.bar-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.bar-count { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 1.5em; text-align: right; }
+.bar-track { height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; margin-top: 3px; }
+.bar-fill { height: 100%; width: 0; background: var(--fill); border-radius: 5px; transition: width .4s ease; }
+.many .bar-fill { background: var(--fill-many); }
+.total { color: var(--muted); margin: 6px 0 0; }
+.status { color: var(--muted); margin: 0; min-height: 0; }
+.status:empty { display: none; }
+
+/* Formular */
+.field { margin-bottom: 16px; }
+label { display: block; font-weight: 600; margin-bottom: 4px; }
+.req { color: var(--error); }
+input[type="text"], select, textarea {
+  display: block; width: 100%; font: inherit; font-size: 17px; /* >= 16px: kein Zoom auf iOS */
+  min-height: 48px; padding: 10px 12px; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--muted); border-radius: 8px;
+}
+textarea { resize: vertical; min-height: 72px; }
+select { appearance: auto; }
+[aria-invalid="true"] { border-color: var(--error); border-width: 2px; }
+.hint { color: var(--muted); font-size: .9rem; margin: 4px 0 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.count { font-variant-numeric: tabular-nums; }
+.field-error { color: var(--error); font-weight: 600; font-size: .95rem; margin: 4px 0 0; }
+.many-hint:empty { display: none; }
+.many-hint {
+  margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--warn-line);
+  background: var(--warn-bg); color: var(--warn-fg); border-radius: 4px;
+}
+
+.hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+.btn {
+  font: inherit; font-weight: 600; min-height: 48px; padding: 10px 20px; border-radius: 8px;
+  cursor: pointer; border: 2px solid var(--primary);
+}
+.btn.primary { background: var(--primary); color: var(--on-primary); width: 100%; }
+.btn.secondary { background: transparent; color: var(--ink); }
+.btn[disabled] { opacity: .6; cursor: progress; }
+
+.error {
+  color: var(--error); background: var(--error-bg); border-radius: 8px; padding: 10px 12px;
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+}
+.error .btn { min-height: 44px; }
+
+.success {
+  background: var(--ok-bg); border: 1px solid var(--ok-line); border-radius: 10px; padding: 14px;
+}
+.success h3:focus { outline: none; }
+
+.notice { border-radius: 8px; padding: 10px 12px; margin: 0 0 12px; font-weight: 600; }
+.notice.demo, .notice.off { background: var(--warn-bg); color: var(--warn-fg); border: 1px solid var(--warn-line); }
+
+.desc-group { margin-bottom: 10px; }
+.desc-group h3 { font-size: 1rem; margin-bottom: 4px; }
+.desc-group ul { margin: 0; padding-left: 1.2em; }
+
+.privacy { color: var(--muted); font-size: .92rem; margin-top: 24px; }
+.privacy h2 { font-size: 1rem; color: var(--ink); }
+
+@media (min-width: 600px) {
+  .wrap { padding-top: 24px; }
+  .langs { justify-content: flex-end; gap: 6px; }
+  .lang-btn { flex: 0 0 auto; min-width: 44px; font-size: .9rem; padding: 6px 12px; }
+  h1 { font-size: 2.2rem; }
+  .card { padding: 20px 24px; }
+  .btn.primary { width: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar-fill { transition: none; }
+}
