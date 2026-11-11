@@ -12,6 +12,9 @@ project:
     # Deliberately unlisted: no navbar entry, no link from any page, and it stays
     # out of sitemap.xml/search.json because only rendered .qmd pages go in those.
     - apps/practice/
+    # Kita bake-sale sign-up, same pattern: unlisted, shared only by e-mail link.
+    # Temporary: remove this line and the folder after the event (2026-11-24).
+    - apps/babar-kuchen/
 
 website:
   title: "Gidon Frischkorn"

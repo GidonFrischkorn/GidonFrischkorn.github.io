@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<!-- Nur eigene Dateien; Netzwerkzugriff ausschliesslich auf das Apps-Script-Backend
+     (script.google.com leitet auf script.googleusercontent.com weiter). Damit sind
+     externe Schriften, CDNs und Tracker technisch ausgeschlossen. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<title>Kuchenverkauf · Chinderhuus BABAR</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%B0%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css">
+<script src="theme.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="notice demo" id="demoBanner" hidden></div>
+
+  <nav class="langs" id="langs" aria-labelledby="langLabel">
+    <span class="sr-only" id="langLabel" data-i18n="lang_label">Sprache</span>
+  </nav>
+
+  <header class="head">
+    <p class="org" id="org">Chinderhuus BABAR</p>
+    <h1 id="title">Kuchenverkauf</h1>
+    <p class="date" id="date"></p>
+    <p class="intro" data-i18n="intro"></p>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="overviewH">
+      <h2 id="overviewH" data-i18n="overview_h"></h2>
+      <p class="status" id="overviewStatus" role="status"></p>
+      <ul class="bars" id="bars" hidden></ul>
+      <p class="total" id="total" hidden></p>
+      <p class="error" id="overviewError" hidden>
+        <span id="overviewErrorText"></span>
+        <button type="button" class="btn secondary" id="retry" data-i18n="retry"></button>
+      </p>
+    </section>
+
+    <section class="card" aria-labelledby="formH" id="formCard">
+      <h2 id="formH" data-i18n="form_h"></h2>
+
+      <p class="notice off" id="notConfigured" hidden data-i18n="not_configured"></p>
+
+      <form id="form" novalidate>
+        <div class="field">
+          <label for="name">
+            <span data-i18n="name_label"></span>
+            <span class="req" aria-hidden="true">*</span>
+            <span class="sr-only" data-i18n="required"></span>
+          </label>
+          <input type="text" id="name" name="name" autocomplete="off" required
+                 aria-describedby="nameHint nameErr">
+          <p class="hint" id="nameHint" data-i18n="name_hint"></p>
+          <p class="field-error" id="nameErr" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="category">
+            <span data-i18n="cat_label"></span>
+            <span class="req" aria-hidden="true">*</span>
+            <span class="sr-only" data-i18n="required"></span>
+          </label>
+          <select id="category" name="category" required aria-describedby="catHint catErr"></select>
+          <p class="many-hint" id="catHint" aria-live="polite"></p>
+          <p class="field-error" id="catErr" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="description" data-i18n="desc_label"></label>
+          <textarea id="description" name="description" rows="2"
+                    aria-describedby="descHint descCount descErr"></textarea>
+          <p class="hint">
+            <span id="descHint" data-i18n="desc_hint"></span>
+            <span class="count" id="descCount"></span>
+          </p>
+          <p class="field-error" id="descErr" hidden></p>
+        </div>
+
+        <!-- Honeypot gegen Spam-Bots: für Menschen unsichtbar und nicht erreichbar. -->
+        <div class="hp" aria-hidden="true">
+          <label for="website" data-i18n="hp_label"></label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p class="error" id="submitError" role="alert" hidden></p>
+
+        <button type="submit" class="btn primary" id="submit">
+          <span id="submitText" data-i18n="submit"></span>
+        </button>
+        <p class="status" id="submitStatus" role="status"></p>
+      </form>
+
+      <div class="success" id="success" hidden>
+        <h3 id="successH" tabindex="-1" data-i18n="success_h"></h3>
+        <p id="successText"></p>
+        <button type="button" class="btn secondary" id="again" data-i18n="again"></button>
+      </div>
+    </section>
+
+    <section class="card" id="descCard" aria-labelledby="descH" hidden>
+      <h2 id="descH" data-i18n="descriptions_h"></h2>
+      <div id="descList"></div>
+    </section>
+
+    <section class="privacy" aria-labelledby="privacyH">
+      <h2 id="privacyH" data-i18n="privacy_h"></h2>
+      <p data-i18n="privacy_p1"></p>
+      <p data-i18n="privacy_p2"></p>
+    </section>
+  </main>
+
+  <noscript>
+    <p class="notice off">Diese Seite braucht JavaScript. / This page needs JavaScript.</p>
+  </noscript>
+</div>
+
+<script src="config.js"></script>
+<script src="i18n.js"></script>
+<script src="mock.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
