@@ -56,47 +56,50 @@ jobs:
       - name: Render CV PDFs
         run: cd cv && quarto render
 
-      # The practice page is an unlisted static file copied through by the
-      # `resources:` key in _quarto.yml. Nothing links to it, so if that entry
+      # The unlisted pages under apps/ are static files copied through by the
+      # `resources:` key in _quarto.yml. Nothing links to them, so if an entry
       # is ever dropped the build still succeeds and the URL just starts
-      # returning 404 with no other symptom. Equally, if it ever got pulled
+      # returning 404 with no other symptom. Equally, if one ever got pulled
       # into `render:` it would silently enter the sitemap and search index and
-      # stop being unlisted. Assert both directions here.
-      - name: Check the unlisted practice page shipped correctly
+      # stop being unlisted. Assert both directions here, for every such page.
+      # apps/babar-kuchen is temporary (Kita bake sale, 2026-11-24): remove it
+      # from this list together with its folder and _quarto.yml entry.
+      - name: Check the unlisted pages shipped correctly
         run: |
           set -euo pipefail
 
-          # Every file under apps/practice/ must ship, byte-identical, and
-          # nothing extra may appear. The pages are split across several files
-          # (shared engine, per-page scripts); a missing sibling gives a blank
-          # or unstyled page rather than an obvious error.
-          if [ ! -d _site/apps/practice ]; then
-            echo "::error::_site/apps/practice is missing. Is the 'apps/practice/' entry still under project.resources in _quarto.yml?"
-            exit 1
-          fi
-          if ! diff -rq apps/practice _site/apps/practice; then
-            echo "::error::apps/practice and _site/apps/practice differ. Every file must be copied verbatim, never rendered by Quarto."
-            exit 1
-          fi
-          n_files=$(find apps/practice -type f | wc -l | tr -d ' ')
+          for app in apps/practice apps/babar-kuchen; do
+            # Every file must ship, byte-identical, and nothing extra may
+            # appear. The pages are split across several files; a missing
+            # sibling gives a blank or unstyled page rather than an obvious error.
+            if [ ! -d "_site/$app" ]; then
+              echo "::error::_site/$app is missing. Is the '$app/' entry still under project.resources in _quarto.yml?"
+              exit 1
+            fi
+            if ! diff -rq "$app" "_site/$app"; then
+              echo "::error::$app and _site/$app differ. Every file must be copied verbatim, never rendered by Quarto."
+              exit 1
+            fi
+            n_files=$(find "$app" -type f | wc -l | tr -d ' ')
 
-          # A page is useless if it stops referencing its siblings: every local
-          # href/src in every HTML file must name a file that exists.
-          for page in apps/practice/*.html; do
-            for ref in $(grep -o -E '(href|src)="[^"/:]+"' "$page" | sed -E 's/^(href|src)="//; s/"$//' | sed 's/[?#].*//'); do
-              if [ ! -f "apps/practice/$ref" ]; then
-                echo "::error::$page references $ref, which does not exist in apps/practice/"
+            # A page is useless if it stops referencing its siblings: every local
+            # href/src in every HTML file must name a file that exists.
+            for page in "$app"/*.html; do
+              for ref in $(grep -o -E '(href|src)="[^"/:]+"' "$page" | sed -E 's/^(href|src)="//; s/"$//' | sed 's/[?#].*//'); do
+                if [ ! -f "$app/$ref" ]; then
+                  echo "::error::$page references $ref, which does not exist in $app/"
+                  exit 1
+                fi
+              done
+            done
+            for index in sitemap.xml search.json; do
+              if [ -f "_site/$index" ] && grep -q "$app" "_site/$index"; then
+                echo "::error::$app appears in _site/$index. This page is meant to stay unlisted."
                 exit 1
               fi
             done
+            echo "$app: all $n_files files present, byte-identical to source, cross-referenced, absent from sitemap.xml and search.json"
           done
-          for index in sitemap.xml search.json; do
-            if [ -f "_site/$index" ] && grep -q "apps/practice" "_site/$index"; then
-              echo "::error::apps/practice appears in _site/$index. This page is meant to stay unlisted."
-              exit 1
-            fi
-          done
-          echo "practice pages: all $n_files files present, byte-identical to source, cross-referenced, absent from sitemap.xml and search.json"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
