@@ -19,9 +19,18 @@
 
   <div class="notice demo" id="demoBanner" hidden></div>
 
-  <nav class="langs" id="langs" aria-labelledby="langLabel">
-    <span class="sr-only" id="langLabel" data-i18n="lang_label">Sprache</span>
-  </nav>
+  <!-- Sprachauswahl: Weltkugel als sprachunabhängiges Zeichen, Namen in der jeweiligen Sprache. -->
+  <div class="langs">
+    <label for="lang" class="lang-label">
+      <svg class="globe" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"
+           fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="12" cy="12" r="9.2"/>
+        <path d="M2.8 12h18.4M12 2.8c2.6 2.5 3.9 5.6 3.9 9.2s-1.3 6.7-3.9 9.2c-2.6-2.5-3.9-5.6-3.9-9.2s1.3-6.7 3.9-9.2z"/>
+      </svg>
+      <span class="sr-only" data-i18n="lang_label">Sprache</span>
+    </label>
+    <select id="lang" name="lang" autocomplete="off"></select>
+  </div>
 
   <header class="head">
     <p class="org" id="org">Chinderhuus BABAR</p>
@@ -60,17 +69,29 @@
           <p data-i18n="tip_text"></p>
         </div>
 
-        <div class="field">
-          <label for="name">
-            <span data-i18n="name_label"></span>
-            <span class="req" aria-hidden="true">*</span>
-            <span class="sr-only" data-i18n="required"></span>
-          </label>
-          <input type="text" id="name" name="name" autocomplete="off" required
-                 aria-describedby="nameHint nameErr">
-          <p class="hint" id="nameHint" data-i18n="name_hint"></p>
-          <p class="field-error" id="nameErr" hidden></p>
+        <div class="name-row">
+          <div class="field">
+            <label for="firstName">
+              <span data-i18n="first_label"></span>
+              <span class="req" aria-hidden="true">*</span>
+              <span class="sr-only" data-i18n="required"></span>
+            </label>
+            <input type="text" id="firstName" name="firstName" autocomplete="off" dir="auto" required
+                   aria-describedby="nameHint firstErr">
+            <p class="field-error" id="firstErr" hidden></p>
+          </div>
+          <div class="field">
+            <label for="lastName">
+              <span data-i18n="last_label"></span>
+              <span class="req" aria-hidden="true">*</span>
+              <span class="sr-only" data-i18n="required"></span>
+            </label>
+            <input type="text" id="lastName" name="lastName" autocomplete="off" dir="auto" required
+                   aria-describedby="nameHint lastErr">
+            <p class="field-error" id="lastErr" hidden></p>
+          </div>
         </div>
+        <p class="hint name-hint" id="nameHint" data-i18n="name_hint"></p>
 
         <div class="field">
           <label for="category">
@@ -83,18 +104,35 @@
           <p class="field-error" id="catErr" hidden></p>
         </div>
 
-        <fieldset class="field ings" id="ingField" aria-describedby="ingHint ingManyHint ingErr">
+        <!-- Nur sichtbar, wenn die Art «Sonstiges» gewählt ist. -->
+        <div class="field" id="otherField" hidden>
+          <label for="otherName" data-i18n="other_label"></label>
+          <input type="text" id="otherName" name="otherName" autocomplete="off" dir="auto"
+                 aria-describedby="otherHint otherErr">
+          <p class="hint" id="otherHint" data-i18n="other_hint"></p>
+          <p class="field-error" id="otherErr" hidden></p>
+        </div>
+
+        <fieldset class="field ings" id="algField" aria-describedby="algHint">
+          <legend data-i18n="alg_legend"></legend>
+          <p class="hint" id="algHint" data-i18n="alg_hint"></p>
+          <div class="ing-grid" id="algGrid"></div>
+        </fieldset>
+
+        <fieldset class="field ings" id="ingField" aria-describedby="ingHint ingManyHint ingNutNote ingErr">
           <legend data-i18n="ing_legend"></legend>
           <p class="hint" id="ingHint"></p>
           <div class="ing-grid" id="ingGrid"></div>
+          <p class="many-hint" id="ingNutNote" aria-live="polite"></p>
           <p class="many-hint" id="ingManyHint" aria-live="polite"></p>
           <p class="field-error" id="ingErr" hidden></p>
         </fieldset>
 
         <div class="field">
           <label for="description" data-i18n="desc_label"></label>
-          <textarea id="description" name="description" rows="2"
-                    aria-describedby="descHint descCount descErr"></textarea>
+          <p class="many-hint above" id="descOtherNote" aria-live="polite"></p>
+          <textarea id="description" name="description" rows="2" dir="auto"
+                    aria-describedby="descOtherNote descHint descCount descErr"></textarea>
           <p class="hint">
             <span id="descHint" data-i18n="desc_hint"></span>
             <span class="count" id="descCount"></span>
@@ -141,7 +179,8 @@
 </div>
 
 <script src="config.js"></script>
-<script src="i18n.js"></script>
+<script src="i18n-de.js"></script>
+<script src="i18n-en.js"></script>
 <script src="mock.js"></script>
 <script src="app.js"></script>
 </body>

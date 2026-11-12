@@ -2,7 +2,9 @@
    Farben aus theme-light.scss / theme-dark.scss der Website (wie apps/practice/app.css),
    Schrift = System-Schriften wie auf der Website; keine externen Fonts.
    Die Hauptfarbe für Text auf Buttons ist gegenüber #2780e3 leicht abgedunkelt,
-   damit weisse Schrift den AA-Kontrast (4.5:1) erreicht. */
+   damit weisse Schrift den AA-Kontrast (4.5:1) erreicht.
+   Schreibrichtung: Arabisch und Persisch laufen von rechts nach links. Darum stehen hier nur
+   logische Angaben (inline-start/-end, text-align: end), nie left/right. */
 :root {
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica,
           Roboto, Arial, system-ui, "Noto Sans Ethiopic", "Kefa", "Abyssinica SIL", sans-serif;
@@ -70,16 +72,11 @@ p { margin: 0 0 .75em; }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
-/* Sprachwahl */
-/* Handy: Sprachen füllen die Breite; auf sehr schmalen Geräten zwei Zeilen statt abgeschnitten. */
-.langs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-.lang-btn {
-  flex: 1 1 auto; white-space: nowrap;
-  font: inherit; font-size: .82rem; min-height: 44px; padding: 6px 4px;
-  border: 1px solid var(--hair); border-radius: 999px; background: var(--bg); color: var(--ink);
-  cursor: pointer;
-}
-.lang-btn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); font-weight: 600; }
+/* Sprachwahl: eine Auswahlliste am Zeilenende, davor die Weltkugel. Das Gerät zeigt die Liste
+   mit seiner eigenen Auswahl an, so passen auch 16 Sprachen auf ein Handy. */
+.langs { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-bottom: 8px; }
+.lang-label { display: flex; align-items: center; margin: 0; color: var(--muted); }
+.langs select { display: inline-block; width: auto; min-width: 9em; max-width: 100%; min-height: 44px; padding: 6px 10px; }
 
 /* Kopf */
 .head { margin: 8px 0 20px; }
@@ -97,7 +94,7 @@ p { margin: 0 0 .75em; }
 .bars { list-style: none; margin: 0; padding: 0; }
 .bars li { margin: 0 0 10px; }
 .bar-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
-.bar-count { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 1.5em; text-align: right; }
+.bar-count { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 1.5em; text-align: end; }
 /* Balken ohne graue Spur: nur Längen zum Vergleichen, kein "Füllstand", der voll wirken könnte. */
 .bar-track { height: 10px; border-radius: 5px; overflow: hidden; margin-top: 3px; }
 .bar-fill { height: 100%; width: 0; background: var(--fill); border-radius: 5px; transition: width .4s ease; }
@@ -105,7 +102,7 @@ p { margin: 0 0 .75em; }
 .mark-legend { color: var(--muted); font-size: .9rem; margin: 10px 0 0; }
 .mark-legend::before {
   content: ""; display: inline-block; width: 1.4em; height: 10px; border-radius: 5px;
-  background: var(--fill-many); margin-right: 6px; vertical-align: 0;
+  background: var(--fill-many); margin-inline-end: 6px; vertical-align: 0;
 }
 .total { color: var(--muted); margin: 6px 0 0; }
 .sub-h { font-size: 1rem; color: var(--muted); margin: 4px 0 8px; }
@@ -124,6 +121,10 @@ p { margin: 0 0 .75em; }
 
 /* Formular */
 .field { margin-bottom: 16px; }
+/* Vorname und Familienname: untereinander auf dem Handy, nebeneinander ab ca. 440 px. */
+.name-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0 12px; }
+.name-row .field { margin-bottom: 8px; }
+.hint.name-hint { margin: 0 0 16px; }   /* zwei Klassen: sonst gewinnt der Abstand von .hint weiter unten */
 label { display: block; font-weight: 600; margin-bottom: 4px; }
 .req { color: var(--error); }
 input[type="text"], select, textarea {
@@ -141,24 +142,29 @@ select { appearance: auto; }
    er soll informieren, nicht nach Obergrenze aussehen. */
 .many-hint:empty { display: none; }
 .many-hint {
-  margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--primary);
+  margin: 8px 0 0; padding: 8px 12px; border-inline-start: 4px solid var(--primary);
   background: var(--bg); color: var(--ink); border-radius: 4px;
 }
+/* Hinweis über einem Feld statt darunter (Beschreibung bei «Andere»). */
+.many-hint.above { margin: 0 0 8px; }
 
 /* Freundlicher Hinweis oben im Formular: ruhige Info-Box, bewusst nicht in Warnfarbe. */
 .tip {
   margin: 0 0 18px; padding: 10px 12px; background: var(--bg);
-  border-left: 4px solid var(--primary); border-radius: 4px;
+  border-inline-start: 4px solid var(--primary); border-radius: 4px;
 }
 .tip p { margin: 0; }
 .tip .tip-h { font-weight: 600; margin-bottom: 4px; }
 
-/* Hauptzutaten: Kästchen, Tippfläche mind. 44 px. Spalten nach Platz: eine auf sehr schmalen
+/* Allergene und Hauptzutaten: Kästchen, Tippfläche mind. 44 px. Spalten nach Platz: eine auf sehr schmalen
    Handys (320 px), zwei ab ca. 360 px, drei auf dem Desktop – damit kein Wort getrennt wird. */
 fieldset.ings { border: 0; padding: 0; margin: 0 0 16px; min-width: 0; }
 fieldset.ings legend { font-weight: 600; padding: 0; margin-bottom: 0; }
 .ings .hint { margin: 0 0 8px; }
 .ing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; }
+/* Allergene sind ganze Aussagen («Enthält Nüsse/Mandeln») und in manchen Sprachen lang:
+   breitere Spalten, auf dem Handy also untereinander. */
+#algGrid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 label.ing {
   display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0;
   padding: 6px 10px; font-weight: 400; border: 1px solid var(--hair); border-radius: 8px;
@@ -167,8 +173,15 @@ label.ing {
 label.ing input { width: 20px; height: 20px; flex: 0 0 auto; margin: 0; accent-color: var(--primary); }
 label.ing:has(input:checked) { border-color: var(--primary); border-width: 2px; padding: 5px 9px; font-weight: 600; }
 label.ing.off { opacity: .55; cursor: not-allowed; }
+/* Von der Seite angekreuzt und gesperrt (Nüsse): bleibt gut lesbar, lässt sich nur nicht ändern. */
+label.ing.locked { cursor: default; }
 
-.hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+/* Fangfeld: unsichtbar durch Beschneiden, nicht durch Verschieben nach links. Ein nach links
+   verschobenes Feld macht eine von rechts nach links laufende Seite seitlich rollbar. */
+.hp {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
 
 .btn {
   font: inherit; font-weight: 600; min-height: 48px; padding: 10px 20px; border-radius: 8px;
@@ -194,15 +207,13 @@ label.ing.off { opacity: .55; cursor: not-allowed; }
 
 .desc-group { margin-bottom: 10px; }
 .desc-group h3 { font-size: 1rem; margin-bottom: 4px; }
-.desc-group ul { margin: 0; padding-left: 1.2em; }
+.desc-group ul { margin: 0; padding-inline-start: 1.2em; }
 
 .privacy { color: var(--muted); font-size: .92rem; margin-top: 24px; }
 .privacy h2 { font-size: 1rem; color: var(--ink); }
 
 @media (min-width: 600px) {
   .wrap { padding-top: 24px; }
-  .langs { justify-content: flex-end; gap: 6px; }
-  .lang-btn { flex: 0 0 auto; min-width: 44px; font-size: .9rem; padding: 6px 12px; }
   h1 { font-size: 2.2rem; }
   .card { padding: 20px 24px; }
   .btn.primary { width: auto; }

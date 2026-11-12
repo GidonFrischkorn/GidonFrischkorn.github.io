@@ -4,9 +4,11 @@
  * Einrichtung: siehe SETUP.md im selben Ordner.
  *
  *   doPost  hängt einen Eintrag als neue Zeile an:
- *           Zeitstempel | Name des Kindes | Kategorie | Beschreibung | Hauptzutaten
+ *           Zeitstempel | Name des Kindes | Kategorie | Beschreibung | Hauptzutaten |
+ *           Allergene | Gebäck (bei Sonstiges)
+ *           Der Name ist "Vorname Familienname" in einer Zelle.
  *   doGet   gibt NUR die Anzahl der Einträge pro Kategorie und pro Hauptzutat
- *           zurück – nie Namen.
+ *           zurück – nie Namen, nie Allergene, nie die Bezeichnung bei Sonstiges.
  *           Beschreibungen (ohne Namen) nur, wenn SHOW_DESCRIPTIONS = true.
  *
  * Nach jeder Änderung an diesem Code: "Bereitstellen" -> "Bereitstellungen verwalten"
@@ -20,7 +22,8 @@
 var SHOW_DESCRIPTIONS = false;
 
 /** Kuchen-Arten: id (wie in config.js) -> Text, der ins Sheet geschrieben wird.
- *  Muss mit config.js übereinstimmen (gleiche ids, gleiche Reihenfolge, Text = label.de). */
+ *  Gleiche ids und gleiche Reihenfolge wie CATEGORIES in config.js; der Text ist der
+ *  deutsche Name aus i18n-de.js (Abschnitt cat). */
 var CATEGORIES = {
   muffins: 'Muffins/Cupcakes',
   blech: 'Blechkuchen/Schnitten',
@@ -33,7 +36,18 @@ var CATEGORIES = {
   sonstiges: 'Sonstiges'
 };
 
-/** Hauptzutaten, gleiche Regeln wie CATEGORIES (config.js -> INGREDIENTS).
+/** Bei dieser Art darf eine Bezeichnung des Gebäcks mitkommen (config.js -> OTHER_CATEGORY). */
+var OTHER_CATEGORY = 'sonstiges';
+
+/** Allergene und Ernährung, gleiche Regeln wie CATEGORIES (config.js -> ALLERGENS,
+ *  i18n-de.js -> alg). Im Sheet mit Komma getrennt in einer Zelle. */
+var ALLERGENS = {
+  nuesse: 'Enthält Nüsse/Mandeln',
+  glutenfrei: 'Glutenfrei',
+  vegan: 'Vegan'
+};
+
+/** Hauptzutaten, gleiche Regeln wie CATEGORIES (config.js -> INGREDIENTS, i18n-de.js -> ing).
  *  Im Sheet stehen sie mit Komma getrennt in einer Zelle, z. B. "Schokolade, Banane". */
 var INGREDIENTS = {
   schoko: 'Schokolade',
@@ -46,16 +60,23 @@ var INGREDIENTS = {
   rueebli: 'Rüebli/Karotte',
   zitrone: 'Zitrone',
   gewuerz: 'Zimt/Gewürze',
-  natur: 'Natur/Vanille'
+  natur: 'Natur/Vanille',
+  andere: 'Andere'
 };
 
-var MAX_NAME = 60;     // Zeichen, wie MAX_NAME in config.js
+/** Wer diese Hauptzutat angibt, bekommt dieses Allergen immer dazu (config.js -> NUT_LINK). */
+var NUT_INGREDIENT = 'nuss';
+var NUT_ALLERGEN = 'nuesse';
+
+var MAX_NAME = 60;     // Zeichen je Vorname und Familienname, wie MAX_NAME in config.js
+var MAX_OTHER = 60;    // Zeichen der Bezeichnung bei Sonstiges, wie MAX_OTHER in config.js
 var MAX_DESC = 200;    // Zeichen, wie MAX_DESC in config.js
 var MAX_INGREDIENTS = 2;  // wie MAX_INGREDIENTS in config.js
 var MAX_ROWS = 500;    // Obergrenze gegen massenhaften Spam
 var SHEET_NAME = 'Einträge';
 // Neue Spalten nur hinten anhängen, damit bestehende Zeilen nicht verrutschen.
-var HEADER = ['Zeitstempel', 'Name des Kindes', 'Kategorie', 'Beschreibung', 'Hauptzutaten'];
+var HEADER = ['Zeitstempel', 'Name des Kindes', 'Kategorie', 'Beschreibung', 'Hauptzutaten',
+              'Allergene', 'Gebäck (bei Sonstiges)'];
 
 /* ---------------- Web-App ---------------- */
 
@@ -105,26 +126,39 @@ function doPost(e) {
   // Honeypot: Menschen sehen dieses Feld nicht. Bots bekommen "ok", es wird nichts gespeichert.
   if (clean_(body.website)) return json_({ ok: true });
 
-  var name = clean_(body.name);
+  var firstName = clean_(body.firstName);
+  var lastName = clean_(body.lastName);
   var category = typeof body.category === 'string' ? body.category : '';
+  // Die Bezeichnung zählt nur bei "Sonstiges"; bei jeder anderen Art wird sie übergangen.
+  var otherName = category === OTHER_CATEGORY ? clean_(body.otherName) : '';
   var description = clean_(body.description);
-  var ingredients = parseIngredients_(body.ingredients);
+  var ingredients = parseIds_(body.ingredients, INGREDIENTS, MAX_INGREDIENTS);
+  var allergens = parseIds_(body.allergens, ALLERGENS, Object.keys(ALLERGENS).length);
 
-  if (!name) return json_({ ok: false, error: 'name_required' });
-  if (name.length > MAX_NAME) return json_({ ok: false, error: 'name_too_long' });
+  if (!firstName) return json_({ ok: false, error: 'first_name_required' });
+  if (firstName.length > MAX_NAME) return json_({ ok: false, error: 'first_name_too_long' });
+  if (!lastName) return json_({ ok: false, error: 'last_name_required' });
+  if (lastName.length > MAX_NAME) return json_({ ok: false, error: 'last_name_too_long' });
   if (!Object.prototype.hasOwnProperty.call(CATEGORIES, category)) {
     return json_({ ok: false, error: 'category_invalid' });
   }
+  if (otherName.length > MAX_OTHER) return json_({ ok: false, error: 'other_too_long' });
   if (description.length > MAX_DESC) return json_({ ok: false, error: 'description_too_long' });
   if (ingredients === null) return json_({ ok: false, error: 'ingredients_invalid' });
+  if (allergens === null) return json_({ ok: false, error: 'allergens_invalid' });
+  // Nüsse/Mandeln als Hauptzutat heisst immer auch: enthält Nüsse/Mandeln.
+  if (ingredients.indexOf(NUT_INGREDIENT) >= 0 && allergens.indexOf(NUT_ALLERGEN) < 0) {
+    allergens.push(NUT_ALLERGEN);
+  }
 
   var lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) return json_({ ok: false, error: 'busy' });
   try {
     var sheet = getSheet_();
     if (sheet.getLastRow() - 1 >= MAX_ROWS) return json_({ ok: false, error: 'full' });
-    sheet.appendRow([new Date(), protect_(name), CATEGORIES[category], protect_(description),
-                     ingredients.map(function (id) { return INGREDIENTS[id]; }).join(', ')]);
+    sheet.appendRow([new Date(), protect_(firstName + ' ' + lastName), CATEGORIES[category],
+                     protect_(description), labels_(ingredients, INGREDIENTS),
+                     labels_(allergens, ALLERGENS), protect_(otherName)]);
   } catch (err) {
     console.error(err);
     return json_({ ok: false, error: 'server' });
@@ -161,18 +195,28 @@ function protect_(s) {
   return /^[=+\-@']/.test(s) ? "'" + s : s;
 }
 
-/** Hauptzutaten aus der Anfrage: fehlt das Feld, gilt "keine Angabe". Sonst eine Liste
- *  bekannter ids, ohne Doppelte, höchstens MAX_INGREDIENTS. Ungültig -> null. */
-function parseIngredients_(value) {
+/** Kästchen aus der Anfrage (Hauptzutaten oder Allergene): fehlt das Feld, gilt "keine
+ *  Angabe". Sonst eine Liste bekannter ids aus "table", ohne Doppelte, höchstens "max".
+ *  Ungültig -> null. */
+function parseIds_(value, table, max) {
   if (value === undefined || value === null) return [];
-  if (!Array.isArray(value) || value.length > MAX_INGREDIENTS) return null;
+  if (!Array.isArray(value) || value.length > max) return null;
   var out = [];
   for (var i = 0; i < value.length; i++) {
     var id = value[i];
-    if (typeof id !== 'string' || !Object.prototype.hasOwnProperty.call(INGREDIENTS, id)) return null;
+    if (typeof id !== 'string' || !Object.prototype.hasOwnProperty.call(table, id)) return null;
     if (out.indexOf(id) < 0) out.push(id);
   }
   return out;
+}
+
+/** ids -> deutsche Texte für die Zelle, mit Komma getrennt, in der Reihenfolge von "table". */
+function labels_(ids, table) {
+  var out = [];
+  for (var id in table) {
+    if (Object.prototype.hasOwnProperty.call(table, id) && ids.indexOf(id) >= 0) out.push(table[id]);
+  }
+  return out.join(', ');
 }
 
 /** Zelle "Schokolade, Banane" -> ['schoko', 'banane']. Unbekanntes wird übergangen,
@@ -210,7 +254,7 @@ function getSheet_() {
     sheet.appendRow(HEADER);
     sheet.setFrozenRows(1);
   } else {
-    // Bestehendes Blatt von früher: fehlende Spaltenüberschriften (z. B. "Hauptzutaten")
+    // Bestehendes Blatt von früher: fehlende Spaltenüberschriften (z. B. "Allergene")
     // ergänzen. Was schon in der Kopfzeile steht, bleibt unverändert.
     var range = sheet.getRange(1, 1, 1, HEADER.length);
     var head = range.getValues()[0];
