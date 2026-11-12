@@ -98,9 +98,15 @@ p { margin: 0 0 .75em; }
 .bars li { margin: 0 0 10px; }
 .bar-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
 .bar-count { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 1.5em; text-align: right; }
-.bar-track { height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; margin-top: 3px; }
+/* Balken ohne graue Spur: nur Längen zum Vergleichen, kein "Füllstand", der voll wirken könnte. */
+.bar-track { height: 10px; border-radius: 5px; overflow: hidden; margin-top: 3px; }
 .bar-fill { height: 100%; width: 0; background: var(--fill); border-radius: 5px; transition: width .4s ease; }
 .many .bar-fill { background: var(--fill-many); }
+.mark-legend { color: var(--muted); font-size: .9rem; margin: 10px 0 0; }
+.mark-legend::before {
+  content: ""; display: inline-block; width: 1.4em; height: 10px; border-radius: 5px;
+  background: var(--fill-many); margin-right: 6px; vertical-align: 0;
+}
 .total { color: var(--muted); margin: 6px 0 0; }
 .sub-h { font-size: 1rem; color: var(--muted); margin: 4px 0 8px; }
 #ingBlock { margin-top: 16px; }
@@ -131,10 +137,12 @@ select { appearance: auto; }
 .hint { color: var(--muted); font-size: .9rem; margin: 4px 0 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .count { font-variant-numeric: tabular-nums; }
 .field-error { color: var(--error); font-weight: 600; font-size: .95rem; margin: 4px 0 0; }
+/* Hinweis "schon gut vertreten": ruhige Info-Box wie der Tipp, bewusst nicht in Warnfarbe –
+   er soll informieren, nicht nach Obergrenze aussehen. */
 .many-hint:empty { display: none; }
 .many-hint {
-  margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--warn-line);
-  background: var(--warn-bg); color: var(--warn-fg); border-radius: 4px;
+  margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--primary);
+  background: var(--bg); color: var(--ink); border-radius: 4px;
 }
 
 /* Freundlicher Hinweis oben im Formular: ruhige Info-Box, bewusst nicht in Warnfarbe. */

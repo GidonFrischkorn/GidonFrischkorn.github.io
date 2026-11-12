@@ -77,11 +77,16 @@ window.KUCHEN_CONFIG = {
   /* Höchstens so viele Hauptzutaten pro Eintrag (muss mit Code.gs übereinstimmen). */
   MAX_INGREDIENTS: 2,
 
-  /* Ab so vielen Einträgen in einer Art bzw. bei einer Hauptzutat erscheint der freundliche
-     Hinweis "Davon gibt es schon einige …" (es wird nie blockiert). Zutaten kommen öfter vor
-     als Arten (bis zu zwei pro Kuchen), darum liegt ihre Schwelle höher. */
-  HINT_THRESHOLD: 3,
-  INGREDIENT_HINT_THRESHOLD: 4,
+  /* Wann eine Art bzw. Hauptzutat als "schon gut vertreten" gilt (orange in der Übersicht und
+     freundlicher Hinweis im Formular; es wird nie etwas blockiert). Es müssen BEIDE Bedingungen
+     erfüllt sein: mindestens MIN Einträge UND mindestens SHARE (Anteil) aller eingetragenen
+     Kuchen. So bleibt eine ausgewogene Liste ohne Markierung, auch wenn sie lang wird.
+     Beispiel Arten: 5 Muffins von 15 Kuchen (33 %) -> markiert; 5 von 25 (20 %) -> nicht.
+     Zutaten kommen öfter vor (bis zu zwei pro Kuchen), darum liegen ihre Werte höher. */
+  MARK_MIN: 5,
+  MARK_SHARE: 0.25,
+  ING_MARK_MIN: 6,
+  ING_MARK_SHARE: 0.35,
 
   /* Beschreibungen (ohne Namen) öffentlich zeigen? Wirkt nur, wenn zusätzlich in
      Code.gs SHOW_DESCRIPTIONS = true gesetzt und neu bereitgestellt ist. */

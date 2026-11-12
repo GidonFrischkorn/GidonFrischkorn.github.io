@@ -113,8 +113,13 @@ die Eltern können oben umschalten.
     sonst wird die Zeile nicht mitgezählt.
   - Spalte „Hauptzutaten“ (E) enthält die Zutaten mit Komma getrennt, z. B. `Schokolade, Banane`.
     Unbekannte Wörter werden einfach nicht gezählt.
-- **Ab wann der Hinweis erscheint:** `HINT_THRESHOLD` (Arten, derzeit 3) und
-  `INGREDIENT_HINT_THRESHOLD` (Zutaten, derzeit 4) in `config.js`.
+- **Wann etwas orange markiert wird und der Hinweis erscheint:** erst wenn eine Art bzw. Zutat
+  eine Mindestzahl erreicht **und** einen Anteil an allen Kuchen. Derzeit: Arten ab 5 Einträgen
+  und 25 % (`MARK_MIN`, `MARK_SHARE`), Zutaten ab 6 und 35 % (`ING_MARK_MIN`, `ING_MARK_SHARE`)
+  in `config.js`. Eine ausgewogene Liste bleibt so ohne Markierung. Eine Markierung kann wieder
+  verschwinden, wenn die anderen Arten aufholen. Blockiert wird nie etwas. Der Hinweis schlägt
+  die zwei am wenigsten vertretenen Arten vor, nie Torte oder Sonstiges.
+  Nur Website-Einstellung: `Code.gs` muss dafür nicht neu bereitgestellt werden.
 - **Spam:** Ein unsichtbares Fangfeld hält einfache Bots ab, und mehr als 500 Zeilen nimmt das
   Programm nicht an. Unsinnige Zeilen einfach in der Tabelle löschen.
 

@@ -36,7 +36,7 @@
     descCard: $("descCard"), descList: $("descList"),
     byCatH: $("byCatH"), ingBlock: $("ingBlock"), ingCounts: $("ingCounts"), ingNone: $("ingNone"),
     ingField: $("ingField"), ingGrid: $("ingGrid"), ingHint: $("ingHint"),
-    ingManyHint: $("ingManyHint"), ingErr: $("ingErr")
+    ingManyHint: $("ingManyHint"), ingErr: $("ingErr"), markLegend: $("markLegend")
   };
 
   var backendReady = !!MOCK || !!C.WEB_APP_URL;
@@ -61,6 +61,29 @@
     return null;
   }
   function ingCountOf(id) { return state.ingCounts ? (state.ingCounts[id] || 0) : null; }
+  /* Alle eingetragenen Kuchen (Summe über die Arten). */
+  function totalCount() {
+    if (!state.counts) return 0;
+    return C.CATEGORIES.reduce(function (s, c) { return s + countOf(c.id); }, 0);
+  }
+  /* "Schon gut vertreten": Mindestzahl UND Anteil an allen Kuchen (siehe config.js). */
+  function isMarked(n, min, share) {
+    return n !== null && n >= min && n >= share * totalCount();
+  }
+  function catMarked(id) { return isMarked(countOf(id), C.MARK_MIN, C.MARK_SHARE); }
+  function ingMarked(id) { return isMarked(ingCountOf(id), C.ING_MARK_MIN, C.ING_MARK_SHARE); }
+  /* Vorschläge im Hinweis: die zwei am wenigsten vertretenen Arten, ohne die gewählte,
+     ohne Torte (passt nicht zum Verkaufstipp) und ohne Sonstiges. Bei Gleichstand gilt die
+     Listenreihenfolge, d. h. Handliches zuerst. */
+  var NO_SUGGEST = { torte: true, sonstiges: true };
+  function suggestCategories(exceptId) {
+    return C.CATEGORIES
+      .filter(function (c) { return c.id !== exceptId && !NO_SUGGEST[c.id]; })
+      .map(function (c, i) { return { c: c, n: countOf(c.id), i: i }; })
+      .sort(function (a, b) { return (a.n - b.n) || (a.i - b.i); })
+      .slice(0, 2)
+      .map(function (x) { return catLabel(x.c); });
+  }
   function checkedIngredients() {
     return C.INGREDIENTS.map(function (g) { return g.id; }).filter(function (id) {
       var box = el.ingGrid.querySelector('input[value="' + id + '"]');
@@ -236,16 +259,19 @@
     var max = 1, total = 0;
     C.CATEGORIES.forEach(function (c) { var n = countOf(c.id); total += n; if (n > max) max = n; });
 
+    var anyMarked = false;
     el.bars.textContent = "";
     C.CATEGORIES.forEach(function (c) {
       var n = countOf(c.id);
       var li = document.createElement("li");
-      if (n >= C.HINT_THRESHOLD) li.className = "many";
+      var marked = catMarked(c.id);
+      if (marked) { li.className = "many"; anyMarked = true; }
       var row = document.createElement("div");
       row.className = "bar-row";
       var lab = document.createElement("span");
       lab.className = "bar-label";
       lab.textContent = catLabel(c);
+      if (marked) lab.appendChild(srMark());
       var num = document.createElement("span");
       num.className = "bar-count";
       num.textContent = String(n);
@@ -263,21 +289,37 @@
       el.bars.appendChild(li);
     });
     el.total.textContent = total === 0 ? t("empty") : t("total", { n: total });
-    renderIngredientOverview();
+    if (renderIngredientOverview()) anyMarked = true;
+    // Erklärung der Farbe nur, wenn etwas markiert ist (Farbe nie als einziges Signal).
+    el.markLegend.textContent = t("mark_legend");
+    el.markLegend.hidden = !anyMarked;
   }
 
-  /* Zutaten in der Übersicht: nur die, die schon vorkommen, häufigste zuerst. */
+  /* Unsichtbarer Zusatz für Screenreader an markierten Balken/Kärtchen. */
+  function srMark() {
+    var s = document.createElement("span");
+    s.className = "sr-only";
+    s.textContent = " " + t("mark_sr");
+    return s;
+  }
+
+  /* Zutaten in der Übersicht: nur die, die schon vorkommen, häufigste zuerst.
+     Gibt zurück, ob eine Zutat markiert ist. */
   function renderIngredientOverview() {
     el.ingCounts.textContent = "";
-    if (!state.ingCounts) return;
+    if (!state.ingCounts) return false;
+    var anyMarked = false;
     var used = C.INGREDIENTS.filter(function (g) { return ingCountOf(g.id) > 0; });
     used.sort(function (a, b) { return ingCountOf(b.id) - ingCountOf(a.id); });   // stabil: sonst Listenreihenfolge
     used.forEach(function (g) {
       var n = ingCountOf(g.id);
       var li = document.createElement("li");
-      li.className = "chip" + (n >= C.INGREDIENT_HINT_THRESHOLD ? " many" : "");
+      var marked = ingMarked(g.id);
+      if (marked) anyMarked = true;
+      li.className = "chip" + (marked ? " many" : "");
       var lab = document.createElement("span");
       lab.textContent = catLabel(g);
+      if (marked) lab.appendChild(srMark());
       var num = document.createElement("span");
       num.className = "chip-n";
       num.textContent = String(n);
@@ -288,6 +330,7 @@
     });
     el.ingCounts.hidden = used.length === 0;
     el.ingNone.hidden = used.length > 0;
+    return anyMarked;
   }
 
   function renderDescriptions() {
@@ -366,12 +409,11 @@
   }
 
   function renderManyHint() {
-    var n = countOf(el.category.value);
-    el.catHint.textContent = (n !== null && n >= C.HINT_THRESHOLD) ? t("hint_many") : "";
-    var many = checkedIngredients().filter(function (id) {
-      var k = ingCountOf(id);
-      return k !== null && k >= C.INGREDIENT_HINT_THRESHOLD;
-    });
+    var cat = el.category.value ? catById(el.category.value) : null;
+    el.catHint.textContent = (cat && catMarked(cat.id))
+      ? t("hint_many", { cat: catLabel(cat), n: countOf(cat.id), list: suggestCategories(cat.id).join(t("list_and")) })
+      : "";
+    var many = checkedIngredients().filter(ingMarked);
     el.ingManyHint.textContent = many.length
       ? t("hint_many_ing", { list: many.map(function (id) { return catLabel(ingById(id)); }).join(", ") })
       : "";
