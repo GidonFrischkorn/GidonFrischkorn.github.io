@@ -22,30 +22,35 @@ window.KUCHEN_CONFIG = {
     date: "2026-11-24"
   },
 
-  /* Kuchen-Kategorien. Die "id" ist ein fester technischer Schlüssel.
-     WICHTIG: Wer hier eine Kategorie hinzufügt, entfernt oder umbenennt, muss
-     dieselbe Änderung in apps-script/kuchenverkauf/Code.gs (CATEGORIES) machen
-     und das Script neu bereitstellen. label.de muss dort genau gleich lauten.
+  /* Kuchen-Arten (Pflichtfeld, eine Auswahl). Die "id" ist ein fester technischer Schlüssel.
+     Reihenfolge = Reihenfolge auf der Seite; was sich gut aus der Hand essen lässt, steht oben.
+     WICHTIG: Wer hier eine Art oder unten eine Hauptzutat hinzufügt, entfernt oder umbenennt,
+     muss dieselbe Änderung in apps-script/kuchenverkauf/Code.gs (CATEGORIES bzw. INGREDIENTS)
+     machen und das Script neu bereitstellen. label.de muss dort genau gleich lauten.
      Der Test (node apps-script/kuchenverkauf/test/run-tests.js) prüft das. */
   CATEGORIES: [
-    { id: "schoko",
-      label: { de: "Schokokuchen", en: "Chocolate cake", fr: "Gâteau au chocolat",
-               it: "Torta al cioccolato", ti: "ኬክ ቸኮላታ" } },
-    { id: "obst",
-      label: { de: "Obstkuchen", en: "Fruit cake or tart", fr: "Gâteau ou tarte aux fruits",
-               it: "Torta alla frutta", ti: "ኬክ ፍሩታ" } },
-    { id: "kaese",
-      label: { de: "Käsekuchen", en: "Cheesecake", fr: "Gâteau au fromage (cheesecake)",
-               it: "Cheesecake", ti: "ቺዝ ኬክ" } },
-    { id: "ruehr",
-      label: { de: "Rührkuchen/Marmor", en: "Pound cake / marble cake", fr: "Cake / gâteau marbré",
-               it: "Torta semplice / marmorizzata", ti: "ቀሊል ኬክ / ማርሞር ኬክ" } },
     { id: "muffins",
       label: { de: "Muffins/Cupcakes", en: "Muffins / cupcakes", fr: "Muffins / cupcakes",
                it: "Muffin / cupcake", ti: "ማፊን / ካፕኬክ" } },
     { id: "blech",
-      label: { de: "Blechkuchen", en: "Tray bake", fr: "Gâteau sur plaque",
-               it: "Torta in teglia", ti: "ኬክ ትሪ" } },
+      label: { de: "Blechkuchen/Schnitten", en: "Tray bake / bars", fr: "Gâteau sur plaque / carrés",
+               it: "Torta in teglia / quadrotti", ti: "ኬክ ትሪ / ቁራጽ" } },
+    { id: "ruehr",
+      label: { de: "Rührkuchen/Cake", en: "Loaf cake / pound cake", fr: "Cake / gâteau simple",
+               it: "Plumcake / torta semplice", ti: "ቀሊል ኬክ" } },
+    { id: "guetzli",
+      label: { de: "Guetzli/Weihnachtsgebäck", en: "Biscuits / Christmas cookies", fr: "Biscuits / biscuits de Noël",
+               it: "Biscotti / biscotti di Natale", ti: "ብሽኮቲ / ናይ ልደት ብሽኮቲ" } },
+    { id: "hefe",
+      label: { de: "Hefegebäck (Zopf, Schnecken)", en: "Yeast bakes (plaited bread, buns)",
+               fr: "Pâte levée (tresse, escargots)", it: "Lievitati (treccia, girelle)",
+               ti: "ብሕሚራ ዝተሰርሐ (ዞፕፍ፣ ጥቕላል)" } },
+    { id: "waehe",
+      label: { de: "Wähe/Tarte", en: "Tart (Swiss Wähe)", fr: "Tarte / gâteau aux fruits",
+               it: "Crostata / torta di frutta", ti: "ታርት" } },
+    { id: "kaese",
+      label: { de: "Käsekuchen", en: "Cheesecake", fr: "Gâteau au fromage (cheesecake)",
+               it: "Cheesecake", ti: "ቺዝ ኬክ" } },
     { id: "torte",
       label: { de: "Torte", en: "Layer cake / gateau", fr: "Tourte (gâteau à la crème)",
                it: "Torta farcita", ti: "ቶርታ" } },
@@ -54,9 +59,29 @@ window.KUCHEN_CONFIG = {
                it: "Altro", ti: "ካልእ" } }
   ],
 
-  /* Ab so vielen Einträgen in einer Kategorie erscheint der freundliche Hinweis
-     "Davon gibt es schon einige …" (es wird nie blockiert). */
+  /* Hauptzutaten (freiwillig, bis zu MAX_INGREDIENTS Kästchen). Gleiche Regeln wie oben. */
+  INGREDIENTS: [
+    { id: "schoko",    label: { de: "Schokolade", en: "Chocolate", fr: "Chocolat", it: "Cioccolato", ti: "ቸኮላታ" } },
+    { id: "nuss",      label: { de: "Nüsse/Mandeln", en: "Nuts / almonds", fr: "Noix / amandes", it: "Noci / mandorle", ti: "ለውዝ / ማንደርላ" } },
+    { id: "apfel",     label: { de: "Apfel", en: "Apple", fr: "Pomme", it: "Mela", ti: "ቱፋሕ" } },
+    { id: "zwetschge", label: { de: "Zwetschge/Pflaume", en: "Plum", fr: "Pruneau / prune", it: "Prugna / susina", ti: "ፕሩኛ" } },
+    { id: "kirsche",   label: { de: "Kirsche", en: "Cherry", fr: "Cerise", it: "Ciliegia", ti: "ቸሪ" } },
+    { id: "beeren",    label: { de: "Beeren", en: "Berries", fr: "Baies / petits fruits", it: "Frutti di bosco", ti: "በሪ" } },
+    { id: "banane",    label: { de: "Banane", en: "Banana", fr: "Banane", it: "Banana", ti: "ባናና" } },
+    { id: "rueebli",   label: { de: "Rüebli/Karotte", en: "Carrot", fr: "Carotte", it: "Carota", ti: "ካሮት" } },
+    { id: "zitrone",   label: { de: "Zitrone", en: "Lemon", fr: "Citron", it: "Limone", ti: "ሎሚ" } },
+    { id: "gewuerz",   label: { de: "Zimt/Gewürze", en: "Cinnamon / spices", fr: "Cannelle / épices", it: "Cannella / spezie", ti: "ቀረፋ / ቅመማት" } },
+    { id: "natur",     label: { de: "Natur/Vanille", en: "Plain / vanilla", fr: "Nature / vanille", it: "Naturale / vaniglia", ti: "ተራ / ቫኒላ" } }
+  ],
+
+  /* Höchstens so viele Hauptzutaten pro Eintrag (muss mit Code.gs übereinstimmen). */
+  MAX_INGREDIENTS: 2,
+
+  /* Ab so vielen Einträgen in einer Art bzw. bei einer Hauptzutat erscheint der freundliche
+     Hinweis "Davon gibt es schon einige …" (es wird nie blockiert). Zutaten kommen öfter vor
+     als Arten (bis zu zwei pro Kuchen), darum liegt ihre Schwelle höher. */
   HINT_THRESHOLD: 3,
+  INGREDIENT_HINT_THRESHOLD: 4,
 
   /* Beschreibungen (ohne Namen) öffentlich zeigen? Wirkt nur, wenn zusätzlich in
      Code.gs SHOW_DESCRIPTIONS = true gesetzt und neu bereitgestellt ist. */

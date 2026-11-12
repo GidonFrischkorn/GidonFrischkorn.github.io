@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Tests ohne Abhängigkeiten:  node apps-script/kuchenverkauf/test/run-tests.js
    1. Führt Code.gs mit nachgebauten Google-Diensten (Sheet, Lock, ContentService) aus.
-   2. Prüft, dass config.js und Code.gs dieselben Kategorien und Längen haben.
+   2. Prüft, dass config.js und Code.gs dieselben Kategorien, Zutaten und Grenzen haben.
    3. Prüft, dass alle Texte in allen fünf Sprachen vorhanden sind. */
 "use strict";
 const fs = require("fs");
@@ -41,6 +41,10 @@ function makeEnv(opts) {
             out.push(v === undefined ? "" : v);
           }
           return out;
+        }),
+        setValues: (vals) => vals.forEach((vr, i) => {
+          if (!rows[r - 1 + i]) rows[r - 1 + i] = [];
+          vr.forEach((v, j) => { rows[r - 1 + i][c - 1 + j] = v; });
         })
       })
     };
@@ -91,39 +95,50 @@ console.log("Code.gs");
 }
 {
   const env = makeEnv();
-  const r = env.post({ name: "  Lena   Muster ", category: "schoko", description: "Brownies,\n vegan", website: "" });
+  const r = env.post({ name: "  Lena   Muster ", category: "muffins", ingredients: ["schoko", "banane"], description: "Brownies,\n vegan", website: "" });
   check("gültiger Eintrag: ok", r.ok === true, JSON.stringify(r));
   const row = env.rows()[1];
   // Date aus dem vm-Kontext: instanceof greift dort nicht, daher toString.
   check("Zeile: Zeitstempel ist ein Datum", Object.prototype.toString.call(row[0]) === "[object Date]");
   check("Zeile: Name bereinigt", row[1] === "Lena Muster", JSON.stringify(row[1]));
-  check("Zeile: Kategorie als deutscher Text", row[2] === "Schokokuchen");
+  check("Zeile: Kategorie als deutscher Text", row[2] === "Muffins/Cupcakes");
   check("Zeile: Beschreibung ohne Zeilenumbruch", row[3] === "Brownies, vegan", JSON.stringify(row[3]));
   check("Lock geholt und freigegeben", env.lockLog.join(",") === "lock,release");
   const g = env.get();
-  check("doGet zählt den Eintrag", g.data.counts.schoko === 1 && g.data.total === 1);
+  check("Zeile: Hauptzutaten als deutscher Text in Spalte E", row[4] === "Schokolade, Banane", JSON.stringify(row[4]));
+  check("doGet zählt den Eintrag", g.data.counts.muffins === 1 && g.data.total === 1);
+  check("doGet zählt die Hauptzutaten", g.data.ingredients.schoko === 1 && g.data.ingredients.banane === 1 &&
+    Object.values(g.data.ingredients).reduce((a, b) => a + b, 0) === 2, JSON.stringify(g.data.ingredients));
   check("doGet-Antwort enthält keinen Namen", !g.raw.includes("Lena") && !g.raw.includes("Muster"));
   check("doGet-Antwort enthält keine Beschreibung", !g.raw.includes("Brownies"));
 }
 {
   const env = makeEnv();
-  const r = env.post({ name: "Bot", category: "schoko", description: "", website: "http://spam" });
+  const r = env.post({ name: "Bot", category: "muffins", description: "", website: "http://spam" });
   check("Honeypot: Antwort ok, aber nichts gespeichert", r.ok === true && env.rows().length <= 1);
 }
 {
   const env = makeEnv();
   const cases = [
-    [{ category: "schoko" }, "name_required"],
-    [{ name: "   ", category: "schoko" }, "name_required"],
-    [{ name: "x".repeat(61), category: "schoko" }, "name_too_long"],
+    [{ category: "muffins" }, "name_required"],
+    [{ name: "   ", category: "muffins" }, "name_required"],
+    [{ name: "x".repeat(61), category: "muffins" }, "name_too_long"],
     [{ name: "Ali", category: "xyz" }, "category_invalid"],
     [{ name: "Ali", category: "__proto__" }, "category_invalid"],
     [{ name: "Ali", category: "constructor" }, "category_invalid"],
     [{ name: "Ali", category: "hasOwnProperty" }, "category_invalid"],
-    [{ name: "Ali", category: ["schoko"] }, "category_invalid"],
-    [{ name: "Ali", category: "Schokokuchen" }, "category_invalid"],
-    [{ name: "Ali", category: "obst", description: "y".repeat(201) }, "description_too_long"],
-    [{ name: { a: 1 }, category: "obst" }, "name_required"],
+    [{ name: "Ali", category: ["muffins"] }, "category_invalid"],
+    [{ name: "Ali", category: "Muffins/Cupcakes" }, "category_invalid"],
+    [{ name: "Ali", category: "schoko" }, "category_invalid"],
+    [{ name: "Ali", category: "waehe", description: "y".repeat(201) }, "description_too_long"],
+    [{ name: { a: 1 }, category: "waehe" }, "name_required"],
+    [{ name: "Ali", category: "waehe", ingredients: "schoko" }, "ingredients_invalid"],
+    [{ name: "Ali", category: "waehe", ingredients: ["xyz"] }, "ingredients_invalid"],
+    [{ name: "Ali", category: "waehe", ingredients: ["Schokolade"] }, "ingredients_invalid"],
+    [{ name: "Ali", category: "waehe", ingredients: ["schoko", "nuss", "apfel"] }, "ingredients_invalid"],
+    [{ name: "Ali", category: "waehe", ingredients: ["__proto__"] }, "ingredients_invalid"],
+    [{ name: "Ali", category: "waehe", ingredients: [1] }, "ingredients_invalid"],
+    [{ name: "Ali", category: "waehe", ingredients: { 0: "apfel" } }, "ingredients_invalid"],
     ["kein json", "bad_request"],
     ["[1,2]", "bad_request"],
     ["null", "bad_request"],
@@ -134,8 +149,15 @@ console.log("Code.gs");
     check("abgelehnt (" + code + "): " + JSON.stringify(body).slice(0, 40), r.ok === false && r.error === code, JSON.stringify(r));
   });
   check("abgelehnte Einträge schreiben nichts", env.rows().length <= 1);
-  const ok60 = env.post({ name: "x".repeat(60), category: "obst", description: "y".repeat(200) });
+  const ok60 = env.post({ name: "x".repeat(60), category: "waehe", description: "y".repeat(200) });
   check("Grenzwerte 60/200 Zeichen erlaubt", ok60.ok === true);
+  const okNone = makeEnv();
+  check("ohne Hauptzutaten erlaubt (Feld fehlt / null / leer)",
+    okNone.post({ name: "A", category: "blech" }).ok && okNone.post({ name: "B", category: "blech", ingredients: null }).ok &&
+    okNone.post({ name: "C", category: "blech", ingredients: [] }).ok && okNone.rows().slice(1).every((r) => r[4] === ""));
+  const dup = makeEnv();
+  dup.post({ name: "A", category: "blech", ingredients: ["apfel", "apfel"] });
+  check("doppelte Hauptzutat nur einmal gespeichert", dup.rows()[1][4] === "Apfel" && dup.get().data.ingredients.apfel === 1);
 }
 {
   const env = makeEnv();
@@ -147,7 +169,7 @@ console.log("Code.gs");
   check("Formel-Injection: Beschreibung beginnt nie mit = + - @", rows.every((r) => !/^[=+\-@]/.test(r[3])));
   check("Formel-Injection: mit Apostroph geschützt", rows.every((r) => r[1][0] === "'" && r[3][0] === "'"));
   const harmless = makeEnv();
-  harmless.post({ name: "Mia", category: "obst", description: "Apfelkuchen" });
+  harmless.post({ name: "Mia", category: "waehe", description: "Apfelkuchen" });
   check("normale Werte bleiben unverändert", harmless.rows()[1][1] === "Mia" && harmless.rows()[1][3] === "Apfelkuchen");
 }
 {
@@ -163,32 +185,58 @@ console.log("Code.gs");
   const env = makeEnv();
   env.get();
   const rows = env.rows();
-  rows.push([new Date(), "A", "Obstkuchen", ""]);
-  rows.push([new Date(), "B", " Obstkuchen ", ""]);
-  rows.push([new Date(), "C", "Irgendwas", ""]);
+  rows.push([new Date(), "A", "Wähe/Tarte", "", "Apfel; Zimt/Gewürze"]);
+  rows.push([new Date(), "B", " Wähe/Tarte ", "", "apfel, Quatsch"]);
+  rows.push([new Date(), "E", "Wähe/Tarte", ""]);
+  rows.push([new Date(), "F", "Wähe/Tarte", "", " Apfel ,Apfel"]);
+  rows.push([new Date(), "C", "Irgendwas", "", "Apfel"]);
   rows.push([new Date(), "D", "", ""]);
   rows.push(["", "", "", ""]);
   const g = env.get();
-  check("von Hand eingetragene Zeilen: bekannte gezählt, unbekannte/leere ignoriert", g.data.counts.obst === 2 && g.data.total === 2, JSON.stringify(g.data));
+  check("von Hand eingetragene Zeilen: bekannte gezählt, unbekannte/leere ignoriert", g.data.counts.waehe === 4 && g.data.total === 4, JSON.stringify(g.data));
+  check("von Hand eingetragene Zutaten: ; und , als Trenner, Unbekanntes und Doppeltes ignoriert",
+    g.data.ingredients.apfel === 3 && g.data.ingredients.gewuerz === 1 &&
+    Object.values(g.data.ingredients).reduce((a, b) => a + b, 0) === 4, JSON.stringify(g.data.ingredients));
 }
 {
   const env = makeEnv({ maxRows: 2 });
-  env.post({ name: "A", category: "obst" });
-  env.post({ name: "B", category: "obst" });
-  const r = env.post({ name: "C", category: "obst" });
+  env.post({ name: "A", category: "waehe" });
+  env.post({ name: "B", category: "waehe" });
+  const r = env.post({ name: "C", category: "waehe" });
   check("MAX_ROWS erreicht: 'full'", r.ok === false && r.error === "full" && env.rows().length === 3);
   check("Lock auch bei 'full' freigegeben", env.lockLog.filter((x) => x === "release").length === 3);
 }
 {
   const env = makeEnv({ lockFails: true });
-  const r = env.post({ name: "A", category: "obst" });
+  const r = env.post({ name: "A", category: "waehe" });
   check("Lock nicht verfügbar: 'busy', nichts gespeichert", r.error === "busy" && env.rows().length <= 1);
 }
 {
   const env = makeEnv({ failAppend: true });
   let r;
-  try { r = env.post({ name: "A", category: "obst" }); } catch (e) { r = { thrown: e.message }; }
+  try { r = env.post({ name: "A", category: "waehe" }); } catch (e) { r = { thrown: e.message }; }
   check("Fehler beim Schreiben: 'server', Lock freigegeben", r.error === "server" && env.lockLog.slice(-1)[0] === "release", JSON.stringify(r));
+}
+{
+  // Blatt aus der ersten Version: Kopfzeile mit 4 Spalten und schon ein Eintrag.
+  const env = makeEnv();
+  env.ctx.SpreadsheetApp.getActiveSpreadsheet().insertSheet("Einträge");
+  const rows = env.rows();
+  rows.push(["Zeitstempel", "Name des Kindes", "Art (umbenannt)", "Beschreibung"]);
+  rows.push([new Date(), "Alt", "Muffins/Cupcakes", "alt"]);
+  const g = env.get();
+  check("altes Blatt: Spalte E 'Hauptzutaten' ergänzt, umbenannte Überschrift bleibt",
+    rows[0][4] === "Hauptzutaten" && rows[0][2] === "Art (umbenannt)", JSON.stringify(rows[0]));
+  check("altes Blatt: bestehende Zeile unverändert und gezählt",
+    rows[1].length === 4 && rows[1][1] === "Alt" && g.data.counts.muffins === 1 && g.data.total === 1);
+  env.post({ name: "Neu", category: "muffins", ingredients: ["zitrone"] });
+  check("altes Blatt: neuer Eintrag mit Zutat in Spalte E", rows[2][4] === "Zitrone" && env.get().data.ingredients.zitrone === 1);
+}
+{
+  const env = makeEnv();
+  env.post({ name: "Lena Muster", category: "muffins", ingredients: ["schoko"], description: "geheim" });
+  const raw = env.get().raw;
+  check("doGet mit Zutaten: weiterhin keine Namen/Beschreibungen", !raw.includes("Lena") && !raw.includes("geheim"));
 }
 
 /* ---------- 2. config.js vs. Code.gs ---------- */
@@ -204,6 +252,14 @@ check("gleiche Kategorie-IDs in gleicher Reihenfolge", JSON.stringify(cfgIds) ==
 check("label.de == Text in Code.gs", C.CATEGORIES.every((c) => gsCats[c.id] === c.label.de),
   C.CATEGORIES.filter((c) => gsCats[c.id] !== c.label.de).map((c) => c.id).join(","));
 check("IDs eindeutig", new Set(cfgIds).size === cfgIds.length);
+const gsIngs = vm.runInContext("INGREDIENTS", gs);
+const cfgIngIds = C.INGREDIENTS.map((g) => g.id);
+check("gleiche Zutaten-IDs in gleicher Reihenfolge", JSON.stringify(cfgIngIds) === JSON.stringify(Object.keys(gsIngs)), cfgIngIds + " vs " + Object.keys(gsIngs));
+check("Zutaten: label.de == Text in Code.gs", C.INGREDIENTS.every((g) => gsIngs[g.id] === g.label.de),
+  C.INGREDIENTS.filter((g) => gsIngs[g.id] !== g.label.de).map((g) => g.id).join(","));
+check("Zutaten-IDs eindeutig", new Set(cfgIngIds).size === cfgIngIds.length);
+check("Zutaten-Texte ohne Komma/Semikolon (Trenner im Sheet)", C.INGREDIENTS.every((g) => !/[,;]/.test(g.label.de)));
+check("MAX_INGREDIENTS gleich", C.MAX_INGREDIENTS === vm.runInContext("MAX_INGREDIENTS", gs));
 check("MAX_NAME gleich", C.MAX_NAME === vm.runInContext("MAX_NAME", gs));
 check("MAX_DESC gleich", C.MAX_DESC === vm.runInContext("MAX_DESC", gs));
 check("SHOW_DESCRIPTIONS ist im Frontend aus", C.SHOW_DESCRIPTIONS === false);
@@ -228,6 +284,7 @@ LANGS.forEach((l) => {
   });
   check(l + ": Platzhalter {…} wie im Deutschen", ph.length === 0, ph.join(","));
   check(l + ": alle Kategorien übersetzt", C.CATEGORIES.every((c) => c.label[l] && c.label[l].trim()));
+  check(l + ": alle Zutaten übersetzt", C.INGREDIENTS.every((g) => g.label[l] && g.label[l].trim()));
   check(l + ": Titel vorhanden", !!C.EVENT.title[l]);
 });
 

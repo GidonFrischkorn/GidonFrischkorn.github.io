@@ -12,6 +12,7 @@
   var state = {
     lang: "de",
     counts: null,        // { id: Anzahl } nach erfolgreichem Laden
+    ingCounts: null,     // { Zutat-id: Anzahl }; null, solange das Backend keine liefert
     descriptions: null,  // nur bei SHOW_DESCRIPTIONS
     loading: false,
     loadFailed: false,
@@ -32,7 +33,10 @@
     submit: $("submit"), submitText: $("submitText"), submitStatus: $("submitStatus"),
     submitError: $("submitError"),
     success: $("success"), successH: $("successH"), successText: $("successText"), again: $("again"),
-    descCard: $("descCard"), descList: $("descList")
+    descCard: $("descCard"), descList: $("descList"),
+    byCatH: $("byCatH"), ingBlock: $("ingBlock"), ingCounts: $("ingCounts"), ingNone: $("ingNone"),
+    ingField: $("ingField"), ingGrid: $("ingGrid"), ingHint: $("ingHint"),
+    ingManyHint: $("ingManyHint"), ingErr: $("ingErr")
   };
 
   var backendReady = !!MOCK || !!C.WEB_APP_URL;
@@ -52,6 +56,23 @@
     return null;
   }
   function countOf(id) { return state.counts ? (state.counts[id] || 0) : null; }
+  function ingById(id) {
+    for (var i = 0; i < C.INGREDIENTS.length; i++) if (C.INGREDIENTS[i].id === id) return C.INGREDIENTS[i];
+    return null;
+  }
+  function ingCountOf(id) { return state.ingCounts ? (state.ingCounts[id] || 0) : null; }
+  function checkedIngredients() {
+    return C.INGREDIENTS.map(function (g) { return g.id; }).filter(function (id) {
+      var box = el.ingGrid.querySelector('input[value="' + id + '"]');
+      return box && box.checked;
+    });
+  }
+  /* "Muffins/Cupcakes" oder "Muffins/Cupcakes (Schokolade, Banane)" */
+  function entryLabel(catId, ingIds) {
+    var s = catLabel(catById(catId));
+    if (ingIds && ingIds.length) s += " (" + ingIds.map(function (id) { return catLabel(ingById(id)); }).join(", ") + ")";
+    return s;
+  }
 
   function formatDate() {
     var p = C.EVENT.date.split("-").map(Number);
@@ -117,10 +138,12 @@
     renderSelect();
     renderDescCount();
     renderFieldErrors();
+    renderIngredients();
     renderManyHint();
     if (!el.success.hidden && el.success.dataset.cat) {
       el.successText.textContent = t("success_text", {
-        cat: catLabel(catById(el.success.dataset.cat)), name: el.success.dataset.name
+        cat: entryLabel(el.success.dataset.cat, el.success.dataset.ings ? el.success.dataset.ings.split(",") : []),
+        name: el.success.dataset.name
       });
     }
     if (!el.submitError.hidden && el.submitError.dataset.key) {
@@ -177,6 +200,7 @@
       .then(function (data) {
         if (!data || !data.ok || typeof data.counts !== "object") throw new Error("bad_response");
         state.counts = data.counts;
+        state.ingCounts = (data.ingredients && typeof data.ingredients === "object") ? data.ingredients : null;
         state.descriptions = (C.SHOW_DESCRIPTIONS && data.descriptions) || null;
       })
       .catch(function (err) {
@@ -188,6 +212,7 @@
         el.bars.removeAttribute("aria-busy");
         renderOverview();
         renderSelect();
+        renderIngredients();
         renderManyHint();
         renderDescriptions();
       });
@@ -203,7 +228,9 @@
     el.form.hidden = !backendReady || !el.success.hidden;
 
     el.bars.hidden = !have;
+    el.byCatH.hidden = !have;
     el.total.hidden = !have;
+    el.ingBlock.hidden = !have || !state.ingCounts;
     if (!have) return;
 
     var max = 1, total = 0;
@@ -236,6 +263,31 @@
       el.bars.appendChild(li);
     });
     el.total.textContent = total === 0 ? t("empty") : t("total", { n: total });
+    renderIngredientOverview();
+  }
+
+  /* Zutaten in der Übersicht: nur die, die schon vorkommen, häufigste zuerst. */
+  function renderIngredientOverview() {
+    el.ingCounts.textContent = "";
+    if (!state.ingCounts) return;
+    var used = C.INGREDIENTS.filter(function (g) { return ingCountOf(g.id) > 0; });
+    used.sort(function (a, b) { return ingCountOf(b.id) - ingCountOf(a.id); });   // stabil: sonst Listenreihenfolge
+    used.forEach(function (g) {
+      var n = ingCountOf(g.id);
+      var li = document.createElement("li");
+      li.className = "chip" + (n >= C.INGREDIENT_HINT_THRESHOLD ? " many" : "");
+      var lab = document.createElement("span");
+      lab.textContent = catLabel(g);
+      var num = document.createElement("span");
+      num.className = "chip-n";
+      num.textContent = String(n);
+      li.appendChild(lab);
+      li.appendChild(document.createTextNode(" "));
+      li.appendChild(num);
+      el.ingCounts.appendChild(li);
+    });
+    el.ingCounts.hidden = used.length === 0;
+    el.ingNone.hidden = used.length > 0;
   }
 
   function renderDescriptions() {
@@ -283,9 +335,46 @@
     el.category.value = current;
   }
 
+  /* Kästchen einmal anlegen, danach nur Texte, Zahlen und Sperren aktualisieren. */
+  function renderIngredients() {
+    if (!el.ingGrid.firstChild) {
+      C.INGREDIENTS.forEach(function (g) {
+        var lab = document.createElement("label");
+        lab.className = "ing";
+        var box = document.createElement("input");
+        box.type = "checkbox";
+        box.name = "ingredients";
+        box.value = g.id;
+        var txt = document.createElement("span");
+        txt.className = "ing-label";
+        lab.appendChild(box);
+        lab.appendChild(txt);
+        el.ingGrid.appendChild(lab);
+      });
+    }
+    el.ingHint.textContent = t("ing_hint", { n: C.MAX_INGREDIENTS });
+    var full = checkedIngredients().length >= C.MAX_INGREDIENTS;
+    Array.prototype.forEach.call(el.ingGrid.querySelectorAll("input"), function (box) {
+      var g = ingById(box.value);
+      var n = ingCountOf(g.id);
+      // Umbruch nach "/" erlauben (unsichtbares Leerzeichen), statt mitten im Wort zu trennen.
+      box.nextSibling.textContent = catLabel(g).replace(/\//g, "/\u200B") + (n === null ? "" : " (" + n + ")");
+      // Bei voller Auswahl die übrigen sperren; abwählen geht immer.
+      box.disabled = full && !box.checked;
+      box.parentNode.classList.toggle("off", box.disabled);
+    });
+  }
+
   function renderManyHint() {
     var n = countOf(el.category.value);
     el.catHint.textContent = (n !== null && n >= C.HINT_THRESHOLD) ? t("hint_many") : "";
+    var many = checkedIngredients().filter(function (id) {
+      var k = ingCountOf(id);
+      return k !== null && k >= C.INGREDIENT_HINT_THRESHOLD;
+    });
+    el.ingManyHint.textContent = many.length
+      ? t("hint_many_ing", { list: many.map(function (id) { return catLabel(ingById(id)); }).join(", ") })
+      : "";
   }
 
   function renderDescCount() {
@@ -296,15 +385,21 @@
   var FIELDS = {
     name: { input: "name", err: "nameErr" },
     category: { input: "category", err: "catErr" },
-    description: { input: "description", err: "descErr" }
+    description: { input: "description", err: "descErr" },
+    ingredients: { input: "ingField", err: "ingErr" }
   };
+  var LIMITS = { name: "MAX_NAME", description: "MAX_DESC", ingredients: "MAX_INGREDIENTS" };
+  function focusField(f) {
+    if (f === "ingredients") { var b = el.ingGrid.querySelector("input:not([disabled])"); if (b) b.focus(); return; }
+    el[FIELDS[f].input].focus();
+  }
 
   function renderFieldErrors() {
     Object.keys(FIELDS).forEach(function (f) {
       var key = state.errors[f];
       var input = el[FIELDS[f].input], err = el[FIELDS[f].err];
       if (key) {
-        err.textContent = t(key, { n: f === "name" ? C.MAX_NAME : C.MAX_DESC });
+        err.textContent = t(key, { n: C[LIMITS[f]] });
         err.hidden = false;
         input.setAttribute("aria-invalid", "true");
       } else {
@@ -320,6 +415,7 @@
       name: el.name.value.replace(/\s+/g, " ").trim(),
       category: el.category.value,
       description: el.description.value.replace(/\s+/g, " ").trim(),
+      ingredients: checkedIngredients(),
       website: el.website.value
     };
   }
@@ -330,6 +426,7 @@
     else if (v.name.length > C.MAX_NAME) e.name = "err_name_long";
     if (!catById(v.category)) e.category = "err_cat";
     if (v.description.length > C.MAX_DESC) e.description = "err_desc_long";
+    if (v.ingredients.length > C.MAX_INGREDIENTS) e.ingredients = "err_ing";
     return e;
   }
 
@@ -337,7 +434,8 @@
     name_required: ["name", "err_name"],
     name_too_long: ["name", "err_name_long"],
     category_invalid: ["category", "err_cat"],
-    description_too_long: ["description", "err_desc_long"]
+    description_too_long: ["description", "err_desc_long"],
+    ingredients_invalid: ["ingredients", "err_ing"]
   };
 
   function showSubmitError(key) {
@@ -362,7 +460,7 @@
     state.errors = validate(v);
     renderFieldErrors();
     var first = Object.keys(FIELDS).filter(function (f) { return state.errors[f]; })[0];
-    if (first) { el[FIELDS[first].input].focus(); return; }
+    if (first) { focusField(first); return; }
 
     setSending(true);
     request("POST", v)
@@ -374,7 +472,7 @@
           state.errors = {};
           state.errors[map[0]] = map[1];
           renderFieldErrors();
-          el[FIELDS[map[0]].input].focus();
+          focusField(map[0]);
         } else {
           showSubmitError(code === "full" ? "err_full" : "err_submit");
         }
@@ -389,7 +487,8 @@
   function showSuccess(v) {
     el.success.dataset.cat = v.category;
     el.success.dataset.name = v.name;
-    el.successText.textContent = t("success_text", { cat: catLabel(catById(v.category)), name: v.name });
+    el.success.dataset.ings = v.ingredients.join(",");
+    el.successText.textContent = t("success_text", { cat: entryLabel(v.category, v.ingredients), name: v.name });
     el.form.hidden = true;
     el.success.hidden = false;
     el.successH.focus();
@@ -403,8 +502,10 @@
     el.success.hidden = true;
     delete el.success.dataset.cat;
     delete el.success.dataset.name;
+    delete el.success.dataset.ings;
     el.form.hidden = false;
     renderFieldErrors();
+    renderIngredients();
     renderManyHint();
     renderDescCount();
     el.name.focus();
@@ -420,6 +521,11 @@
   el.form.addEventListener("submit", onSubmit);
   el.category.addEventListener("change", function () {
     if (state.errors.category) { delete state.errors.category; renderFieldErrors(); }
+    renderManyHint();
+  });
+  el.ingGrid.addEventListener("change", function () {
+    if (state.errors.ingredients) { delete state.errors.ingredients; renderFieldErrors(); }
+    renderIngredients();
     renderManyHint();
   });
   el.name.addEventListener("input", function () {

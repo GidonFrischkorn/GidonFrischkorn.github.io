@@ -6,14 +6,15 @@ Programmierkenntnisse sind nicht nötig.
 
 **So funktioniert es:** Die Eltern öffnen die Seite
 `https://www.gfrischkorn.org/apps/babar-kuchen/` (nirgends verlinkt, nur per Mail).
+Sie wählen eine **Kuchen-Art** (Pflicht) und freiwillig bis zu zwei **Hauptzutaten**.
 Was sie eintragen, landet über ein kleines Google-Programm (Apps Script) als neue Zeile
-in der Google-Tabelle. Die Seite fragt dasselbe Programm nach den Zahlen pro Kategorie
-und bekommt dabei nie Namen zu sehen.
+in der Google-Tabelle. Die Seite fragt dasselbe Programm nach den Zahlen pro Art und pro
+Zutat und bekommt dabei nie Namen zu sehen.
 
 | Was | Wo |
 | --- | --- |
 | Eintragsseite | `apps/babar-kuchen/` im Repository |
-| Alle Einstellungen der Seite (URL, Titel, Datum, Kategorien) | `apps/babar-kuchen/config.js` |
+| Alle Einstellungen der Seite (URL, Titel, Datum, Arten, Zutaten) | `apps/babar-kuchen/config.js` |
 | Texte in den fünf Sprachen | `apps/babar-kuchen/i18n.js` |
 | Google-Programm | `apps-script/kuchenverkauf/Code.gs` (wird in Google eingefügt, nicht veröffentlicht) |
 
@@ -88,7 +89,8 @@ Die Eintragsseite funktioniert trotzdem, denn das Programm läuft mit deinem Kon
 ## 6. Testen
 
 1. **Programm direkt:** Die Web-App-URL im Browser öffnen. Es erscheint Text wie
-   `{"ok":true,"counts":{"schoko":0,"obst":0,…},"total":0}`. Darin stehen nur Zahlen, nie Namen.
+   `{"ok":true,"counts":{"muffins":0,"blech":0,…},"ingredients":{"schoko":0,…},"total":0}`.
+   Darin stehen nur Zahlen, nie Namen.
    Erscheint stattdessen eine Google-Anmeldeseite, steht der Zugriff nicht auf „Jeder“
    (Schritt 4 prüfen).
 2. **Seite:** `https://www.gfrischkorn.org/apps/babar-kuchen/` öffnen, am besten auf dem Handy.
@@ -106,9 +108,13 @@ die Eltern können oben umschalten.
 ## Während der Aktion
 
 - **Einträge korrigieren:** Direkt in der Tabelle ändern oder Zeilen löschen. Die Zahlen auf
-  der Seite passen sich beim nächsten Laden an. Die Spalte „Kategorie“ muss genau einen der
-  Kategorienamen enthalten (z. B. `Obstkuchen`), sonst wird die Zeile nicht mitgezählt.
-- **Ab wann der Hinweis erscheint:** `HINT_THRESHOLD` in `config.js` (derzeit 3).
+  der Seite passen sich beim nächsten Laden an.
+  - Spalte „Kategorie“ (C) muss genau einen der Namen der Arten enthalten (z. B. `Wähe/Tarte`),
+    sonst wird die Zeile nicht mitgezählt.
+  - Spalte „Hauptzutaten“ (E) enthält die Zutaten mit Komma getrennt, z. B. `Schokolade, Banane`.
+    Unbekannte Wörter werden einfach nicht gezählt.
+- **Ab wann der Hinweis erscheint:** `HINT_THRESHOLD` (Arten, derzeit 3) und
+  `INGREDIENT_HINT_THRESHOLD` (Zutaten, derzeit 4) in `config.js`.
 - **Spam:** Ein unsichtbares Fangfeld hält einfache Bots ab, und mehr als 500 Zeilen nimmt das
   Programm nicht an. Unsinnige Zeilen einfach in der Tabelle löschen.
 
@@ -117,20 +123,27 @@ die Eltern können oben umschalten.
 **Texte, Titel, Datum:** in `config.js` bzw. `i18n.js`. Danach nur committen und pushen,
 an Google muss nichts geändert werden.
 
-**Kategorien hinzufügen, entfernen oder umbenennen:** An **zwei** Stellen gleich ändern:
+**Arten oder Hauptzutaten hinzufügen, entfernen oder umbenennen:** An **zwei** Stellen gleich ändern:
 
-1. `apps/babar-kuchen/config.js` → `CATEGORIES` (mit allen fünf Übersetzungen)
-2. `apps-script/kuchenverkauf/Code.gs` → `CATEGORIES` (gleiche `id`, Text = deutscher Name)
+1. `apps/babar-kuchen/config.js` → `CATEGORIES` bzw. `INGREDIENTS` (mit allen fünf Übersetzungen)
+2. `apps-script/kuchenverkauf/Code.gs` → `CATEGORIES` bzw. `INGREDIENTS`
+   (gleiche `id`, gleiche Reihenfolge, Text = deutscher Name; Zutaten ohne Komma im Namen)
 
 Danach `Code.gs` neu in den Apps-Script-Editor kopieren und **neu bereitstellen** (siehe unten).
+**Reihenfolge:** zuerst `Code.gs` neu bereitstellen, dann die Seite veröffentlichen. Umgekehrt
+würde das alte Programm neue Arten ablehnen. Wie viele Zutaten man ankreuzen darf, steht in
+`MAX_INGREDIENTS` (ebenfalls an beiden Stellen).
 Ob beide Listen zusammenpassen, prüft der Test:
 
 ```sh
 node apps-script/kuchenverkauf/test/run-tests.js
 ```
 
-Wichtig: Wird eine Kategorie umbenannt, zählen bereits eingetragene Zeilen mit dem alten
+Wichtig: Wird eine Art oder Zutat umbenannt, zählen bereits eingetragene Zeilen mit dem alten
 Namen nicht mehr mit. Dann den Namen in der Tabelle von Hand anpassen.
+
+Die Spalte „Hauptzutaten“ ergänzt das Programm in einer bestehenden Tabelle selbst
+(Kopfzeile, Spalte E). Bestehende Zeilen bleiben, wie sie sind.
 
 **Code.gs geändert → neu bereitstellen, ohne dass sich die URL ändert:**
 Apps Script → **Bereitstellen → Bereitstellungen verwalten** → Stift-Symbol →
@@ -168,7 +181,8 @@ manchmal Namen („von Lenas Mama“). Den Datenschutztext in `i18n.js` dann ebe
 | „Die Eintragung ist noch nicht freigeschaltet.“ | `WEB_APP_URL` in `config.js` ist leer (Schritt 5). |
 | „Die Übersicht konnte nicht geladen werden.“ | URL falsch kopiert (muss auf `/exec` enden), Zugriff nicht auf „Jeder“, oder keine Internetverbindung. URL direkt im Browser testen (Schritt 6.1). |
 | Eintragen klappt nicht, Übersicht schon | Code.gs nach einer Änderung nicht neu bereitgestellt, oder die Berechtigung (Schritt 3) fehlt. In Apps Script unter **Ausführungen** stehen die Fehler. |
-| Zahl stimmt nicht mit Tabelle überein | In der Spalte „Kategorie“ steht ein Name, der nicht genau einer Kategorie entspricht. |
+| Zahl stimmt nicht mit Tabelle überein | In der Spalte „Kategorie“ steht ein Name, der nicht genau einer Art entspricht, bzw. in „Hauptzutaten“ ein unbekannter Zutatenname. |
+| Neue Arten werden abgelehnt („Bitte wähl eine Kuchen-Art aus“), Zutaten fehlen in der Übersicht | `Code.gs` ist noch die alte Version. Neu einfügen und als **Neue Version** bereitstellen. |
 
 **Hinweis zur Sicherheit:** Die Web-App-URL steht im öffentlichen Repository. Wer sie findet,
 kann darüber höchstens zusätzliche Einträge machen, aber nie Namen oder Beschreibungen lesen.

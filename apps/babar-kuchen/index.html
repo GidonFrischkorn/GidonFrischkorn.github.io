@@ -34,7 +34,13 @@
     <section class="card" aria-labelledby="overviewH">
       <h2 id="overviewH" data-i18n="overview_h"></h2>
       <p class="status" id="overviewStatus" role="status"></p>
-      <ul class="bars" id="bars" hidden></ul>
+      <h3 class="sub-h" id="byCatH" data-i18n="overview_by_cat" hidden></h3>
+      <ul class="bars" id="bars" aria-labelledby="byCatH" hidden></ul>
+      <div id="ingBlock" hidden>
+        <h3 class="sub-h" id="byIngH" data-i18n="overview_by_ing"></h3>
+        <ul class="chips" id="ingCounts" aria-labelledby="byIngH"></ul>
+        <p class="ing-none" id="ingNone" data-i18n="ing_none" hidden></p>
+      </div>
       <p class="total" id="total" hidden></p>
       <p class="error" id="overviewError" hidden>
         <span id="overviewErrorText"></span>
@@ -48,6 +54,11 @@
       <p class="notice off" id="notConfigured" hidden data-i18n="not_configured"></p>
 
       <form id="form" novalidate>
+        <div class="tip" role="note" aria-labelledby="tipH">
+          <p class="tip-h" id="tipH" data-i18n="tip_h"></p>
+          <p data-i18n="tip_text"></p>
+        </div>
+
         <div class="field">
           <label for="name">
             <span data-i18n="name_label"></span>
@@ -70,6 +81,14 @@
           <p class="many-hint" id="catHint" aria-live="polite"></p>
           <p class="field-error" id="catErr" hidden></p>
         </div>
+
+        <fieldset class="field ings" id="ingField" aria-describedby="ingHint ingManyHint ingErr">
+          <legend data-i18n="ing_legend"></legend>
+          <p class="hint" id="ingHint"></p>
+          <div class="ing-grid" id="ingGrid"></div>
+          <p class="many-hint" id="ingManyHint" aria-live="polite"></p>
+          <p class="field-error" id="ingErr" hidden></p>
+        </fieldset>
 
         <div class="field">
           <label for="description" data-i18n="desc_label"></label>

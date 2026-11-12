@@ -10,9 +10,15 @@
   if (!mode) { window.KuchenMock = null; return; }
 
   var C = window.KUCHEN_CONFIG;
-  var KEY = "babar-kuchen-demo";
-  var SEED = { schoko: 4, obst: 1, ruehr: 3, muffins: 2, blech: 1, sonstiges: 1 };
-  var SEED_DESC = { schoko: ["Brownies", "Schoggitorte, vegan"], ruehr: ["Marmorkuchen, glutenfrei"] };
+  var KEY = "babar-kuchen-demo2";   // neuer Schlüssel: alte Demo-Daten im Tab nicht weiterverwenden
+  // [Art, Hauptzutaten, Beschreibung] – 12 Beispiel-Einträge
+  var SEED = [
+    ["muffins", ["schoko"], ""], ["muffins", ["schoko", "banane"], ""], ["muffins", ["beeren"], ""],
+    ["blech", ["schoko"], "Brownies"], ["blech", ["apfel"], ""],
+    ["ruehr", ["natur"], "Marmorkuchen, glutenfrei"], ["ruehr", ["zitrone"], ""], ["ruehr", ["schoko", "nuss"], ""],
+    ["guetzli", ["gewuerz", "nuss"], "Zimtsterne"], ["waehe", ["apfel"], ""],
+    ["torte", ["rueebli", "nuss"], ""], ["sonstiges", [], ""]
+  ];
 
   function load() {
     try {
@@ -21,11 +27,7 @@
     } catch (e) {}
     var rows = [];
     if (mode !== "empty") {
-      Object.keys(SEED).forEach(function (id) {
-        for (var i = 0; i < SEED[id]; i++) {
-          rows.push({ category: id, description: (SEED_DESC[id] || [])[i] || "" });
-        }
-      });
+      SEED.forEach(function (r) { rows.push({ category: r[0], ingredients: r[1], description: r[2] }); });
     }
     return rows;
   }
@@ -34,19 +36,22 @@
   }
   function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function ids() { return C.CATEGORIES.map(function (c) { return c.id; }); }
+  function ingIds() { return C.INGREDIENTS.map(function (g) { return g.id; }); }
 
   function handle(method, payload) {
     var rows = load();
     if (method === "GET") {
-      var counts = {}, descriptions = {};
+      var counts = {}, descriptions = {}, ingredients = {};
       ids().forEach(function (id) { counts[id] = 0; descriptions[id] = []; });
+      ingIds().forEach(function (id) { ingredients[id] = 0; });
       rows.forEach(function (r) {
         if (counts.hasOwnProperty(r.category)) {
           counts[r.category]++;
           if (r.description) descriptions[r.category].push(r.description);
+          (r.ingredients || []).forEach(function (g) { if (ingredients.hasOwnProperty(g)) ingredients[g]++; });
         }
       });
-      var out = { ok: true, counts: counts, total: rows.length };
+      var out = { ok: true, counts: counts, ingredients: ingredients, total: rows.length };
       if (C.SHOW_DESCRIPTIONS) out.descriptions = descriptions;
       return out;
     }
@@ -58,7 +63,12 @@
     if (name.length > C.MAX_NAME) return { ok: false, error: "name_too_long" };
     if (ids().indexOf(payload.category) < 0) return { ok: false, error: "category_invalid" };
     if (desc.length > C.MAX_DESC) return { ok: false, error: "description_too_long" };
-    rows.push({ category: payload.category, description: desc });
+    var ings = payload.ingredients || [];
+    if (!Array.isArray(ings) || ings.length > C.MAX_INGREDIENTS ||
+        ings.some(function (g) { return ingIds().indexOf(g) < 0; })) {
+      return { ok: false, error: "ingredients_invalid" };
+    }
+    rows.push({ category: payload.category, ingredients: ings, description: desc });
     save(rows);
     return { ok: true };
   }
