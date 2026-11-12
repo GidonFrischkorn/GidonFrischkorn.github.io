@@ -10,14 +10,14 @@
   if (!mode) { window.KuchenMock = null; return; }
 
   var C = window.KUCHEN_CONFIG;
-  var KEY = "babar-kuchen-demo2";   // neuer Schlüssel: alte Demo-Daten im Tab nicht weiterverwenden
+  var KEY = "babar-kuchen-demo3";   // neuer Schlüssel: alte Demo-Daten im Tab nicht weiterverwenden
   // [Art, Hauptzutaten, Beschreibung] – 12 Beispiel-Einträge
   var SEED = [
     ["muffins", ["schoko"], ""], ["muffins", ["schoko", "banane"], ""], ["muffins", ["beeren"], ""],
     ["blech", ["schoko"], "Brownies"], ["blech", ["apfel"], ""],
     ["ruehr", ["natur"], "Marmorkuchen, glutenfrei"], ["ruehr", ["zitrone"], ""], ["ruehr", ["schoko", "nuss"], ""],
     ["guetzli", ["gewuerz", "nuss"], "Zimtsterne"], ["waehe", ["apfel"], ""],
-    ["torte", ["rueebli", "nuss"], ""], ["sonstiges", [], ""]
+    ["torte", ["rueebli", "nuss"], ""], ["sonstiges", ["andere"], "Baklava mit Pistazien"]
   ];
 
   function load() {
@@ -35,8 +35,12 @@
     try { sessionStorage.setItem(KEY + ":" + mode, JSON.stringify(rows)); } catch (e) {}
   }
   function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  function ids() { return C.CATEGORIES.map(function (c) { return c.id; }); }
-  function ingIds() { return C.INGREDIENTS.map(function (g) { return g.id; }); }
+  function ids() { return C.CATEGORIES; }
+  function ingIds() { return C.INGREDIENTS; }
+  function known(list, allowed, max) {
+    return Array.isArray(list) && list.length <= max &&
+      !list.some(function (id) { return allowed.indexOf(id) < 0; });
+  }
 
   function handle(method, payload) {
     var rows = load();
@@ -57,16 +61,21 @@
     }
     // POST – vereinfachte Version der Prüfungen in Code.gs
     if (payload.website) return { ok: true };
-    var name = String(payload.name || "").trim();
+    var first = String(payload.firstName || "").trim();
+    var last = String(payload.lastName || "").trim();
     var desc = String(payload.description || "").trim();
-    if (!name) return { ok: false, error: "name_required" };
-    if (name.length > C.MAX_NAME) return { ok: false, error: "name_too_long" };
+    var other = payload.category === C.OTHER_CATEGORY ? String(payload.otherName || "").trim() : "";
+    if (!first) return { ok: false, error: "first_name_required" };
+    if (first.length > C.MAX_NAME) return { ok: false, error: "first_name_too_long" };
+    if (!last) return { ok: false, error: "last_name_required" };
+    if (last.length > C.MAX_NAME) return { ok: false, error: "last_name_too_long" };
     if (ids().indexOf(payload.category) < 0) return { ok: false, error: "category_invalid" };
+    if (other.length > C.MAX_OTHER) return { ok: false, error: "other_too_long" };
     if (desc.length > C.MAX_DESC) return { ok: false, error: "description_too_long" };
     var ings = payload.ingredients || [];
-    if (!Array.isArray(ings) || ings.length > C.MAX_INGREDIENTS ||
-        ings.some(function (g) { return ingIds().indexOf(g) < 0; })) {
-      return { ok: false, error: "ingredients_invalid" };
+    if (!known(ings, ingIds(), C.MAX_INGREDIENTS)) return { ok: false, error: "ingredients_invalid" };
+    if (!known(payload.allergens || [], C.ALLERGENS, C.ALLERGENS.length)) {
+      return { ok: false, error: "allergens_invalid" };
     }
     rows.push({ category: payload.category, ingredients: ings, description: desc });
     save(rows);
