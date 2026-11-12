@@ -45,6 +45,7 @@
     hint_many: "{cat}: {n} signed up already. Similar cakes are welcome. We have only a few of: {list}.",
     hint_many_ing: "Already in many cakes: {list}. That is fine. A different ingredient adds variety.",
     list_and: " and ",
+    list_sep: ", ",
     submit: "Sign up",
     sending: "Sending …",
 

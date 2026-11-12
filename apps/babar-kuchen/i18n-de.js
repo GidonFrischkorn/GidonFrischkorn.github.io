@@ -57,6 +57,7 @@
     hint_many: "{cat}: schon {n} eingetragen. Ähnliche Kuchen sind willkommen. Noch wenig gibt es von: {list}.",   // {cat} = gewählte Art, {list} = zwei andere Arten
     hint_many_ing: "Schon in vielen Kuchen: {list}. Das passt. Eine andere Zutat bringt mehr Abwechslung.",        // {list} = Zutaten
     list_and: " und ",                           // verbindet zwei Namen in {list}, mit Leerzeichen davor und danach
+    list_sep: ", ",       // trennt Namen in einer Aufzählung, z. B. Zutaten; mit dem Leerzeichen, das die Sprache braucht
     submit: "Eintragen",                         // Schaltfläche zum Absenden
     sending: "Wird gesendet …",
 

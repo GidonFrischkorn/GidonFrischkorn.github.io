@@ -17,9 +17,12 @@ window.KUCHEN_CONFIG = {
     date: "2026-11-24"
   },
 
-  /* Sprachen in der Reihenfolge der Auswahl. Zu jedem Kürzel gehört eine Datei
+  /* Sprachen in der Reihenfolge der Auswahl: Deutsch zuerst, danach wie in der Liste der Kita
+     (Albanisch, Amharisch, Arabisch, Chinesisch, Englisch, Griechisch, Kurdisch, Mongolisch,
+     Persisch, Somalisch, Spanisch, Thailändisch, Tigrinya, Türkisch, Vietnamesisch).
+     Zu jedem Kürzel gehört eine Datei
      i18n-<Kürzel>.js und eine <script>-Zeile in index.html. Der Test prüft beides. */
-  LANGS: ["de", "en"],
+  LANGS: ["de", "sq", "am", "ar", "zh", "en", "el", "ku", "mn", "fa", "so", "es", "th", "ti", "tr", "vi"],
 
   /* Kuchen-Arten (Pflichtfeld, eine Auswahl): feste technische Schlüssel.
      Reihenfolge = Reihenfolge auf der Seite; was sich gut aus der Hand essen lässt, steht oben.

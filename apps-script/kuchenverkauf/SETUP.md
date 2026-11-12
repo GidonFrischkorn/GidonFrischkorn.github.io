@@ -105,8 +105,27 @@ Die Eintragsseite funktioniert trotzdem, denn das Programm läuft mit deinem Kon
 6. Optional: die Seite einmal mit `?lang=en` usw. ansehen.
 
 Danach kann der Link verschickt werden. Für eine bestimmte Sprache lässt sich `?lang=…`
-anhängen, z. B. `…/apps/babar-kuchen/?lang=en`. Ohne Angabe nimmt die Seite die Sprache
+anhängen, z. B. `…/apps/babar-kuchen/?lang=tr`. Ohne Angabe nimmt die Seite die Sprache
 des Geräts, falls es sie gibt, sonst Deutsch. Oben rechts (Weltkugel) lässt sie sich umschalten.
+
+Die 16 Sprachen und ihre Kürzel:
+
+| Kürzel | Sprache | Kürzel | Sprache |
+| --- | --- | --- | --- |
+| `de` | Deutsch | `mn` | Mongolisch |
+| `sq` | Albanisch | `fa` | Persisch |
+| `am` | Amharisch | `so` | Somalisch |
+| `ar` | Arabisch | `es` | Spanisch |
+| `zh` | Chinesisch (vereinfacht) | `th` | Thailändisch |
+| `en` | Englisch | `ti` | Tigrinya |
+| `el` | Griechisch | `tr` | Türkisch |
+| `ku` | Kurdisch (Kurmandschi) | `vi` | Vietnamesisch |
+
+Ausser Deutsch und Englisch sind alle Sprachen maschinell übersetzt und per Rückübersetzung
+auf ihre Bedeutung geprüft, aber erst dann verlässlich, wenn eine Person mit dieser
+Muttersprache sie gegengelesen hat. Eine Korrektur gehört in die Datei der Sprache
+(`i18n-<Kürzel>.js`); danach den Test laufen lassen und veröffentlichen. Das Datum erscheint
+in Sprachen, die der Browser nicht kennt, in Ziffern (24.11.2026).
 
 ## Während der Aktion
 

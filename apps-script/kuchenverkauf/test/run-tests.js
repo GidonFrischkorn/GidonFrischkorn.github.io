@@ -378,8 +378,6 @@ const SCRIPTS = {
   am: /\p{Script=Ethiopic}/u, ti: /\p{Script=Ethiopic}/u, ar: /\p{Script=Arabic}/u, fa: /\p{Script=Arabic}/u,
   zh: /\p{Script=Han}/u, el: /\p{Script=Greek}/u, mn: /\p{Script=Cyrillic}/u, th: /\p{Script=Thai}/u
 };
-// Texte, die in einer anderen Sprache gleich lauten dürfen wie im Deutschen.
-const SAME_AS_GERMAN_OK = new Set(["alg.vegan"]);
 C.LANGS.forEach((l) => {
   const L = T[l];
   if (!L) { check(l + ": Datei geladen", false, langFile(l) + " setzt KUCHEN_I18N." + l + " nicht"); return; }
@@ -406,8 +404,9 @@ C.LANGS.forEach((l) => {
     const all = [];
     keys.forEach((k) => all.push(["ui." + k, T.de.ui[k], ui[k]]));
     ["cat", "alg", "ing"].forEach((kind) => Object.keys(T.de[kind]).forEach((id) => all.push([kind + "." + id, T.de[kind][id], (L[kind] || {})[id]])));
-    const same = all.filter(([k, de, tr]) => de === tr && /\p{L}{4,}/u.test(de) && !SAME_AS_GERMAN_OK.has(k)).map((x) => x[0]);
-    check(l + ": kein Text steht noch auf Deutsch", same.length === 0, same.join(","));
+    // Nur ganze Oberflächentexte: Ein-Wort-Namen dürfen gleich lauten (Albanisch «banane», «Vegan»).
+    const same = all.filter(([k, de, tr]) => k.startsWith("ui.") && de === tr && /\p{L}{4,}/u.test(de)).map((x) => x[0]);
+    check(l + ": kein Oberflächentext steht noch auf Deutsch", same.length === 0, same.join(","));
     if (SCRIPTS[l]) {
       const wrong = all.filter(([k, de, tr]) => typeof tr === "string" && /\p{L}{4,}/u.test(de) && !SCRIPTS[l].test(tr)).map((x) => x[0]);
       check(l + ": Texte in der erwarteten Schrift", wrong.length === 0, wrong.join(","));

@@ -108,7 +108,7 @@
   function entryLabel(catId, ingIds, otherName) {
     var s = label("cat", catId);
     if (otherName) s += ": " + otherName;
-    if (ingIds && ingIds.length) s += " (" + ingIds.map(function (id) { return label("ing", id); }).join(", ") + ")";
+    if (ingIds && ingIds.length) s += " (" + ingIds.map(function (id) { return label("ing", id); }).join(t("list_sep")) + ")";
     return s;
   }
 
@@ -475,7 +475,7 @@
       : "";
     var many = checkedIngredients().filter(ingMarked);
     el.ingManyHint.textContent = many.length
-      ? t("hint_many_ing", { list: many.map(function (id) { return label("ing", id); }).join(", ") })
+      ? t("hint_many_ing", { list: many.map(function (id) { return label("ing", id); }).join(t("list_sep")) })
       : "";
     el.descOtherNote.textContent = checkedIngredients().indexOf(C.OTHER_INGREDIENT) >= 0
       ? t("ing_other_note") : "";
