@@ -102,6 +102,17 @@ p { margin: 0 0 .75em; }
 .bar-fill { height: 100%; width: 0; background: var(--fill); border-radius: 5px; transition: width .4s ease; }
 .many .bar-fill { background: var(--fill-many); }
 .total { color: var(--muted); margin: 6px 0 0; }
+.sub-h { font-size: 1rem; color: var(--muted); margin: 4px 0 8px; }
+#ingBlock { margin-top: 16px; }
+/* Zutaten in der Übersicht: kompakte Zeile, Zahl immer als Text (nicht nur Farbe). */
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  border: 1px solid var(--hair); background: var(--bg); border-radius: 999px;
+  padding: 3px 10px; font-size: .95rem;
+}
+.chip-n { font-weight: 700; font-variant-numeric: tabular-nums; }
+.chip.many { border-color: var(--fill-many); border-width: 2px; }
+.ing-none { color: var(--muted); margin: 0; }
 .status { color: var(--muted); margin: 0; min-height: 0; }
 .status:empty { display: none; }
 
@@ -125,6 +136,29 @@ select { appearance: auto; }
   margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--warn-line);
   background: var(--warn-bg); color: var(--warn-fg); border-radius: 4px;
 }
+
+/* Freundlicher Hinweis oben im Formular: ruhige Info-Box, bewusst nicht in Warnfarbe. */
+.tip {
+  margin: 0 0 18px; padding: 10px 12px; background: var(--bg);
+  border-left: 4px solid var(--primary); border-radius: 4px;
+}
+.tip p { margin: 0; }
+.tip .tip-h { font-weight: 600; margin-bottom: 4px; }
+
+/* Hauptzutaten: Kästchen, Tippfläche mind. 44 px. Spalten nach Platz: eine auf sehr schmalen
+   Handys (320 px), zwei ab ca. 360 px, drei auf dem Desktop – damit kein Wort getrennt wird. */
+fieldset.ings { border: 0; padding: 0; margin: 0 0 16px; min-width: 0; }
+fieldset.ings legend { font-weight: 600; padding: 0; margin-bottom: 0; }
+.ings .hint { margin: 0 0 8px; }
+.ing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; }
+label.ing {
+  display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0;
+  padding: 6px 10px; font-weight: 400; border: 1px solid var(--hair); border-radius: 8px;
+  background: var(--bg); cursor: pointer; overflow-wrap: break-word;
+}
+label.ing input { width: 20px; height: 20px; flex: 0 0 auto; margin: 0; accent-color: var(--primary); }
+label.ing:has(input:checked) { border-color: var(--primary); border-width: 2px; padding: 5px 9px; font-weight: 600; }
+label.ing.off { opacity: .55; cursor: not-allowed; }
 
 .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
 
