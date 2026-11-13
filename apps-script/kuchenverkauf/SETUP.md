@@ -135,14 +135,14 @@ speichern** an. Sie lädt eine kleine Kalender-Datei (`kuchenverkauf.ics`) herun
 Browser auf dem Gerät selbst erzeugt. Dabei wird nichts verschickt, und an Google muss dafür
 nichts geändert werden.
 
-- **Was im Kalender steht:** ein Eintrag vom Vortag 8 Uhr bis zum Verkaufstag 8 Uhr, in der
-  gewählten Sprache, mit dem, was die Eltern eingetragen haben. Das Handy meldet sich zum
-  Beginn, also am Vortag um 8 Uhr: So bleibt Zeit zum Einkaufen und Backen.
-- **Warum der Eintrag am Vortag beginnt:** Manche Kalender (z. B. Google Kalender) übernehmen
-  den Alarm aus einer Datei nicht und nehmen ihre eigene Standard-Erinnerung, und die richtet
-  sich nach dem Beginn des Eintrags.
-- **Einstellen:** `REMINDER: { daysBefore: 1, hour: 8 }` in `config.js` (Tage vor dem Verkauf,
-  volle Stunde).
+- **Was im Kalender steht:** ein Termin am Verkaufstag von 8 bis 9 Uhr (Zürcher Zeit), in der
+  gewählten Sprache, mit dem, was die Eltern eingetragen haben. Das Handy meldet sich
+  24 Stunden vorher, also am Vortag um 8 Uhr: So bleibt Zeit zum Einkaufen und Backen.
+- **Wenn die Erinnerung nicht am Vortag kommt:** Der Alarm steht in der Datei. Ein Kalender,
+  der ihn beim Import nicht übernimmt, erinnert nach seiner eigenen Voreinstellung, also kurz
+  vor 8 Uhr am Verkaufstag. Das zeigt der Test auf dem Handy (siehe unten).
+- **Einstellen:** `REMINDER: { hour: 8, durationHours: 1, alarmHoursBefore: 24 }` in
+  `config.js` (Beginn zur vollen Stunde, Dauer in Stunden, Alarm so viele Stunden vorher).
 - **Auf dem Handy:** Auf dem iPhone öffnet sich der Kalender direkt. Auf Android wird die Datei
   heruntergeladen; ein Tipp darauf öffnet sie im Kalender. In Browsern, die in andere Apps
   eingebaut sind (z. B. der Vorschau von WhatsApp), klappt der Download manchmal nicht; der

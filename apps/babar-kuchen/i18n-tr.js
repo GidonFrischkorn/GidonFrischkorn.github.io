@@ -64,7 +64,6 @@
     again: "Bir kek daha ekle",
     reminder_btn: "Hatırlatmayı takvime kaydet",
     reminder_hint: "Dosyayı takviminizle açın. Takvim, kek satışından bir gün önce sabah size hatırlatır. Hiçbir şey olmazsa bu sayfayı Safari veya Chrome’da açın.",
-    reminder_title: "Kek yapılacak: {event}, {date}",
     reminder_text: "Listeye eklediğiniz: {cat}. Lütfen keki {date} sabahı, çocuğunuzu bırakırken getirin.",
 
     privacy_h: "Gizlilik",

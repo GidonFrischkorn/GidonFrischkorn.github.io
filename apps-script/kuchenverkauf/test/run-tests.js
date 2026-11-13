@@ -465,30 +465,46 @@ console.log("ics.js");
   const ICS = w.KuchenIcs;
   const octets = (s) => Buffer.byteLength(s, "utf8");
   const unfold = (s) => s.replace(/\r\n /g, "");
-  const field = (ics, name) => { const m = unfold(ics).match(new RegExp("^" + name + ":(.*)$", "m")); return m ? m[1] : null; };
+  const field = (ics, name) => { const m = unfold(ics).match(new RegExp("^" + name + "(?:;[^:]*)?:(.*)$", "m")); return m ? m[1] : null; };
+  // ganze Zeile aus dem Termin (die Zeitzonen-Beschreibung davor hat eigene DTSTART-Zeilen)
+  const line = (ics, name) => { const ev = unfold(ics); const m = ev.slice(ev.indexOf("BEGIN:VEVENT")).match(new RegExp("^" + name + "[;:].*$", "m")); return m ? m[0] : null; };
   const unesc = (s) => s.replace(/\\(.)/g, (m, c) => (c === "n" ? "\n" : c));   // in einem Durchgang, sonst wird ein maskierter Backslash doppelt gelesen
   const R = C.REMINDER;
-  check("REMINDER in config.js: Tage und volle Stunde", R && Number.isInteger(R.daysBefore) && R.daysBefore >= 0 && Number.isInteger(R.hour) && R.hour >= 0 && R.hour <= 23, JSON.stringify(R));
-  const [ey, em, ed] = C.EVENT.date.split("-").map(Number);
-  const start = new Date(ey, em - 1, ed - R.daysBefore, R.hour), end = new Date(ey, em - 1, ed, R.hour);
-  const sample = { uid: "test-1@babar-kuchen", stamp: new Date(Date.UTC(2026, 10, 12, 9, 5, 7)), start, end,
-    summary: "Kuchen backen: Kuchenverkauf Chinderhuus BABAR am 24.11.2026",
+  check("REMINDER in config.js: volle Stunde, Dauer und Vorlauf des Alarms in ganzen Stunden",
+    R && Number.isInteger(R.hour) && R.hour >= 0 && R.hour <= 23 && Number.isInteger(R.durationHours) && R.durationHours >= 1 &&
+    Number.isInteger(R.alarmHoursBefore) && R.alarmHoursBefore >= 0, JSON.stringify(R));
+  const sample = { uid: "test-1@babar-kuchen", stamp: new Date(Date.UTC(2026, 10, 12, 9, 5, 7)),
+    date: C.EVENT.date, hour: R.hour, durationHours: R.durationHours, alarmHoursBefore: R.alarmHoursBefore,
+    summary: "Kuchenverkauf Chinderhuus BABAR",
     description: "Du hast eingetragen: Sonstiges: Baklava (Nüsse/Mandeln, Andere); a\\b.\nZweite Zeile, mit Komma." };
   const ics = ICS.build(sample);
   const lines = ics.split("\r\n");
   check("Datei: beginnt und endet richtig, Zeilenenden CRLF", lines[0] === "BEGIN:VCALENDAR" && lines[lines.length - 2] === "END:VCALENDAR" && lines[lines.length - 1] === "" && !/[^\r]\n/.test(ics));
-  check("Datei: genau ein Eintrag mit einem Alarm", (ics.match(/BEGIN:VEVENT/g) || []).length === 1 && (ics.match(/BEGIN:VALARM/g) || []).length === 1 && /TRIGGER:PT0S/.test(ics) && /ACTION:DISPLAY/.test(ics));
-  check("Beginn am Vortag um 8 Uhr, Ende am Verkaufstag um 8 Uhr (Ortszeit ohne Zeitzone)",
-    field(ics, "DTSTART") === "20261123T080000" && field(ics, "DTEND") === "20261124T080000", field(ics, "DTSTART") + " / " + field(ics, "DTEND"));
+  check("Datei: genau ein Eintrag mit einem Alarm", (ics.match(/BEGIN:VEVENT/g) || []).length === 1 && (ics.match(/BEGIN:VALARM/g) || []).length === 1 && /ACTION:DISPLAY/.test(ics));
+  check("Termin am Verkaufstag von 8 bis 9 Uhr, in Zürcher Zeit",
+    line(ics, "DTSTART") === "DTSTART;TZID=Europe/Zurich:20261124T080000" && line(ics, "DTEND") === "DTEND;TZID=Europe/Zurich:20261124T090000",
+    line(ics, "DTSTART") + " / " + line(ics, "DTEND"));
+  check("Alarm 24 Stunden vor dem Beginn", line(ics, "TRIGGER") === "TRIGGER:-PT24H", line(ics, "TRIGGER"));
+  {
+    // Die Zeitzone, auf die sich der Termin bezieht, steht in der Datei, vor dem Termin, mit beiden Regeln.
+    const tz = (unfold(ics).match(/BEGIN:VTIMEZONE[\s\S]*?END:VTIMEZONE/) || [""])[0];
+    check("Zeitzone Europe/Zurich ist in der Datei beschrieben (Winter +0100, Sommer +0200)",
+      (ics.match(/BEGIN:VTIMEZONE/g) || []).length === 1 && /^TZID:Europe\/Zurich$/m.test(tz) &&
+      /BEGIN:STANDARD[\s\S]*TZOFFSETTO:\+0100[\s\S]*END:STANDARD/.test(tz) && /BEGIN:DAYLIGHT[\s\S]*TZOFFSETTO:\+0200[\s\S]*END:DAYLIGHT/.test(tz) &&
+      ics.indexOf("END:VTIMEZONE") < ics.indexOf("BEGIN:VEVENT"));
+    // Der Termin hängt nicht von der Zeitzone des Geräts ab, und eine Dauer über Mitternacht rollt in den nächsten Tag.
+    const late = ICS.build(Object.assign({}, sample, { date: "2026-12-31", hour: 23, durationHours: 2 }));
+    check("Ende nach Mitternacht fällt auf den nächsten Tag", line(late, "DTEND") === "DTEND;TZID=Europe/Zurich:20270101T010000", line(late, "DTEND"));
+  }
   check("Erstellungs-Stempel in Weltzeit", field(ics, "DTSTAMP") === "20261112T090507Z", field(ics, "DTSTAMP"));
   check("Titel und Notiz kommen unverändert zurück (Komma, Strichpunkt, Backslash, Zeilenumbruch maskiert)",
     unesc(field(ics, "SUMMARY")) === sample.summary && unesc(field(ics, "DESCRIPTION")) === sample.description, field(ics, "DESCRIPTION"));
   check("keine Zeile über 75 Bytes", lines.every((l) => octets(l) <= 75), String(Math.max(...lines.map(octets))));
   check("Adresse für den Download enthält die Datei", decodeURIComponent(ICS.dataUrl(ics).replace("data:text/calendar;charset=utf-8,", "")) === ics);
   // Jede Sprache: Titel und Notiz der Erinnerung ergeben eine gültige Datei, auch mit mehrbyteigen Zeichen.
-  const bad = C.LANGS.filter((l) => T[l] && T[l].ui && T[l].ui.reminder_title).filter((l) => {
+  const bad = C.LANGS.filter((l) => T[l] && T[l].ui && T[l].ui.reminder_text).filter((l) => {
     const sub = (s, v) => Object.keys(v).reduce((a, k) => a.split("{" + k + "}").join(v[k]), s);
-    const summary = sub(T[l].ui.reminder_title, { event: T[l].title + " " + C.EVENT.org, date: "24.11.2026" });
+    const summary = T[l].title + " " + C.EVENT.org;
     const description = sub(T[l].ui.reminder_text, { cat: T[l].cat.sonstiges + ": Baklava (" + T[l].ing.nuss + T[l].ui.list_sep + T[l].ing.andere + ")", date: "24.11.2026" });
     const out = ICS.build(Object.assign({}, sample, { summary, description }));
     const ok = out.split("\r\n").every((x) => octets(x) <= 75) && unesc(field(out, "SUMMARY")) === summary && unesc(field(out, "DESCRIPTION")) === description &&
@@ -496,7 +512,8 @@ console.log("ics.js");
     return !ok;
   });
   check("Erinnerung in jeder Sprache: gültige Datei, Text kommt unverändert zurück", bad.length === 0, bad.join(","));
-  check("app.js entfernt die unsichtbaren Richtungszeichen aus dem Kalendertext", /function plain\(s\)/.test(appJs) && /summary: plain\(/.test(appJs) && /description: plain\(/.test(appJs));
+  check("app.js entfernt die unsichtbaren Richtungszeichen aus dem Kalendertext", /function plain\(s\)/.test(appJs) && /description: plain\(/.test(appJs));
+  check("Titel des Termins: Titel der Seite und Name der Kita, ohne Zusatz", /var event = \(T\[state\.lang\]\.title \|\| T\.de\.title\) \+ " " \+ C\.EVENT\.org;/.test(appJs) && /summary: event,/.test(appJs));
 }
 
 console.log("\n" + passed + " bestanden, " + failed + " fehlgeschlagen");

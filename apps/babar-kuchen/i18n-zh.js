@@ -64,7 +64,6 @@
     again: "再登记一份糕点",
     reminder_btn: "在日历中保存提醒",
     reminder_hint: "请用您的日历打开这个文件。日历会在糕点售卖前一天的早上提醒您。如果没有反应，请用 Safari 或 Chrome 打开本页面。",
-    reminder_title: "做糕点：{event}（{date}）",
     reminder_text: "您登记的是：{cat}。请在 {date} 早上送孩子来的时候把糕点带来。",
 
     privacy_h: "隐私保护",

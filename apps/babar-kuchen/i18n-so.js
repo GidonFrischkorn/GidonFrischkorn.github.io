@@ -64,7 +64,6 @@
     again: "Diiwaangeli doolsho kale",
     reminder_btn: "Xusuusin ku kaydi kalandarkaaga",
     reminder_hint: "Faylka ku fur kalandarkaaga. Wuxuu ku xusuusinayaa subaxa maalinta ka horreysa iibka doolshada. Haddii aysan waxba dhicin, boggan ka fur Safari ama Chrome.",
-    reminder_title: "Doolsho dub: {event}, taariikhda {date}",
     reminder_text: "Waxaad diiwaangelisay: {cat}. Fadlan doolshada keen taariikhda {date} subaxnimada, marka aad ilmahaaga keenayso.",
 
     privacy_h: "Ilaalinta xogta shakhsiga",

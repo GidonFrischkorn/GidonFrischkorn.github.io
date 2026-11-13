@@ -64,7 +64,6 @@
     again: "Đăng ký thêm bánh khác",
     reminder_btn: "Lưu lời nhắc vào lịch",
     reminder_hint: "Bạn hãy mở tệp bằng ứng dụng lịch của bạn. Lịch sẽ nhắc bạn vào buổi sáng hôm trước buổi bán bánh. Nếu không có gì xảy ra, bạn hãy mở trang này bằng Safari hoặc Chrome.",
-    reminder_title: "Làm bánh: {event} ngày {date}",
     reminder_text: "Bạn đã đăng ký: {cat}. Bạn vui lòng mang bánh đến vào sáng ngày {date}, khi bạn đưa bé đến nhà trẻ.",
 
     privacy_h: "Quyền riêng tư",
