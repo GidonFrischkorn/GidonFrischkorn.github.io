@@ -3,6 +3,7 @@
      ?demo=empty  wie 1, aber ohne Startdaten
      ?demo=error  Backend nicht erreichbar (Laden und Absenden schlagen fehl)
      ?demo=slow   wie 1, aber mit 3 Sekunden Verzögerung (Ladezustände ansehen)
+     ?demo=closed wie 1, aber nach dem Anmeldeschluss (nur noch die Übersicht)
    Antworten haben dieselbe Form wie die des echten Apps Script (Code.gs). */
 (function () {
   var mode = null;

@@ -65,6 +65,8 @@
     reminder_btn: "Bîrxistinê di salnameyê de qeyd bikin",
     reminder_hint: "Pelê bi salnameya xwe vekin. Ew rojek berî firotina kekan, serê sibê, tîne bîra we. Heke tiştek nebe, vê rûpelê di Safari an Chrome de vekin.",
     reminder_text: "We qeyd kir: {cat}. Ji kerema xwe kekê roja {date} serê sibê bi xwe re bînin, dema hûn zaroka xwe tînin.",
+    deadline: "Ji kerema xwe heta {date}, saet {time} qeyd bikin.",
+    closed: "Qeydkirin girtî ye. Spas ji bo her kesê ku kek tîne!",
 
     privacy_h: "Parastina agahiyan",
     privacy_p1: "Tenê koma amadekar navê zaroka we û nivîsên we dibîne. Rûpel ji her kesî re tenê hejmaran nîşan dide: ji bo her cureyî û ji bo her pêkhateya sereke çend kek hatine qeydkirin.",

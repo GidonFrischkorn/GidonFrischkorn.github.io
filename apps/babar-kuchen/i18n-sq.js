@@ -65,6 +65,8 @@
     reminder_btn: "Ruani një kujtesë në kalendar",
     reminder_hint: "Hapeni skedarin me kalendarin tuaj. Kalendari ju kujton një ditë para shitjes së ëmbëlsirave, në mëngjes. Nëse nuk ndodh asgjë, hapeni këtë faqe në Safari ose Chrome.",
     reminder_text: "Keni regjistruar: {cat}. Ju lutemi sillni ëmbëlsirën më {date} në mëngjes, kur ta sillni fëmijën tuaj.",
+    deadline: "Ju lutemi regjistrohuni deri më {date}, ora {time}.",
+    closed: "Regjistrimi është mbyllur. Faleminderit të gjithëve që sjellin një ëmbëlsirë!",
 
     privacy_h: "Mbrojtja e të dhënave",
     privacy_p1: "Emrin e fëmijës suaj dhe atë që shkruani i sheh vetëm ekipi organizues. Publikisht faqja tregon vetëm numra: sa ëmbëlsira janë regjistruar për çdo lloj dhe për çdo përbërës kryesor.",

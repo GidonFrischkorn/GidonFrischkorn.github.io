@@ -65,6 +65,8 @@
     reminder_btn: "Guardar recordatorio en el calendario",
     reminder_hint: "Abra el archivo con su calendario. El calendario le avisará la mañana del día anterior a la venta de pasteles. Si no pasa nada, abra esta página en Safari o Chrome.",
     reminder_text: "Ha anotado: {cat}. Por favor, traiga el pastel el {date} por la mañana, cuando deje a su hijo o hija.",
+    deadline: "Por favor, anótese hasta el {date}, a las {time}.",
+    closed: "La inscripción está cerrada. ¡Gracias a todas las personas que traen un pastel!",
 
     privacy_h: "Protección de datos",
     privacy_p1: "El nombre de su hijo o hija y lo que usted escribe solo lo ve el equipo organizador. Al público, la página solo muestra números: cuántos pasteles hay anotados por tipo y por ingrediente principal.",

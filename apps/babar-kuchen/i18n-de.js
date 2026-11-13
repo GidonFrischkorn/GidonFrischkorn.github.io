@@ -82,6 +82,9 @@
     reminder_btn: "Erinnerung im Kalender speichern",   // Schaltfläche: lädt eine Kalender-Datei herunter
     reminder_hint: "Öffne die Datei mit deinem Kalender. Er erinnert dich am Tag vor dem Kuchenverkauf, am Morgen. Falls nichts passiert, öffne diese Seite in Safari oder Chrome.",
     reminder_text: "Du hast eingetragen: {cat}. Bitte bring den Kuchen am {date} am Morgen mit, wenn du dein Kind bringst.",   // Notiz im Kalender-Eintrag; {cat} = Art und Zutaten
+    /* Anmeldeschluss: deadline steht oben unter dem Datum, closed ersetzt das Formular danach. */
+    deadline: "Bitte trag dich bis {date}, {time} Uhr ein.",   // {date} = Wochentag, Tag und Monat, z. B. «Sonntag, 22. November»; {time} = «23:59»
+    closed: "Die Eintragung ist geschlossen. Danke an alle, die einen Kuchen mitbringen!",
 
     /* Datenschutz */
     privacy_h: "Datenschutz",
