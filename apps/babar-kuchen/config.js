@@ -17,11 +17,11 @@ window.KUCHEN_CONFIG = {
     date: "2026-11-24"
   },
 
-  /* Kalender-Erinnerung, die Eltern nach dem Eintragen herunterladen können: Der Eintrag beginnt
-     so viele Tage vor dem Verkauf zu dieser vollen Stunde (dann meldet sich das Handy) und endet
-     am Verkaufstag zur selben Stunde. 1 und 8 heisst: am Vortag um 8 Uhr, damit Zeit zum
-     Einkaufen und Backen bleibt. */
-  REMINDER: { daysBefore: 1, hour: 8 },
+  /* Kalender-Erinnerung, die Eltern nach dem Eintragen herunterladen können: ein Termin am
+     Verkaufstag ab dieser vollen Stunde (Zürcher Zeit), so viele Stunden lang, mit einem Alarm
+     so viele Stunden vorher. 8, 1 und 24 heisst: Termin von 8 bis 9 Uhr, das Handy meldet sich
+     am Vortag um 8 Uhr, damit Zeit zum Einkaufen und Backen bleibt. */
+  REMINDER: { hour: 8, durationHours: 1, alarmHoursBefore: 24 },
 
   /* Sprachen in der Reihenfolge der Auswahl: Deutsch zuerst, danach wie in der Liste der Kita
      (Albanisch, Amharisch, Arabisch, Chinesisch, Englisch, Griechisch, Kurdisch, Mongolisch,

@@ -64,7 +64,6 @@
     again: "ሌላ ኬክ ይመዝግቡ",
     reminder_btn: "ማስታወሻ በቀን መቁጠሪያዎ ላይ ያስቀምጡ",
     reminder_hint: "ፋይሉን በቀን መቁጠሪያዎ ይክፈቱ። ከኬክ ሽያጩ አንድ ቀን በፊት ጠዋት ያስታውስዎታል። ምንም ካልተፈጠረ ይህን ገጽ በSafari ወይም በChrome ይክፈቱ።",
-    reminder_title: "ኬክ መጋገር፦ {event}፣ ቀን {date}",
     reminder_text: "የመዘገቡት፦ {cat}። እባክዎ ኬኩን {date} ጠዋት፣ ልጅዎን ሲያመጡ ይዘው ይምጡ።",
 
     privacy_h: "የግል መረጃ ጥበቃ",

@@ -64,7 +64,6 @@
     again: "Dîsa kek qeyd bikin",
     reminder_btn: "Bîrxistinê di salnameyê de qeyd bikin",
     reminder_hint: "Pelê bi salnameya xwe vekin. Ew rojek berî firotina kekan, serê sibê, tîne bîra we. Heke tiştek nebe, vê rûpelê di Safari an Chrome de vekin.",
-    reminder_title: "Kek çêkirin: {event}, roja {date}",
     reminder_text: "We qeyd kir: {cat}. Ji kerema xwe kekê roja {date} serê sibê bi xwe re bînin, dema hûn zaroka xwe tînin.",
 
     privacy_h: "Parastina agahiyan",

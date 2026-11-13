@@ -138,18 +138,17 @@
   function plain(s) { return s.split(FSI).join("").split(PDI).join(""); }
 
   /* Download-Adresse für den Eintrag der bestätigten Anmeldung, in der gewählten Sprache.
-     Beginn: REMINDER.daysBefore Tage vor dem Verkauf um REMINDER.hour Uhr; Ende: am Verkaufstag
-     zur selben Stunde. Warum diese Form: siehe ics.js. */
+     Termin am Verkaufstag ab REMINDER.hour Uhr (Zürcher Zeit), REMINDER.durationHours Stunden
+     lang, mit Alarm REMINDER.alarmHoursBefore Stunden vorher. */
   function reminderHref(catId, ingIds, otherName) {
     var p = C.EVENT.date.split("-").map(Number);
-    var end = new Date(p[0], p[1] - 1, p[2], C.REMINDER.hour, 0, 0);
-    var start = new Date(p[0], p[1] - 1, p[2] - C.REMINDER.daysBefore, C.REMINDER.hour, 0, 0);
     var date = ("0" + p[2]).slice(-2) + "." + ("0" + p[1]).slice(-2) + "." + p[0];
     var event = (T[state.lang].title || T.de.title) + " " + C.EVENT.org;
     return ICS.dataUrl(ICS.build({
       uid: "kuchen-" + Date.now() + "-" + Math.floor(Math.random() * 1e9) + "@babar-kuchen",
-      stamp: new Date(), start: start, end: end,
-      summary: plain(t("reminder_title", { event: event, date: date })),
+      stamp: new Date(), date: C.EVENT.date, hour: C.REMINDER.hour,
+      durationHours: C.REMINDER.durationHours, alarmHoursBefore: C.REMINDER.alarmHoursBefore,
+      summary: event,   // Titel des Termins: «Kuchenverkauf Chinderhuus BABAR», in der gewählten Sprache
       description: plain(t("reminder_text", { cat: entryLabel(catId, ingIds, otherName), date: date }))
     }));
   }
