@@ -17,9 +17,18 @@ window.KUCHEN_CONFIG = {
     date: "2026-11-24"
   },
 
-  /* Sprachen in der Reihenfolge der Auswahl. Zu jedem Kürzel gehört eine Datei
+  /* Kalender-Erinnerung, die Eltern nach dem Eintragen herunterladen können: Der Eintrag beginnt
+     so viele Tage vor dem Verkauf zu dieser vollen Stunde (dann meldet sich das Handy) und endet
+     am Verkaufstag zur selben Stunde. 1 und 8 heisst: am Vortag um 8 Uhr, damit Zeit zum
+     Einkaufen und Backen bleibt. */
+  REMINDER: { daysBefore: 1, hour: 8 },
+
+  /* Sprachen in der Reihenfolge der Auswahl: Deutsch zuerst, danach wie in der Liste der Kita
+     (Albanisch, Amharisch, Arabisch, Chinesisch, Englisch, Griechisch, Kurdisch, Mongolisch,
+     Persisch, Somalisch, Spanisch, Thailändisch, Tigrinya, Türkisch, Vietnamesisch).
+     Zu jedem Kürzel gehört eine Datei
      i18n-<Kürzel>.js und eine <script>-Zeile in index.html. Der Test prüft beides. */
-  LANGS: ["de", "en"],
+  LANGS: ["de", "sq", "am", "ar", "zh", "en", "el", "ku", "mn", "fa", "so", "es", "th", "ti", "tr", "vi"],
 
   /* Kuchen-Arten (Pflichtfeld, eine Auswahl): feste technische Schlüssel.
      Reihenfolge = Reihenfolge auf der Seite; was sich gut aus der Hand essen lässt, steht oben.

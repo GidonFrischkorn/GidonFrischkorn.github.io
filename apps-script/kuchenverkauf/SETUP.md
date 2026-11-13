@@ -17,6 +17,7 @@ Zutat und bekommt dabei nie Namen zu sehen.
 | Eintragsseite | `apps/babar-kuchen/` im Repository |
 | Einstellungen der Seite (URL, Datum, Sprachen, Schlüssel der Arten, Allergene und Zutaten) | `apps/babar-kuchen/config.js` |
 | Alle Texte einer Sprache, auch Titel und Namen der Arten, Allergene und Zutaten | `apps/babar-kuchen/i18n-<Sprache>.js`, z. B. `i18n-de.js` |
+| Kalender-Erinnerung (erzeugt die Datei im Browser) | `apps/babar-kuchen/ics.js` |
 | Google-Programm | `apps-script/kuchenverkauf/Code.gs` (wird in Google eingefügt, nicht veröffentlicht) |
 
 ---
@@ -105,8 +106,50 @@ Die Eintragsseite funktioniert trotzdem, denn das Programm läuft mit deinem Kon
 6. Optional: die Seite einmal mit `?lang=en` usw. ansehen.
 
 Danach kann der Link verschickt werden. Für eine bestimmte Sprache lässt sich `?lang=…`
-anhängen, z. B. `…/apps/babar-kuchen/?lang=en`. Ohne Angabe nimmt die Seite die Sprache
+anhängen, z. B. `…/apps/babar-kuchen/?lang=tr`. Ohne Angabe nimmt die Seite die Sprache
 des Geräts, falls es sie gibt, sonst Deutsch. Oben rechts (Weltkugel) lässt sie sich umschalten.
+
+Die 16 Sprachen und ihre Kürzel:
+
+| Kürzel | Sprache | Kürzel | Sprache |
+| --- | --- | --- | --- |
+| `de` | Deutsch | `mn` | Mongolisch |
+| `sq` | Albanisch | `fa` | Persisch |
+| `am` | Amharisch | `so` | Somalisch |
+| `ar` | Arabisch | `es` | Spanisch |
+| `zh` | Chinesisch (vereinfacht) | `th` | Thailändisch |
+| `en` | Englisch | `ti` | Tigrinya |
+| `el` | Griechisch | `tr` | Türkisch |
+| `ku` | Kurdisch (Kurmandschi) | `vi` | Vietnamesisch |
+
+Ausser Deutsch und Englisch sind alle Sprachen maschinell übersetzt und per Rückübersetzung
+auf ihre Bedeutung geprüft, aber erst dann verlässlich, wenn eine Person mit dieser
+Muttersprache sie gegengelesen hat. Eine Korrektur gehört in die Datei der Sprache
+(`i18n-<Kürzel>.js`); danach den Test laufen lassen und veröffentlichen. Das Datum erscheint
+in Sprachen, die der Browser nicht kennt, in Ziffern (24.11.2026).
+
+## Kalender-Erinnerung
+
+Nach dem Eintragen bietet die Seite unter „Danke!“ die Schaltfläche **Erinnerung im Kalender
+speichern** an. Sie lädt eine kleine Kalender-Datei (`kuchenverkauf.ics`) herunter, die der
+Browser auf dem Gerät selbst erzeugt. Dabei wird nichts verschickt, und an Google muss dafür
+nichts geändert werden.
+
+- **Was im Kalender steht:** ein Eintrag vom Vortag 8 Uhr bis zum Verkaufstag 8 Uhr, in der
+  gewählten Sprache, mit dem, was die Eltern eingetragen haben. Das Handy meldet sich zum
+  Beginn, also am Vortag um 8 Uhr: So bleibt Zeit zum Einkaufen und Backen.
+- **Warum der Eintrag am Vortag beginnt:** Manche Kalender (z. B. Google Kalender) übernehmen
+  den Alarm aus einer Datei nicht und nehmen ihre eigene Standard-Erinnerung, und die richtet
+  sich nach dem Beginn des Eintrags.
+- **Einstellen:** `REMINDER: { daysBefore: 1, hour: 8 }` in `config.js` (Tage vor dem Verkauf,
+  volle Stunde).
+- **Auf dem Handy:** Auf dem iPhone öffnet sich der Kalender direkt. Auf Android wird die Datei
+  heruntergeladen; ein Tipp darauf öffnet sie im Kalender. In Browsern, die in andere Apps
+  eingebaut sind (z. B. der Vorschau von WhatsApp), klappt der Download manchmal nicht; der
+  Hinweis unter der Schaltfläche rät dann zu Safari oder Chrome.
+- **Vor dem Versand ausprobieren:** einmal auf einem iPhone und einem Android-Handy mit
+  `?demo=1` einen Testeintrag machen und die Erinnerung speichern. Im Testmodus wird nichts
+  gespeichert.
 
 ## Während der Aktion
 

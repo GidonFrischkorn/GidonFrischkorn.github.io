@@ -37,6 +37,7 @@
     submit: $("submit"), submitText: $("submitText"), submitStatus: $("submitStatus"),
     submitError: $("submitError"),
     success: $("success"), successH: $("successH"), successText: $("successText"), again: $("again"),
+    reminderBox: $("reminderBox"), reminder: $("reminder"),
     descCard: $("descCard"), descList: $("descList"),
     byCatH: $("byCatH"), ingBlock: $("ingBlock"), ingCounts: $("ingCounts"), ingNone: $("ingNone"),
     algGrid: $("algGrid"),
@@ -52,7 +53,7 @@
   /* Eingesetzte Werte (Zahlen, Namen, Listen) stehen zwischen unsichtbaren Richtungszeichen
      (FSI … PDI). So bleibt ein lateinischer Name in einem arabischen Satz an seinem Platz
      und umgekehrt. In Sprachen mit gleicher Schreibrichtung ändert das nichts. */
-  var FSI = "⁨", PDI = "⁩";
+  var FSI = "\u2068", PDI = "\u2069";
   function t(key, vars) {
     var L = T[state.lang];
     var s = (L && L.ui && L.ui[key]) || T.de.ui[key] || key;
@@ -108,7 +109,7 @@
   function entryLabel(catId, ingIds, otherName) {
     var s = label("cat", catId);
     if (otherName) s += ": " + otherName;
-    if (ingIds && ingIds.length) s += " (" + ingIds.map(function (id) { return label("ing", id); }).join(", ") + ")";
+    if (ingIds && ingIds.length) s += " (" + ingIds.map(function (id) { return label("ing", id); }).join(t("list_sep")) + ")";
     return s;
   }
 
@@ -128,6 +129,38 @@
       if (fmt.resolvedOptions().locale.split("-")[0] !== loc.split("-")[0]) return fallback;
       return fmt.format(d);
     } catch (e) { return fallback; }
+  }
+
+  /* ---------- Kalender-Erinnerung ---------- */
+
+  var ICS = window.KuchenIcs;
+  /* Die unsichtbaren Richtungszeichen aus t() gehören nicht in eine Kalender-Datei. */
+  function plain(s) { return s.split(FSI).join("").split(PDI).join(""); }
+
+  /* Download-Adresse für den Eintrag der bestätigten Anmeldung, in der gewählten Sprache.
+     Beginn: REMINDER.daysBefore Tage vor dem Verkauf um REMINDER.hour Uhr; Ende: am Verkaufstag
+     zur selben Stunde. Warum diese Form: siehe ics.js. */
+  function reminderHref(catId, ingIds, otherName) {
+    var p = C.EVENT.date.split("-").map(Number);
+    var end = new Date(p[0], p[1] - 1, p[2], C.REMINDER.hour, 0, 0);
+    var start = new Date(p[0], p[1] - 1, p[2] - C.REMINDER.daysBefore, C.REMINDER.hour, 0, 0);
+    var date = ("0" + p[2]).slice(-2) + "." + ("0" + p[1]).slice(-2) + "." + p[0];
+    var event = (T[state.lang].title || T.de.title) + " " + C.EVENT.org;
+    return ICS.dataUrl(ICS.build({
+      uid: "kuchen-" + Date.now() + "-" + Math.floor(Math.random() * 1e9) + "@babar-kuchen",
+      stamp: new Date(), start: start, end: end,
+      summary: plain(t("reminder_title", { event: event, date: date })),
+      description: plain(t("reminder_text", { cat: entryLabel(catId, ingIds, otherName), date: date }))
+    }));
+  }
+
+  /* Nur nach einer bestätigten Anmeldung sichtbar; bei Sprachwechsel neu erzeugt. */
+  function renderReminder() {
+    var d = el.success.dataset;
+    var on = !!ICS && !!C.REMINDER && !el.success.hidden && !!d.cat;
+    el.reminderBox.hidden = !on;
+    if (on) el.reminder.href = reminderHref(d.cat, d.ings ? d.ings.split(",") : [], d.other);
+    else el.reminder.removeAttribute("href");
   }
 
   /* ---------- Sprache ---------- */
@@ -204,6 +237,7 @@
     if (!el.submitError.hidden && el.submitError.dataset.key) {
       el.submitError.textContent = t(el.submitError.dataset.key);
     }
+    renderReminder();
   }
 
   /* ---------- Backend ---------- */
@@ -428,7 +462,7 @@
     });
   }
   // Umbruch nach "/" erlauben (unsichtbares Leerzeichen), statt mitten im Wort zu trennen.
-  function breakable(s) { return s.replace(/\//g, "/​"); }
+  function breakable(s) { return s.replace(/\//g, "/\u200B"); }
 
   function renderIngredients() {
     buildBoxes(el.ingGrid, C.INGREDIENTS, "ingredients");
@@ -475,7 +509,7 @@
       : "";
     var many = checkedIngredients().filter(ingMarked);
     el.ingManyHint.textContent = many.length
-      ? t("hint_many_ing", { list: many.map(function (id) { return label("ing", id); }).join(", ") })
+      ? t("hint_many_ing", { list: many.map(function (id) { return label("ing", id); }).join(t("list_sep")) })
       : "";
     el.descOtherNote.textContent = checkedIngredients().indexOf(C.OTHER_INGREDIENT) >= 0
       ? t("ing_other_note") : "";
@@ -625,6 +659,7 @@
     });
     el.form.hidden = true;
     el.success.hidden = false;
+    renderReminder();
     el.successH.focus();
     loadCounts();
   }
@@ -639,6 +674,7 @@
     delete el.success.dataset.name;
     delete el.success.dataset.ings;
     delete el.success.dataset.other;
+    renderReminder();
     el.form.hidden = false;
     renderFieldErrors();
     renderChoices();

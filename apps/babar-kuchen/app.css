@@ -201,6 +201,10 @@ label.ing.locked { cursor: default; }
   background: var(--ok-bg); border: 1px solid var(--ok-line); border-radius: 10px; padding: 14px;
 }
 .success h3:focus { outline: none; }
+/* Kalender-Erinnerung: ein Link, der wie eine Schaltfläche aussieht. */
+a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; }
+.reminder { margin: 0 0 14px; }
+.reminder .hint { display: block; margin: 6px 0 0; }
 
 .notice { border-radius: 8px; padding: 10px 12px; margin: 0 0 12px; font-weight: 600; }
 .notice.demo, .notice.off { background: var(--warn-bg); color: var(--warn-fg); border: 1px solid var(--warn-line); }
