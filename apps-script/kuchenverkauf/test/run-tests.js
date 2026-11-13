@@ -516,5 +516,31 @@ console.log("ics.js");
   check("Titel des Termins: Titel der Seite und Name der Kita, ohne Zusatz", /var event = \(T\[state\.lang\]\.title \|\| T\.de\.title\) \+ " " \+ C\.EVENT\.org;/.test(appJs) && /summary: event,/.test(appJs));
 }
 
+/* ---------- 6. Anmeldeschluss ---------- */
+console.log("Anmeldeschluss");
+{
+  const E = C.SIGNUP_END;
+  check("SIGNUP_END in config.js: Datum JJJJ-MM-TT, Uhrzeit HH:MM, Abstand zur Weltzeit ±HH:MM",
+    E && /^\d{4}-\d{2}-\d{2}$/.test(E.date) && /^([01]\d|2[0-3]):[0-5]\d$/.test(E.time) && /^[+-]\d{2}:\d{2}$/.test(E.utcOffset), JSON.stringify(E));
+  const end = Date.parse(E.date + "T" + E.time + ":00" + E.utcOffset) + 60000;   // wie signupEnd() in app.js
+  // Der angegebene Abstand muss an diesem Tag wirklich der von Zürich sein (Winter- oder Sommerzeit).
+  const zh = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Zurich", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+    .formatToParts(new Date(end - 60000)).reduce((a, x) => (a[x.type] = x.value, a), {});
+  check("Anmeldeschluss in Zürcher Zeit wie angegeben (" + E.date + " " + E.time + ")",
+    zh.year + "-" + zh.month + "-" + zh.day === E.date && zh.hour + ":" + zh.minute === E.time, JSON.stringify(zh));
+  check("Anmeldeschluss 22.11.2026 23:59 (Zürich) = 22:59 Weltzeit, Formular zu ab 23:00 Weltzeit",
+    new Date(end).toISOString() === "2026-11-22T23:00:00.000Z", new Date(end).toISOString());
+  // Wer sich bis zum Schluss einträgt, bekommt den Alarm der Erinnerung noch: Alarm = Verkaufstag REMINDER.hour Uhr minus Vorlauf.
+  const [y, m, d] = C.EVENT.date.split("-").map(Number);
+  const startUtc = Date.UTC(y, m - 1, d, C.REMINDER.hour) - 60 * 60000;   // Winterzeit: Zürich = Weltzeit + 1 h (Test oben prüft den Tag)
+  const alarm = startUtc - C.REMINDER.alarmHoursBefore * 3600000;
+  check("Anmeldeschluss liegt vor dem Alarm der Erinnerung", end <= alarm, new Date(end).toISOString() + " / " + new Date(alarm).toISOString());
+  check("app.js: Formular zu nach dem Schluss, auch beim Absenden und bei offener Seite",
+    /el\.form\.hidden = !backendReady \|\| closed \|\| !el\.success\.hidden/.test(appJs) && /if \(isClosed\(\)\) \{ renderTexts\(\); return; \}/.test(appJs) && /setTimeout\(renderTexts, left \+ 1000\)/.test(appJs));
+  check("index.html hat Platz für Schluss-Hinweis und Frist", /id="closedNote"[^>]*data-i18n="closed"/.test(html) && /id="deadline"/.test(html));
+  const noTime = C.LANGS.filter((l) => !(T[l].ui.deadline.includes("{date}") && T[l].ui.deadline.includes("{time}")));
+  check("Frist nennt in jeder Sprache Datum und Uhrzeit", noTime.length === 0, noTime.join(","));
+}
+
 console.log("\n" + passed + " bestanden, " + failed + " fehlgeschlagen");
 process.exit(failed ? 1 : 0);

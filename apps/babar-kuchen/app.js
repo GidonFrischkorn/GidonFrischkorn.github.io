@@ -27,7 +27,7 @@
     demoBanner: $("demoBanner"),
     overviewStatus: $("overviewStatus"), bars: $("bars"), total: $("total"),
     overviewError: $("overviewError"), overviewErrorText: $("overviewErrorText"), retry: $("retry"),
-    notConfigured: $("notConfigured"), form: $("form"),
+    intro: $("intro"), notConfigured: $("notConfigured"), closedNote: $("closedNote"), deadline: $("deadline"), form: $("form"),
     firstName: $("firstName"), lastName: $("lastName"), category: $("category"),
     otherField: $("otherField"), otherName: $("otherName"),
     description: $("description"), website: $("website"),
@@ -113,22 +113,42 @@
     return s;
   }
 
-  function formatDate() {
-    var p = C.EVENT.date.split("-").map(Number);
+  /* "JJJJ-MM-TT" -> Datum in der gewählten Sprache; ohne Jahr, wenn withYear false ist. */
+  function formatDate(iso, withYear) {
+    var p = (iso || C.EVENT.date).split("-").map(Number);
+    if (withYear === undefined) withYear = true;
     var d = new Date(p[0], p[1] - 1, p[2]);
     var fallback = ("0" + p[2]).slice(-2) + "." + ("0" + p[1]).slice(-2) + "." + p[0];
     try {
       var loc = (T[state.lang].meta && T[state.lang].meta.locale) || state.lang;
       // Kalender und Ziffern fest vorgeben: Ohne das zeigt Persisch das Jahr 1405 und
       // Thai das Jahr 2569, und Arabisch je nach Gerät andere Ziffern.
-      var fmt = new Intl.DateTimeFormat(loc, {
-        weekday: "long", day: "numeric", month: "long", year: "numeric",
-        calendar: "gregory", numberingSystem: "latn"
-      });
+      var opts = { weekday: "long", day: "numeric", month: "long", calendar: "gregory", numberingSystem: "latn" };
+      if (withYear) opts.year = "numeric";
+      var fmt = new Intl.DateTimeFormat(loc, opts);
       // Kennt der Browser die Sprache nicht (z. B. Tigrinya), lieber Zahlen als eine fremde Sprache.
       if (fmt.resolvedOptions().locale.split("-")[0] !== loc.split("-")[0]) return fallback;
       return fmt.format(d);
     } catch (e) { return fallback; }
+  }
+
+  /* ---------- Anmeldeschluss ---------- */
+
+  /* Zeitpunkt (ms), ab dem nichts mehr eingetragen wird: das Ende der Minute SIGNUP_END.time. */
+  function signupEnd() {
+    var e = C.SIGNUP_END;
+    return e ? Date.parse(e.date + "T" + e.time + ":00" + e.utcOffset) + 60000 : NaN;
+  }
+  function isClosed() {
+    if (MOCK && MOCK.mode === "closed") return true;   // Testmodus ?demo=closed
+    var end = signupEnd();
+    return !isNaN(end) && Date.now() >= end;
+  }
+  function renderDeadline() {
+    var show = !!C.SIGNUP_END && !isClosed();
+    el.deadline.hidden = !show;
+    el.intro.hidden = isClosed();          // «Trag hier bitte ein …» passt nach dem Schluss nicht mehr
+    if (show) el.deadline.textContent = t("deadline", { date: formatDate(C.SIGNUP_END.date, false), time: C.SIGNUP_END.time });
   }
 
   /* ---------- Kalender-Erinnerung ---------- */
@@ -217,6 +237,7 @@
     el.title.textContent = title;
     el.org.textContent = C.EVENT.org;
     el.date.textContent = formatDate();
+    renderDeadline();
     document.title = title + " · " + C.EVENT.org;
     if (MOCK) { el.demoBanner.textContent = t("demo_banner"); el.demoBanner.hidden = false; }
     if (state.sending) el.submitText.textContent = t("sending");
@@ -311,8 +332,10 @@
       : (state.loading && !have) ? t("loading") : "";
     el.overviewError.hidden = !state.loadFailed;
     if (state.loadFailed) el.overviewErrorText.textContent = t("load_error");
+    var closed = isClosed();
     el.notConfigured.hidden = backendReady;
-    el.form.hidden = !backendReady || !el.success.hidden;
+    el.closedNote.hidden = !backendReady || !closed || !el.success.hidden;
+    el.form.hidden = !backendReady || closed || !el.success.hidden;
 
     el.bars.hidden = !have;
     el.byCatH.hidden = !have;
@@ -618,6 +641,7 @@
   function onSubmit(ev) {
     ev.preventDefault();
     if (state.sending) return;           // Doppelklick-Schutz
+    if (isClosed()) { renderTexts(); return; }   // Seite stand über den Anmeldeschluss hinaus offen
     el.submitError.hidden = true;
     var v = values();
     state.errors = validate(v);
@@ -674,7 +698,7 @@
     delete el.success.dataset.ings;
     delete el.success.dataset.other;
     renderReminder();
-    el.form.hidden = false;
+    renderOverview();                    // zeigt das Formular wieder, ausser nach dem Anmeldeschluss
     renderFieldErrors();
     renderChoices();
     renderDescCount();
@@ -696,6 +720,12 @@
       if (state.errors[field]) { delete state.errors[field]; renderFieldErrors(); }
     });
   }
+
+  // Bleibt die Seite über den Anmeldeschluss offen, schliesst sie das Formular von selbst.
+  (function () {
+    var left = signupEnd() - Date.now();
+    if (left > 0 && left < 2147483647) setTimeout(renderTexts, left + 1000);   // setTimeout trägt höchstens ~24 Tage
+  })();
 
   el.form.addEventListener("submit", onSubmit);
   el.category.addEventListener("change", function () {

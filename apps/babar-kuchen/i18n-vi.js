@@ -65,6 +65,8 @@
     reminder_btn: "Lưu lời nhắc vào lịch",
     reminder_hint: "Bạn hãy mở tệp bằng ứng dụng lịch của bạn. Lịch sẽ nhắc bạn vào buổi sáng hôm trước buổi bán bánh. Nếu không có gì xảy ra, bạn hãy mở trang này bằng Safari hoặc Chrome.",
     reminder_text: "Bạn đã đăng ký: {cat}. Bạn vui lòng mang bánh đến vào sáng ngày {date}, khi bạn đưa bé đến nhà trẻ.",
+    deadline: "Bạn vui lòng đăng ký trước {time}, {date}.",
+    closed: "Đã hết hạn đăng ký. Cảm ơn tất cả mọi người mang bánh đến!",
 
     privacy_h: "Quyền riêng tư",
     privacy_p1: "Chỉ ban tổ chức nhìn thấy tên của bé và những gì bạn viết. Trang này chỉ hiển thị công khai các con số: có bao nhiêu bánh đã đăng ký theo từng loại và từng nguyên liệu chính.",

@@ -82,6 +82,7 @@ p { margin: 0 0 .75em; }
 .head { margin: 8px 0 20px; }
 .org { color: var(--muted); font-weight: 600; letter-spacing: .02em; margin-bottom: .2em; }
 .date { font-size: 1.1rem; font-weight: 600; }
+.deadline { font-weight: 600; color: var(--warn-fg); }
 .intro { color: var(--ink); }
 
 /* Karten */

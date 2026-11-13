@@ -30,7 +30,8 @@ nichts verschickt.
 - Datei `apps/babar-kuchen/index.html` im Browser öffnen und an die Adresse
   `?demo=1` anhängen, z. B. `file:///…/apps/babar-kuchen/index.html?demo=1`.
 - Weitere Varianten: `?demo=empty` (keine Einträge), `?demo=error` (Google nicht
-  erreichbar), `?demo=slow` (langsame Verbindung), `&lang=en` usw. für eine Sprache.
+  erreichbar), `?demo=slow` (langsame Verbindung), `?demo=closed` (nach dem Anmeldeschluss), `&lang=en` usw.
+  für eine Sprache.
 - Auch auf der veröffentlichten Seite funktioniert `?demo=1`, ohne dass etwas gespeichert wird.
 
 ## 1. Tabelle schützen (wichtig!)
@@ -127,6 +128,17 @@ auf ihre Bedeutung geprüft, aber erst dann verlässlich, wenn eine Person mit d
 Muttersprache sie gegengelesen hat. Eine Korrektur gehört in die Datei der Sprache
 (`i18n-<Kürzel>.js`); danach den Test laufen lassen und veröffentlichen. Das Datum erscheint
 in Sprachen, die der Browser nicht kennt, in Ziffern (24.11.2026).
+
+## Anmeldeschluss
+
+- Bis `SIGNUP_END` in `config.js` (zurzeit Sonntag, 22. November 2026, 23:59 Uhr, Zürcher Zeit)
+  kann man sich eintragen. Die Frist steht oben unter dem Datum.
+- Danach zeigt die Seite statt des Formulars „Die Eintragung ist geschlossen …“; die Übersicht
+  bleibt sichtbar. Auch eine Seite, die über die Frist hinaus offen bleibt, schliesst sich.
+- Der Schluss liegt vor dem Alarm der Kalender-Erinnerung (23. November, 8 Uhr): Wer sich
+  einträgt, wird also noch erinnert. Der Test prüft das.
+- Das Apps Script prüft die Frist nicht. Für die Seite genügt das; ein Eintrag nach der Frist
+  wäre nur über einen direkten Aufruf möglich und stünde dann einfach in der Tabelle.
 
 ## Kalender-Erinnerung
 

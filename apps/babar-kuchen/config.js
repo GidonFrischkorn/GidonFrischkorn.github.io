@@ -17,6 +17,12 @@ window.KUCHEN_CONFIG = {
     date: "2026-11-24"
   },
 
+  /* Anmeldeschluss: bis zu dieser Minute (Zürcher Zeit) kann man sich eintragen, danach zeigt
+     die Seite nur noch die Übersicht. utcOffset ist der Abstand zur Weltzeit an diesem Tag
+     (Winterzeit +01:00, Sommerzeit +02:00). Der Schluss liegt vor dem Alarm der
+     Kalender-Erinnerung, damit alle, die sich eintragen, auch erinnert werden. */
+  SIGNUP_END: { date: "2026-11-22", time: "23:59", utcOffset: "+01:00" },
+
   /* Kalender-Erinnerung, die Eltern nach dem Eintragen herunterladen können: ein Termin am
      Verkaufstag ab dieser vollen Stunde (Zürcher Zeit), so viele Stunden lang, mit einem Alarm
      so viele Stunden vorher. 8, 1 und 24 heisst: Termin von 8 bis 9 Uhr, das Handy meldet sich

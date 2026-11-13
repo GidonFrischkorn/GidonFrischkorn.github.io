@@ -65,6 +65,8 @@
     reminder_btn: "Xusuusin ku kaydi kalandarkaaga",
     reminder_hint: "Faylka ku fur kalandarkaaga. Wuxuu ku xusuusinayaa subaxa maalinta ka horreysa iibka doolshada. Haddii aysan waxba dhicin, boggan ka fur Safari ama Chrome.",
     reminder_text: "Waxaad diiwaangelisay: {cat}. Fadlan doolshada keen taariikhda {date} subaxnimada, marka aad ilmahaaga keenayso.",
+    deadline: "Fadlan is diiwaangeli ilaa {date}, saacadda {time}.",
+    closed: "Diiwaangelintu waa xiran tahay. Mahadsanidiin dhammaan inta doolsho keenaysa!",
 
     privacy_h: "Ilaalinta xogta shakhsiga",
     privacy_p1: "Magaca ilmahaaga iyo waxa aad qortay waxaa arka kooxda qabanqaabada oo keliya. Dadka kale boggu wuxuu tusayaa tirooyin keliya: inta doolsho ee la diiwaangeliyey nooc kasta iyo mid kasta oo ka mid ah waxyaabaha ugu weyn ee ku jira.",
