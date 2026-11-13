@@ -62,6 +62,10 @@
     success_h: "Teşekkürler!",
     success_text: "{name} için “{cat}” listeye eklendi.",
     again: "Bir kek daha ekle",
+    reminder_btn: "Hatırlatmayı takvime kaydet",
+    reminder_hint: "Dosyayı takviminizle açın. Takvim, kek satışından bir gün önce sabah size hatırlatır. Hiçbir şey olmazsa bu sayfayı Safari veya Chrome’da açın.",
+    reminder_title: "Kek yapılacak: {event}, {date}",
+    reminder_text: "Listeye eklediğiniz: {cat}. Lütfen keki {date} sabahı, çocuğunuzu bırakırken getirin.",
 
     privacy_h: "Gizlilik",
     privacy_p1: "Çocuğunuzun adını ve yazdıklarınızı yalnızca organizasyon ekibi görür. Sayfa herkese yalnızca sayıları gösterir: her türden ve her ana malzemeden kaç kek eklendiğini.",

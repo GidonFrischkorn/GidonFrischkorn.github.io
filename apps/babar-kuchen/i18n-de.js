@@ -76,6 +76,12 @@
     success_h: "Danke!",
     success_text: "Wir haben «{cat}» für {name} eingetragen.",   // {cat} = Art und Zutaten, {name} = Name des Kindes
     again: "Weiteren Kuchen eintragen",          // Schaltfläche
+    /* Kalender-Erinnerung: Schaltfläche und Hinweis stehen unter der Bestätigung.
+       reminder_title und reminder_text stehen später im Kalender der Eltern. */
+    reminder_btn: "Erinnerung im Kalender speichern",   // Schaltfläche: lädt eine Kalender-Datei herunter
+    reminder_hint: "Öffne die Datei mit deinem Kalender. Er erinnert dich am Tag vor dem Kuchenverkauf, am Morgen. Falls nichts passiert, öffne diese Seite in Safari oder Chrome.",
+    reminder_title: "Kuchen backen: {event} am {date}",   // Titel des Kalender-Eintrags; {event} = «Kuchenverkauf Chinderhuus BABAR», {date} = Datum in Ziffern, z. B. 24.11.2026
+    reminder_text: "Du hast eingetragen: {cat}. Bitte bring den Kuchen am {date} am Morgen mit, wenn du dein Kind bringst.",   // Notiz im Kalender-Eintrag; {cat} = Art und Zutaten
 
     /* Datenschutz */
     privacy_h: "Datenschutz",

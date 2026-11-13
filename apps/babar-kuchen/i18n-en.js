@@ -62,6 +62,10 @@
     success_h: "Thank you!",
     success_text: "We have signed up “{cat}” for {name}.",
     again: "Sign up another cake",
+    reminder_btn: "Save a reminder in your calendar",
+    reminder_hint: "Open the file with your calendar. It reminds you in the morning of the day before the bake sale. If nothing happens, open this page in Safari or Chrome.",
+    reminder_title: "Bake a cake: {event} on {date}",
+    reminder_text: "You signed up: {cat}. Please bring the cake on {date} in the morning, when you drop off your child.",
 
     privacy_h: "Privacy",
     privacy_p1: "Only the organising team sees your child’s name and what you write. Publicly, the page shows only numbers: how many cakes are signed up per type and per main ingredient.",

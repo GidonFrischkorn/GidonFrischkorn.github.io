@@ -429,8 +429,8 @@ const langScripts = scripts.filter((f) => /^i18n-/.test(f));
 check("index.html bindet genau die Sprachdateien aus LANGS ein, in dieser Reihenfolge", sameList(langScripts, C.LANGS.map(langFile)), langScripts.join(","));
 check("im Ordner liegen genau die Sprachdateien aus LANGS", sameList(pageFiles.filter((f) => /^i18n/.test(f)).sort(), C.LANGS.map(langFile).sort()),
   pageFiles.filter((f) => /^i18n/.test(f)).join(","));
-check("Reihenfolge der Scripts: theme.js, config.js, Sprachdateien, mock.js, app.js",
-  sameList(scripts, ["theme.js", "config.js"].concat(C.LANGS.map(langFile), ["mock.js", "app.js"])), scripts.join(","));
+check("Reihenfolge der Scripts: theme.js, config.js, Sprachdateien, mock.js, ics.js, app.js",
+  sameList(scripts, ["theme.js", "config.js"].concat(C.LANGS.map(langFile), ["mock.js", "ics.js", "app.js"])), scripts.join(","));
 check("kein Hinweis auf externe Fonts/CDNs in CSS/JS",
   pageFiles.filter((f) => /\.(js|css)$/.test(f)).every((f) => !/fonts\.googleapis|cdn\.|unpkg|jsdelivr|@import/.test(fs.readFileSync(path.join(PAGE, f), "utf8"))));
 const appJs = fs.readFileSync(path.join(PAGE, "app.js"), "utf8");
@@ -456,6 +456,48 @@ const errRefs = [...appJs.matchAll(/"(err_[a-z_]+)"/g)].map((m) => m[1]);
 const usedKeys = new Set(i18nRefs.concat(tRefs, errRefs));
 check("jeder Text, den Seite und Script verwenden, steht in i18n-de.js", [...usedKeys].every((k) => k in T.de.ui), [...usedKeys].filter((k) => !(k in T.de.ui)).join(","));
 check("i18n-de.js enthält keinen unbenutzten Text", keys.every((k) => usedKeys.has(k)), keys.filter((k) => !usedKeys.has(k)).join(","));
+
+/* ---------- 5. Kalender-Erinnerung (ics.js) ---------- */
+console.log("ics.js");
+{
+  const w = {};
+  vm.runInNewContext(fs.readFileSync(path.join(PAGE, "ics.js"), "utf8"), { window: w });
+  const ICS = w.KuchenIcs;
+  const octets = (s) => Buffer.byteLength(s, "utf8");
+  const unfold = (s) => s.replace(/\r\n /g, "");
+  const field = (ics, name) => { const m = unfold(ics).match(new RegExp("^" + name + ":(.*)$", "m")); return m ? m[1] : null; };
+  const unesc = (s) => s.replace(/\\(.)/g, (m, c) => (c === "n" ? "\n" : c));   // in einem Durchgang, sonst wird ein maskierter Backslash doppelt gelesen
+  const R = C.REMINDER;
+  check("REMINDER in config.js: Tage und volle Stunde", R && Number.isInteger(R.daysBefore) && R.daysBefore >= 0 && Number.isInteger(R.hour) && R.hour >= 0 && R.hour <= 23, JSON.stringify(R));
+  const [ey, em, ed] = C.EVENT.date.split("-").map(Number);
+  const start = new Date(ey, em - 1, ed - R.daysBefore, R.hour), end = new Date(ey, em - 1, ed, R.hour);
+  const sample = { uid: "test-1@babar-kuchen", stamp: new Date(Date.UTC(2026, 10, 12, 9, 5, 7)), start, end,
+    summary: "Kuchen backen: Kuchenverkauf Chinderhuus BABAR am 24.11.2026",
+    description: "Du hast eingetragen: Sonstiges: Baklava (Nüsse/Mandeln, Andere); a\\b.\nZweite Zeile, mit Komma." };
+  const ics = ICS.build(sample);
+  const lines = ics.split("\r\n");
+  check("Datei: beginnt und endet richtig, Zeilenenden CRLF", lines[0] === "BEGIN:VCALENDAR" && lines[lines.length - 2] === "END:VCALENDAR" && lines[lines.length - 1] === "" && !/[^\r]\n/.test(ics));
+  check("Datei: genau ein Eintrag mit einem Alarm", (ics.match(/BEGIN:VEVENT/g) || []).length === 1 && (ics.match(/BEGIN:VALARM/g) || []).length === 1 && /TRIGGER:PT0S/.test(ics) && /ACTION:DISPLAY/.test(ics));
+  check("Beginn am Vortag um 8 Uhr, Ende am Verkaufstag um 8 Uhr (Ortszeit ohne Zeitzone)",
+    field(ics, "DTSTART") === "20261123T080000" && field(ics, "DTEND") === "20261124T080000", field(ics, "DTSTART") + " / " + field(ics, "DTEND"));
+  check("Erstellungs-Stempel in Weltzeit", field(ics, "DTSTAMP") === "20261112T090507Z", field(ics, "DTSTAMP"));
+  check("Titel und Notiz kommen unverändert zurück (Komma, Strichpunkt, Backslash, Zeilenumbruch maskiert)",
+    unesc(field(ics, "SUMMARY")) === sample.summary && unesc(field(ics, "DESCRIPTION")) === sample.description, field(ics, "DESCRIPTION"));
+  check("keine Zeile über 75 Bytes", lines.every((l) => octets(l) <= 75), String(Math.max(...lines.map(octets))));
+  check("Adresse für den Download enthält die Datei", decodeURIComponent(ICS.dataUrl(ics).replace("data:text/calendar;charset=utf-8,", "")) === ics);
+  // Jede Sprache: Titel und Notiz der Erinnerung ergeben eine gültige Datei, auch mit mehrbyteigen Zeichen.
+  const bad = C.LANGS.filter((l) => T[l] && T[l].ui && T[l].ui.reminder_title).filter((l) => {
+    const sub = (s, v) => Object.keys(v).reduce((a, k) => a.split("{" + k + "}").join(v[k]), s);
+    const summary = sub(T[l].ui.reminder_title, { event: T[l].title + " " + C.EVENT.org, date: "24.11.2026" });
+    const description = sub(T[l].ui.reminder_text, { cat: T[l].cat.sonstiges + ": Baklava (" + T[l].ing.nuss + T[l].ui.list_sep + T[l].ing.andere + ")", date: "24.11.2026" });
+    const out = ICS.build(Object.assign({}, sample, { summary, description }));
+    const ok = out.split("\r\n").every((x) => octets(x) <= 75) && unesc(field(out, "SUMMARY")) === summary && unesc(field(out, "DESCRIPTION")) === description &&
+      !out.includes("�") && Buffer.from(out, "utf8").toString("utf8") === out;
+    return !ok;
+  });
+  check("Erinnerung in jeder Sprache: gültige Datei, Text kommt unverändert zurück", bad.length === 0, bad.join(","));
+  check("app.js entfernt die unsichtbaren Richtungszeichen aus dem Kalendertext", /function plain\(s\)/.test(appJs) && /summary: plain\(/.test(appJs) && /description: plain\(/.test(appJs));
+}
 
 console.log("\n" + passed + " bestanden, " + failed + " fehlgeschlagen");
 process.exit(failed ? 1 : 0);

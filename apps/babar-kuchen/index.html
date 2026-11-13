@@ -157,6 +157,11 @@
       <div class="success" id="success" hidden>
         <h3 id="successH" tabindex="-1" data-i18n="success_h"></h3>
         <p id="successText"></p>
+        <!-- Kalender-Erinnerung: Die Datei entsteht im Browser (ics.js), es wird nichts verschickt. -->
+        <div class="reminder" id="reminderBox" hidden>
+          <a class="btn secondary" id="reminder" download="kuchenverkauf.ics" data-i18n="reminder_btn"></a>
+          <p class="hint" data-i18n="reminder_hint"></p>
+        </div>
         <button type="button" class="btn secondary" id="again" data-i18n="again"></button>
       </div>
     </section>
@@ -196,6 +201,7 @@
 <script src="i18n-tr.js"></script>
 <script src="i18n-vi.js"></script>
 <script src="mock.js"></script>
+<script src="ics.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

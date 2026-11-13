@@ -62,6 +62,10 @@
     success_h: "Cảm ơn bạn!",
     success_text: "Chúng tôi đã ghi “{cat}” cho bé {name}.",
     again: "Đăng ký thêm bánh khác",
+    reminder_btn: "Lưu lời nhắc vào lịch",
+    reminder_hint: "Bạn hãy mở tệp bằng ứng dụng lịch của bạn. Lịch sẽ nhắc bạn vào buổi sáng hôm trước buổi bán bánh. Nếu không có gì xảy ra, bạn hãy mở trang này bằng Safari hoặc Chrome.",
+    reminder_title: "Làm bánh: {event} ngày {date}",
+    reminder_text: "Bạn đã đăng ký: {cat}. Bạn vui lòng mang bánh đến vào sáng ngày {date}, khi bạn đưa bé đến nhà trẻ.",
 
     privacy_h: "Quyền riêng tư",
     privacy_p1: "Chỉ ban tổ chức nhìn thấy tên của bé và những gì bạn viết. Trang này chỉ hiển thị công khai các con số: có bao nhiêu bánh đã đăng ký theo từng loại và từng nguyên liệu chính.",
