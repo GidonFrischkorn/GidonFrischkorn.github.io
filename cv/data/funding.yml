@@ -43,8 +43,8 @@ grants:
       de: "SNSF Starting Grant 2026 — BASIC"
     agency: "SNF"
     type:
-      en: "competitive — submitted; first evaluation stage passed"
-      de: "kompetitiv — eingereicht; erste Evaluationsphase bestanden"
+      en: "competitive — submitted; second evaluation stage reached"
+      de: "kompetitiv — eingereicht; zweite Evaluationsphase erreicht"
     role: "PI"
     duration:
       en: "from 2027 (planned)"
@@ -56,13 +56,13 @@ grants:
       en: "approx. CHF 1.85 million (requested)"
       de: "ca. CHF 1.85 Mio. (beantragt)"
     summary:
-      en: "Submitted to the SNSF on 1 May 2026; passed the first evaluation stage; presentation to the evaluation panel on 28/29 January 2027. Project on process-oriented, bias-reduced assessment of individual differences using cognitive measurement models."
-      de: "Eingereicht beim SNF am 1. Mai 2026; erste Evaluationsphase bestanden; Präsentation vor dem Evaluationsgremium am 28./29. Januar 2027. Projekt zur prozessorientierten, verzerrungsarmen Erfassung individueller Unterschiede mit kognitiven Messmodellen."
+      en: "Submitted to the SNSF on 1 May 2026; second evaluation stage reached; presentation to the evaluation panel on 29 January 2027; decision by early April 2027. Project on process-oriented, bias-reduced assessment of individual differences using cognitive measurement models."
+      de: "Eingereicht beim SNF am 1. Mai 2026; zweite Evaluationsphase erreicht; Präsentation vor dem Evaluationsgremium am 29. Januar 2027; Entscheid bis Anfang April 2027. Projekt zur prozessorientierten, verzerrungsarmen Erfassung individueller Unterschiede mit kognitiven Messmodellen."
 
   - number: 4
     title:
       en: "Neurocognitive Psychometrics (research network)"
-      de: "Neurocognitive Psychometrics (research network)"
+      de: "Neurocognitive Psychometrics (Forschungsnetzwerk)"
     agency: "DFG"
     type:
       en: "competitive"
@@ -74,7 +74,7 @@ grants:
       de: "€ 44'645, Gesamtsumme Netzwerk"
     summary:
       en: "An international scientific network to foster exchange between psychometrics, cognitive psychology, and neurocognition. My role involved co-coordinating the network and shaping its conceptual direction and grant applications."
-      de: "Ein internationales wissenschaftliches Netzwerk zur Förderung des Austauschs zwischen Psychometrie, kognitiver Psychologie und Neurokognition. Meine Rolle umfasste die Co-Koordination des Netzwerks sowie die Mitgestaltung seiner konzeptuellen Ausrichtung und Antragsstellung."
+      de: "Ein internationales wissenschaftliches Netzwerk zur Förderung des Austauschs zwischen Psychometrie, kognitiver Psychologie und Neurokognition. Meine Rolle umfasste die Co-Koordination des Netzwerks sowie die Mitgestaltung seiner konzeptuellen Ausrichtung und Antragstellung."
 
   - number: 5
     title:
@@ -100,7 +100,7 @@ travel_awards:
     description:
       en: "60th Annual Meeting, Montreal, Canada"
       de: "60. Jahrestagung, Montreal, Kanada"
-    amount: "CHF 1,000"
+    amount: "CHF 1'000"
 
   - year: 2018
     agency: "ISIR"
@@ -110,7 +110,9 @@ travel_awards:
     description:
       en: "International Society for Intelligence Research, Edinburgh, Scotland"
       de: "International Society for Intelligence Research, Edinburgh, Schottland"
-    amount: "€ 1,000"
+    amount:
+      en: "€ 1,000"
+      de: "€ 1'000"
 
   - year: 2017
     agency: "DAAD"
@@ -120,4 +122,6 @@ travel_awards:
     description:
       en: "58th Annual Meeting, Vancouver, Canada"
       de: "58. Jahrestagung, Vancouver, Kanada"
-    amount: "€ 1,000"
+    amount:
+      en: "€ 1,000"
+      de: "€ 1'000"

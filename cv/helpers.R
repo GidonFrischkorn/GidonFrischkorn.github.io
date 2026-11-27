@@ -14,8 +14,34 @@ get_lang <- function(field, lang = "en") {
   }
 }
 
+# German month names for dates stored in English ("July 2024" -> "Juli 2024").
+# Dates in the YAML are single strings shared by all variants, so the de
+# variants translate them here; any other language returns them unchanged.
+localize_date <- function(x, lang = "en") {
+  if (lang != "de" || is.null(x)) return(x)
+  months <- c(January = "Januar", February = "Februar", March = "März",
+              May = "Mai", June = "Juni", July = "Juli",
+              October = "Oktober", December = "Dezember")
+  for (m in names(months)) x <- gsub(paste0("\\b", m, "\\b"), months[[m]], x)
+  x
+}
+
+# German status text for preprints. The status lives inside the citation
+# string in publications.yml (one string for all variants), so the de
+# variants translate it here.
+localize_status <- function(text, lang = "en") {
+  if (lang != "de") return(text)
+  text <- gsub("\\(under review at ", "(in Begutachtung bei ", text)
+  text <- gsub("\\(invited for revision at ", "(zur Revision eingeladen bei ", text)
+  text
+}
+
 # Convert Markdown bold/italic to Typst syntax
 md_to_typst <- function(text) {
+  # A literal asterisk (the shared-first-author marker) is written \* in the
+  # YAML. Park it so the bold/italic rules below do not read it as markup,
+  # then emit Typst's escaped asterisk.
+  text <- gsub("\\*", "\001", text, fixed = TRUE)
   # Convert **bold** to #strong[bold] (must come first)
   text <- gsub("\\*\\*([^*]+)\\*\\*", "#strong[\\1]", text)
   # Convert *italic* to _italic_ (Typst inline)
@@ -23,7 +49,7 @@ md_to_typst <- function(text) {
   # Fix: when _..._ is immediately followed by ( it looks like
   # a function call in Typst. Escape the ( with backslash.
   text <- gsub("_([^_]+)_\\(", "_\\1_\\\\(", text)
-  text
+  gsub("\001", "\\*", text, fixed = TRUE)
 }
 
 # Generate a single resume-entry with optional bullet details
@@ -124,7 +150,9 @@ render_publications <- function(type = "articles", lang = "en", max_entries = NU
     as.character(rev(seq_along(pubs)))
   }
   entries <- vapply(seq_along(pubs), function(i) {
-    paste0(numbers[i], ". ", md_to_typst(pubs[[i]]$text), "\n\n")
+    text <- pubs[[i]]$text
+    if (type == "preprints") text <- localize_status(text, lang)
+    paste0(numbers[i], ". ", md_to_typst(text), "\n\n")
   }, character(1))
   typst_block(entries)
 }
@@ -171,7 +199,7 @@ render_software <- function(lang = "en") {
   data <- yaml::read_yaml("data/software.yml")
   entries <- vapply(data, function(entry) {
     typst_entry(
-      title = sprintf("#strong[%s] (%s)", entry$name, entry$type),
+      title = sprintf("#strong[%s] (%s)", entry$name, get_lang(entry$type, lang)),
       location = get_lang(entry$role, lang),
       description = get_lang(entry$description, lang),
       date = ""
@@ -215,7 +243,7 @@ render_travel_awards <- function(lang = "en") {
     }
     typst_entry(
       title = get_lang(award$title, lang),
-      location = award$amount,
+      location = get_lang(award$amount, lang),
       date = as.character(award$year),
       description = desc
     )
@@ -328,7 +356,7 @@ render_workshops <- function(lang = "en") {
     typst_entry(
       title = get_lang(entry$title, lang),
       location = "",
-      date = entry$date,
+      date = localize_date(entry$date, lang),
       description = get_lang(entry$venue, lang)
     )
   }, character(1))
@@ -366,7 +394,7 @@ render_invited_talks <- function(lang = "en") {
     typst_entry(
       title = md_to_typst(talk$title),
       location = "",
-      date = talk$date,
+      date = localize_date(talk$date, lang),
       description = talk$venue
     )
   }, character(1))

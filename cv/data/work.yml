@@ -7,9 +7,7 @@
   location:
     en: "Zurich, Switzerland"
     de: "Zürich, Schweiz"
-  date:
-    en: "01/2023 -- present"
-    de: "01/2023 -- heute"
+  date: "01/2023 -- 12/2026"
   details_industry:
     en:
       - "Lead an independent four-person research team with full budget and personnel responsibility, funded by more than CHF 1 million secured as PI in competitive SNSF grants"
@@ -35,7 +33,6 @@
       - "Designed and executed multiple experimental studies (lab and online), producing 10+ peer-reviewed publications on cognitive processes and individual differences"
       - "Developing and applying hierarchical Bayesian modeling approaches to measure and dissociate cognitive processes"
       - "Managing budget, personnel planning, and scientific direction of an SNSF-funded research project (over CHF 1 million incl. Flexibility Grant, 4 years)"
-      - "Planning, conducting, and analyzing experimental studies (lab and online)"
       - "Teaching advanced statistical methods"
     de:
       - "CHF 916'510 an kompetitiven SNF-Drittmitteln als PI eingeworben und verwaltet; Leitung einer unabhängigen vierköpfigen Forschungsgruppe von der Gründung bis zur Publikation"
@@ -43,7 +40,6 @@
       - "Planung und Durchführung mehrerer experimenteller Studien (Labor und Online) mit 10+ publizierten Fachartikeln zu kognitiven Prozessen und individuellen Unterschieden"
       - "Entwicklung und Anwendung hierarchischer Bayes-Modellierungsansätze zur Messung und Dissoziation kognitiver Prozesse"
       - "Leitung von Budget, Personalplanung und wissenschaftlicher Ausrichtung eines SNF-Forschungsprojekts (über CHF 1 Mio. inkl. Flexibility Grant, 4 Jahre)"
-      - "Planung, Durchführung und Auswertung experimenteller Studien (Labor und Online)"
       - "Lehre in fortgeschrittenen statistischen Methoden"
 
 - title:
@@ -94,29 +90,27 @@
     en:
       - "Led international multi-site research projects in psychometrics and cognitive psychology, contributing to 15+ peer-reviewed publications"
       - "Statistical advisor to a research group of 10+ scientists: Bayesian inference, mixed-effects models, and reproducible analysis workflows"
-      - "Co-acquired DFG network funding (€44,645) and co-coordinated an international research network"
+      - "Co-acquired DFG network funding (€44,645 network total) and co-coordinated an international research network"
     de:
       - "Leitung internationaler Multi-Site-Forschungsprojekte in Psychometrie und kognitiver Psychologie mit Beitrag zu 15+ begutachteten Publikationen"
       - "Statistische Beratung einer Forschungsgruppe von 10+ Forschenden: Bayes-Inferenz, gemischte Modelle und reproduzierbare Analyse-Workflows"
-      - "Co-Einwerbung von DFG-Netzwerkmitteln (€44.645) und Co-Koordination eines internationalen Forschungsnetzwerks"
+      - "Co-Einwerbung von DFG-Netzwerkmitteln (€ 44'645 Gesamtsumme des Netzwerks) und Co-Koordination eines internationalen Forschungsnetzwerks"
   details_public:
     de:
       - "Statistische Beratung einer Forschungsgruppe von 10+ Forschenden zu Bayes-Inferenz, gemischten Modellen und reproduzierbaren Analyse-Workflows"
       - "Leitung internationaler Multi-Site-Forschungsprojekte in Psychometrie und kognitiver Psychologie mit Beitrag zu 15+ begutachteten Publikationen"
-      - "Co-Einwerbung von DFG-Netzwerkmitteln (EUR 44'645) und Co-Koordination eines internationalen Forschungsnetzwerks"
+      - "Co-Einwerbung von DFG-Netzwerkmitteln (EUR 44'645 Gesamtsumme des Netzwerks) und Co-Koordination eines internationalen Forschungsnetzwerks"
   details:
     en:
       - "Led international multi-site research projects at the intersection of psychometrics and cognitive psychology, contributing to 15+ peer-reviewed publications"
-      - "Secured external network funding (DFG, €44,645 as co-PI) and authored competitive grant applications across two funding cycles"
+      - "Secured external network funding (DFG, €44,645 network total, as co-PI) and authored competitive grant applications across two funding cycles"
       - "Advised a research group of 10+ on statistical methodology — Bayesian inference, mixed-effects models, and reproducible analysis pipelines"
       - "Teaching courses and supervising bachelor and master theses"
-      - "Advising on statistical methodology and research computing for the group"
     de:
       - "Leitung internationaler Forschungsprojekte an der Schnittstelle von Psychometrie und kognitiver Psychologie mit Beitrag zu 15+ begutachteten Publikationen"
-      - "Einwerbung externer Drittmittel (DFG, €44.645 als Co-PI) und Entwicklung kompetitiver Förderanträge über zwei Förderzyklen"
+      - "Einwerbung externer Drittmittel (DFG, € 44'645 Gesamtsumme des Netzwerks, als Co-PI) und Entwicklung kompetitiver Förderanträge über zwei Förderzyklen"
       - "Beratung einer Forschungsgruppe von 10+ Personen in statistischer Methodik — Bayesianische Inferenz, gemischte Modelle und reproduzierbare Analyse-Workflows"
       - "Lehrtätigkeit und Betreuung von Bachelor- und Masterarbeiten"
-      - "Beratung zur statistischen Methodik und zum wissenschaftlichen Rechnen in der Arbeitsgruppe"
 
 - title:
     en: "Ph.D. Student"

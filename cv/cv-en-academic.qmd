@@ -67,6 +67,12 @@ render_languages(lang)
 render_awards(lang)
 ```
 
+## Travel Awards
+
+```{r}
+render_travel_awards(lang)
+```
+
 ```{=typst}
 #pagebreak()
 ```
@@ -77,16 +83,14 @@ render_awards(lang)
 render_funding(lang, include_summaries = TRUE)
 ```
 
-## Travel Awards
-
-```{r}
-render_travel_awards(lang)
-```
-
 # Publications and Research Contributions
 
 ```{r}
 render_citation_stats(lang)
+```
+
+```{=typst}
+#linebreak()\* shared first authorship
 ```
 
 ## Peer-Reviewed Journal Articles
@@ -100,6 +104,10 @@ render_publications("articles", lang, kind = "article")
 ```{r}
 render_publications("articles", lang, kind = "review")
 ```
+
+## Books and Book Chapters
+
+None.
 
 ## Preprints
 
@@ -147,7 +155,7 @@ render_conference_summary(lang)
 
 ```{r}
 data <- yaml::read_yaml("data/teaching.yml")
-typst_block(sprintf("Overview of teaching (since 2015, summarized): %s\\\n(%s)\n",
+typst_block(sprintf("Overview of teaching (whole career since 2015; selection below): %s\\\n(%s)\n",
                     get_lang(data$overview, lang), teaching_hours_rule(lang)))
 ```
 

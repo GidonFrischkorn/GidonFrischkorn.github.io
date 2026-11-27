@@ -1,5 +1,7 @@
 - name: "bmm"
-  type: "R package"
+  type:
+    en: "R package"
+    de: "R-Paket"
   role:
     en: "Lead author"
     de: "Erstautor"
@@ -9,7 +11,9 @@
   url: "https://cran.r-project.org/web/packages/bmm/index.html"
 
 - name: "rtprep"
-  type: "R package"
+  type:
+    en: "R package"
+    de: "R-Paket"
   role:
     en: "Author and maintainer"
     de: "Autor und Maintainer"
@@ -19,7 +23,9 @@
   url: "https://www.gfrischkorn.org/rtprep/"
 
 - name: "jatosr"
-  type: "R package"
+  type:
+    en: "R package"
+    de: "R-Paket"
   role:
     en: "Author and maintainer"
     de: "Autor und Maintainer"
@@ -29,7 +35,9 @@
   url: "https://www.gfrischkorn.org/jatosr/"
 
 - name: "bmmtools"
-  type: "R package"
+  type:
+    en: "R package"
+    de: "R-Paket"
   role:
     en: "Author and maintainer"
     de: "Autor und Maintainer"
@@ -39,7 +47,9 @@
   url: "https://www.gfrischkorn.org/bmmtools/"
 
 - name: "apabayes"
-  type: "R package"
+  type:
+    en: "R package"
+    de: "R-Paket"
   role:
     en: "Author and maintainer"
     de: "Autor und Maintainer"
