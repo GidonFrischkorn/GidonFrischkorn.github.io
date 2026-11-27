@@ -17,8 +17,8 @@ preprints:
     & Practices for Psychological Science). Applying the Memory Measurement Model
     (M3): A Tutorial Using the bmm R Package. Preprint: https://osf.io/tcuzx_v1'
 - number: 5
-  text: '**Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (under review at Psychological
-    Review). Validity is a Theoretical Problem: A Computational Psychometrics Perspective
+  text: '**Frischkorn, G. T.**, Rebmann, R., & Oberauer, K. (invited for revision at
+    Psychological Review). Validity is a Theoretical Problem: A Computational Psychometrics Perspective
     on How to Measure Cognition. Preprint: https://osf.io/pczua_v3'
 - number: 4
   text: 'Göttmann, J., **Frischkorn, G. T.**, Oberauer, K., Schaefer, S. B., & Schubert,
@@ -30,7 +30,7 @@ preprints:
     C. J. (under review at Perspectives on Psychological Science). The Signal-To-Noise
     Ratio Hypothesis of Intelligence. Preprint: https://doi.org/10.31219/osf.io/nkms3_v2'
 - number: 2
-  text: 'Rey-Mermet, A., Haaf, J., Donzallaz, M., **Frischkorn, G.**, Hedge, C., Kempkens,
+  text: 'Rey-Mermet, A., Haaf, J., Donzallaz, M., **Frischkorn, G. T.**, Hedge, C., Kempkens,
     N., Oberauer, K., & Schubert, A.-L. (invited for revision at Perspectives on Psychological
     Science). *How can we achieve a good measurement of attentional control?* Preprint:
     https://doi.org/10.31234/osf.io/ugk4h_v2'
@@ -116,7 +116,7 @@ articles:
   year: '2024'
   text: Bartsch, L. M., **Frischkorn, G. T.**, & Shepherdson, P. (2024). When Load
     is Low, Working Memory is Shielded From Long-Term Memory's Influence. *Journal
-    of Cognition* 7(1). https://doi.org/10.5334/joc.368
+    of Cognition*, 7(1). https://doi.org/10.5334/joc.368
 - number: 22
   year: '2024'
   text: Löffler, C., **Frischkorn, G. T.**, Hagemann, D., Sadus, K., & Schubert, A.-L.
@@ -175,13 +175,13 @@ articles:
     9(3), 43. https://doi.org/10/gmm7dz'
 - number: 12
   year: '2020'
-  text: 'Lerche, V., von Krause, M., Voss, A., Frischkorn, G. T., Schubert, A.-L.,
+  text: 'Lerche, V., von Krause, M., Voss, A., **Frischkorn, G. T.**, Schubert, A.-L.,
     & Hagemann, D. (2020). Diffusion modeling and intelligence: Drift rates show both
     domain-general and domain-specific relations with intelligence. *Journal of Experimental
     Psychology: General*, 149, 2207--2249. https://doi.org/10/ggt8r7'
 - number: 11
   year: '2020'
-  text: 'Schubert, A.-L.*, & **Frischkorn, G. T.*** (2020). Neurocognitive Psychometrics
+  text: 'Schubert, A.-L.\*, & **Frischkorn, G. T.**\* (2020). Neurocognitive Psychometrics
     of Intelligence: How Measurement Advancements Unveiled the Role of Mental Speed
     in Intelligence Differences. *Current Directions in Psychological Science*. https://doi.org/10/ggkz9b'
   shared_first: yes
@@ -208,7 +208,7 @@ articles:
 - number: 6
   year: '2018'
   kind: review
-  text: '**Frischkorn, G. T.*** , & Schubert, A.-L.* (2018). Cognitive Models in Intelligence
+  text: '**Frischkorn, G. T.**\*, & Schubert, A.-L.\* (2018). Cognitive Models in Intelligence
     Research: Advantages and Recommendations for Their Application. *Journal of Intelligence*,
     6(3), 34. https://doi.org/10/gd3vqn'
   shared_first: yes

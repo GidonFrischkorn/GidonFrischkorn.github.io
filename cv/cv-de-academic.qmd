@@ -18,6 +18,9 @@ author:
     - icon: fa brands orcid
       text: 0000-0002-5055-9764
       url: "https://orcid.org/0000-0002-5055-9764"
+date: today
+date-format: "D. MMMM YYYY"
+lang: de
 format:
   awesomecv-typst:
     keep-typ: false
@@ -67,6 +70,12 @@ render_languages(lang)
 render_awards(lang)
 ```
 
+## Reisestipendien
+
+```{r}
+render_travel_awards(lang)
+```
+
 ```{=typst}
 #pagebreak()
 ```
@@ -77,16 +86,14 @@ render_awards(lang)
 render_funding(lang, include_summaries = TRUE)
 ```
 
-## Reisestipendien
-
-```{r}
-render_travel_awards(lang)
-```
-
 # Publikationen und Forschungsbeiträge
 
 ```{r}
 render_citation_stats(lang)
+```
+
+```{=typst}
+#linebreak()\* geteilte Erstautorschaft
 ```
 
 ## Begutachtete Zeitschriftenartikel
@@ -100,6 +107,10 @@ render_publications("articles", lang, kind = "article")
 ```{r}
 render_publications("articles", lang, kind = "review")
 ```
+
+## Bücher und Buchkapitel
+
+Keine.
 
 ## Preprints
 
@@ -143,7 +154,7 @@ render_conference_summary(lang)
 
 ```{r}
 data <- yaml::read_yaml("data/teaching.yml")
-typst_block(sprintf("Lehrüberblick (seit 2015, zusammengefasst): %s\\\n(%s)\n",
+typst_block(sprintf("Lehrüberblick (gesamte Laufbahn seit 2015; unten eine Auswahl): %s\\\n(%s)\n",
                     get_lang(data$overview, lang), teaching_hours_rule(lang)))
 ```
 
@@ -172,7 +183,7 @@ data <- yaml::read_yaml("data/teaching.yml")
 entries <- vapply(data$professional_development, function(entry) {
   typst_entry(
     title = get_lang(entry$title, lang),
-    date = entry$date,
+    date = localize_date(entry$date, lang),
     description = get_lang(entry$details, lang)
   )
 }, character(1))
